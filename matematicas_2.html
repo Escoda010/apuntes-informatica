@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matemáticas 2 — Apuntes</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e11;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --border: #2a2a35;
+    --accent: #7c6af7;
+    --accent-rgb: 124,106,247;
+    --text: #e8e8f0;
+    --text-dim: #8888a0;
+    --text-muted: #55556a;
+
+    --color-background-primary: #16161a;
+    --color-background-secondary: #1e1e24;
+    --color-background-tertiary: #111114;
+    --color-background-info: #1a1a35;
+    --color-background-warning: #2a1f0e;
+    --color-background-success: #0e2a1a;
+    --color-background-danger: #2a0e0e;
+    --color-border-secondary: #2a2a35;
+    --color-border-tertiary: #222228;
+    --color-border-info: #3a3a80;
+    --color-border-primary: #3a3a50;
+    --color-border-success: #1a4a2a;
+    --color-border-danger: #4a1a1a;
+    --color-text-primary: #e8e8f0;
+    --color-text-secondary: #8888a0;
+    --color-text-info: #7c6af7;
+    --color-text-warning: #f0c44a;
+    --color-text-success: #4af0a0;
+    --color-text-danger: #f04a4a;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --font-mono: 'DM Mono', monospace;
+    --font-sans: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 3rem 2rem 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 1rem;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .subject-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .subject-tag::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .header-meta {
+    text-align: right;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .widget-count {
+    font-size: 2.5rem;
+    font-family: 'DM Serif Display', serif;
+    color: var(--text-dim);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  main {
+    position: relative;
+    z-index: 10;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static !important; }
+  }
+
+  .sidebar { position: sticky; top: 1.5rem; }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    padding-left: 2px;
+  }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-item {
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid transparent;
+  }
+
+  .nav-item:hover {
+    color: var(--text);
+    background: var(--surface);
+    border-color: var(--border);
+  }
+
+  .nav-item.active {
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.07);
+    border-color: rgba(var(--accent-rgb), 0.2);
+  }
+
+  .nav-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    min-width: 20px;
+  }
+
+  .nav-item.active .nav-num { color: var(--accent); opacity: 0.6; }
+
+  .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+
+  .add-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    line-height: 1.5;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .widgets-area {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .widget-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .widget-wrapper:hover { border-color: #3a3a50; }
+
+  .widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .widget-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .widget-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .widget-title { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+  .widget-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 1px; }
+
+  .widget-chevron { color: var(--text-muted); font-size: 12px; transition: transform 0.2s; }
+  .widget-wrapper.collapsed .widget-chevron { transform: rotate(-90deg); }
+
+  .widget-body { padding: 1.25rem; }
+  .widget-wrapper.collapsed .widget-body { display: none; }
+
+  .leccion-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .leccion-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── WIDGET CONTENT STYLES ── */
+  #w1 .container { padding: 0; font-family: 'DM Sans', sans-serif; }
+  #w1 .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  #w1 .nav-btn { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-dim); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  #w1 .nav-btn:hover { background: var(--surface); color: var(--text); }
+  #w1 .nav-btn.active { background: rgba(var(--accent-rgb), 0.1); color: var(--accent); border-color: rgba(var(--accent-rgb), 0.3); font-weight: 500; }
+  #w1 .section { display: none; }
+  #w1 .section.active { display: block; }
+  #w1 .card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  #w1 .card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 0.75rem; }
+  #w1 .card p { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin-bottom: 0.5rem; }
+  #w1 .card p:last-child { margin-bottom: 0; }
+  #w1 pre { background: #0a0a0d; border-radius: 8px; padding: 0.75rem 1rem; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); overflow-x: auto; margin: 0.5rem 0; line-height: 1.6; border: 1px solid var(--border); }
+  #w1 .tag { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 500; margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; }
+  #w1 .tag-sp { background: rgba(124,106,247,0.1); color: #9d8fff; border: 1px solid rgba(124,106,247,0.2); }
+  #w1 .tag-np { background: rgba(74,176,240,0.1); color: #4ab0f0; border: 1px solid rgba(74,176,240,0.2); }
+  #w1 .tag-sc { background: rgba(240,196,74,0.1); color: #f0c44a; border: 1px solid rgba(240,196,74,0.2); }
+  #w1 .tag-py { background: rgba(74,240,160,0.1); color: #4af0a0; border: 1px solid rgba(74,240,160,0.2); }
+  #w1 .tag-plt { background: rgba(200,240,74,0.1); color: #c8f04a; border: 1px solid rgba(200,240,74,0.2); }
+  #w1 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  #w1 .highlight { border-left: 2px solid rgba(var(--accent-rgb), 0.5); padding-left: 0.75rem; margin: 0.5rem 0; }
+  #w1 .highlight p { color: var(--text-dim); font-size: 13px; }
+  #w1 .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 1rem; font-family: 'DM Serif Display', serif; }
+  #w1 .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.5rem; }
+  #w1 .pill { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface); }
+  #w1 .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 0.75rem; }
+  #w1 .step-num { min-width: 24px; height: 24px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.1); border: 1px solid rgba(var(--accent-rgb), 0.2); font-size: 12px; font-weight: 600; color: var(--accent); display: flex; align-items: center; justify-content: center; margin-top: 2px; font-family: 'DM Mono', monospace; }
+  #w1 .step-content { flex: 1; }
+  #w1 .step-content p { font-size: 13px; color: var(--text-dim); margin: 0; line-height: 1.5; }
+  #w1 .step-content strong { font-weight: 600; color: var(--text); font-size: 13px; }
+  #w1 .quiz-btn { font-size: 13px; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; width: 100%; text-align: left; margin-bottom: 6px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  #w1 .quiz-btn:hover { background: var(--surface); }
+  #w1 .quiz-btn.correct { background: rgba(74,240,160,0.1); color: #4af0a0; border-color: rgba(74,240,160,0.3); }
+  #w1 .quiz-btn.wrong { background: rgba(240,74,74,0.1); color: #f04a4a; border-color: rgba(240,74,74,0.3); }
+  #w1 .quiz-feedback { font-size: 13px; margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 8px; display: none; }
+  #w1 .quiz-feedback.show { display: block; }
+  #w1 .quiz-next { font-size: 13px; padding: 6px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; margin-top: 0.75rem; display: none; font-family: 'DM Sans', sans-serif; }
+  #w1 .quiz-next.show { display: inline-block; }
+  #w1 .q-num { font-size: 12px; color: var(--text-muted); margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; }
+  #w1 .q-text { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 0.75rem; line-height: 1.5; }
+  #w1 table.comp { width: 100%; font-size: 13px; border-collapse: collapse; }
+  #w1 table.comp th { text-align: left; color: var(--text-muted); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  #w1 table.comp td { padding: 6px 8px; color: var(--text); border-bottom: 1px solid var(--border); vertical-align: top; }
+  #w1 table.comp tr:last-child td { border-bottom: none; }
+  #w1 code { font-family: 'DM Mono', monospace; font-size: 12px; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <a href="index.html" class="back-link">← Volver a inicio</a>
+      <div class="subject-tag">Matemáticas — Grado</div>
+      <h1>Matemáticas <em>2</em></h1>
+    </div>
+    <div class="header-meta">
+      <div class="widget-count" id="widgetCount">1</div>
+      widget(s)
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="sidebar-label">Widgets</div>
+      <ul class="nav-list" id="navList">
+        <li class="nav-item active" onclick="scrollToWidget('w1', this)">
+          <span class="nav-num">01</span>
+          Tema 2 — Derivadas
+        </li>
+      </ul>
+      <div class="sidebar-divider"></div>
+      <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
+    </aside>
+
+    <div class="widgets-area" id="widgetsArea">
+
+      <!-- WIDGET 1 -->
+      <div class="widget-wrapper" id="w1">
+        <div class="widget-header" onclick="toggleWidget('w1')">
+          <div class="widget-header-left">
+            <div class="widget-icon" style="background:rgba(124,106,247,0.1)">∫</div>
+            <div>
+              <div class="widget-title">Derivadas y límites — Tema 2</div>
+              <div class="widget-subtitle">Límites · Derivada · Parciales · Análisis · Optimización · Repaso</div>
+            </div>
+          </div>
+          <span class="widget-chevron">▼</span>
+        </div>
+        <div class="widget-body">
+          <div class="leccion-badge">
+            <span class="leccion-dot"></span>
+            TEMA 02
+          </div>
+
+          <!-- WIDGET CONTENT -->
+          <div class="container">
+            <nav class="nav">
+              <button class="nav-btn active" onclick="w1show('limites', this)">Límites</button>
+              <button class="nav-btn" onclick="w1show('derivada', this)">Derivada</button>
+              <button class="nav-btn" onclick="w1show('parciales', this)">Derivadas parciales</button>
+              <button class="nav-btn" onclick="w1show('analisis', this)">Análisis de funciones</button>
+              <button class="nav-btn" onclick="w1show('optimizacion', this)">Optimización</button>
+              <button class="nav-btn" onclick="w1show('quiz', this)">Repaso</button>
+            </nav>
+
+            <div class="section active" id="w1-s-limites">
+              <p class="section-title">Límites</p>
+              <div class="grid2">
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Límite en un punto</h3>
+                  <p>Valor al que se aproxima f(x) cuando x tiende a un punto.</p>
+                  <pre>sp.limit(f, x, 0)        # x → 0
+sp.limit(f, x, sp.oo)   # x → ∞
+sp.limit(f, x, -sp.oo)  # x → -∞</pre>
+                  <div class="highlight"><p>Si el límite existe, los laterales deben coincidir.</p></div>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Límites laterales</h3>
+                  <p>A veces la función se aproxima a valores distintos por cada lado.</p>
+                  <pre>sp.limit(f, x, 3, '+')  # por la derecha
+sp.limit(f, x, 3, '-')  # por la izquierda</pre>
+                  <p>Si lim(+) ≠ lim(−) → el límite no existe en ese punto.</p>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Límites iterados (2 variables)</h3>
+                  <p>Para f(x, y) en el punto (a, b): primero un límite, luego el otro.</p>
+                  <pre>f = x**2 / (x + y)
+
+lim_xy = sp.limit(sp.limit(f, y, 2), x, 1)
+lim_yx = sp.limit(sp.limit(f, x, 1), y, 2)</pre>
+                  <div class="highlight"><p>El orden importa. Si lim_xy ≠ lim_yx, el límite doble puede no existir.</p></div>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Definición de derivada como límite</h3>
+                  <p>La derivada es un límite cuando h → 0.</p>
+                  <pre>from sympy.abc import x, h
+
+f = sp.cos(x)
+sp.limit((f.subs(x, x+h) - f) / h, h, 0)</pre>
+                  <p>Esto equivale a sp.diff(f, x).</p>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Ejemplos típicos del notebook</h3>
+                <pre>x = sp.symbols('x')
+
+sp.limit(sp.sin(x)/x, x, 0)              # → 1
+sp.limit(1/x, x, 0, '+')                 # → ∞
+sp.limit(1/x, x, 0, '-')                 # → -∞
+
+f = (x - 3) / sp.Abs(x - 3)
+sp.limit(f, x, 3, '+')                   # → 1
+sp.limit(f, x, 3, '-')                   # → -1</pre>
+              </div>
+            </div>
+
+            <div class="section" id="w1-s-derivada">
+              <p class="section-title">Derivada</p>
+              <div class="grid2">
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Calcular la derivada</h3>
+                  <pre>x = sp.symbols('x')
+f = x**2
+
+sp.diff(f, x)       # → 2x (primera)
+sp.diff(f, x, 2)    # → 2  (segunda)
+sp.diff(f, x, 3)    # → 0  (tercera)</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Expresión matemática de la derivada</h3>
+                  <pre>d = sp.Derivative(x**2, x)
+d         # muestra d/dx(x²)
+d.doit()  # calcula → 2x</pre>
+                  <p>Útil para mostrar la notación matemática sin calcularla todavía.</p>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Evaluar la derivada en un punto</h3>
+                  <pre>df = sp.diff(x**2, x)   # → 2x
+
+df.subs(x, 3)           # → 6
+df.evalf(subs={x: 3})   # → 6.0</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-plt">matplotlib</span>
+                  <h3>Representar función y derivada</h3>
+                  <pre>from sympy.plotting import plot as symplot
+
+x = sp.symbols('x')
+f = x**2
+df = sp.diff(f, x)
+
+p = symplot(f, df, (x, -5, 5), show=False)
+p[0].line_color = 'red'
+p.show()</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section" id="w1-s-parciales">
+              <p class="section-title">Derivadas parciales</p>
+              <div class="grid2">
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Qué es una derivada parcial</h3>
+                  <p>Para funciones de varias variables, la derivada parcial mide cómo cambia f cuando varía solo una variable, manteniendo las demás constantes.</p>
+                  <pre>x, y = sp.symbols('x y')
+g = x**2 + y**3
+
+sp.diff(g, x)    # → 2x  (respecto a x)
+sp.diff(g, y)    # → 3y² (respecto a y)</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Segundas derivadas parciales</h3>
+                  <pre>sp.diff(g, x, 2)   # → 2   (∂²g/∂x²)
+sp.diff(g, y, 2)   # → 6y  (∂²g/∂y²)
+sp.diff(g, x, y)   # → 0   (mixta ∂²g/∂x∂y)</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Gradiente</h3>
+                  <p>Vector formado por todas las derivadas parciales de una función escalar.</p>
+                  <pre>f = x**2 * y**3
+
+grad_x = sp.diff(f, x)   # → 2xy³
+grad_y = sp.diff(f, y)   # → 3x²y²
+
+gradiente = [grad_x, grad_y]</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">sympy</span>
+                  <h3>Evaluar en un punto</h3>
+                  <pre>f = 8*x**2 + 2*y**2 - 4*x*y + 3*y - 4*x + 5
+
+df_x = sp.diff(f, x)
+df_y = sp.diff(f, y)
+
+df_x.subs([(x, 1), (y, -2)])
+df_y.subs([(x, 1), (y, -2)])</pre>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Matrices de derivadas</h3>
+                <table class="comp">
+                  <tr><th>Matriz</th><th>Qué contiene</th><th>Para qué sirve</th></tr>
+                  <tr><td>Jacobiana</td><td>Derivadas parciales de una función vectorial</td><td>Generalización de la derivada a varias variables</td></tr>
+                  <tr><td>Hessiana</td><td>Segundas derivadas parciales</td><td>Determinar máximos/mínimos en varias variables</td></tr>
+                </table>
+                <pre style="margin-top:0.75rem">f = sp.Matrix([sp.exp(x), sp.cos(y), sp.sin(z)])
+f.jacobian([x, y, z])   # matriz jacobiana</pre>
+              </div>
+            </div>
+
+            <div class="section" id="w1-s-analisis">
+              <p class="section-title">Análisis de funciones</p>
+              <div class="card">
+                <h3>Pasos para analizar una función</h3>
+                <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Asíntotas horizontales</strong><p>Límite cuando x → ±∞. Si da un número finito, hay asíntota horizontal en ese valor.</p></div></div>
+                <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Asíntotas verticales</strong><p>Igualar el denominador a cero. Las raíces son candidatas a asíntotas verticales.</p></div></div>
+                <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Puntos críticos</strong><p>Calcular f'(x) e igualar a cero. Las soluciones son candidatos a máximos o mínimos.</p></div></div>
+                <div class="step"><div class="step-num">4</div><div class="step-content"><strong>Clasificar máximos/mínimos</strong><p>Evaluar f''(x) en cada punto crítico. Si f'' > 0 → mínimo. Si f'' &lt; 0 → máximo.</p></div></div>
+              </div>
+              <div class="grid2">
+                <div class="card">
+                  <span class="tag tag-sp">asíntotas</span>
+                  <h3>Asíntotas en código</h3>
+                  <pre>f = 2*(x**2 - 9) / (x**2 - 4)
+
+sp.limit(f, x, sp.oo)    # asíntota horizontal
+
+den = x**2 - 4
+sp.solve(den, x)          # asíntotas verticales: x=±2</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">puntos críticos</span>
+                  <h3>Puntos críticos en código</h3>
+                  <pre>f1 = sp.diff(f, x)
+criticos = list(sp.solveset(f1, x))
+
+f2 = sp.diff(f, x, 2)
+for cr in criticos:
+    val = f2.subs(x, cr)
+    # val > 0 → mínimo
+    # val < 0 → máximo</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-np">gráfica completa</span>
+                  <h3>Representar con puntos críticos</h3>
+                  <pre>xx = np.linspace(-10, 10, 1000)
+yy = sp.lambdify(x, f)(xx)
+
+plt.plot(xx, yy)
+plt.plot(criticos_x, criticos_y, 'k*')
+plt.axhline(0, color='black')
+plt.grid(True)
+plt.show()</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sp">solveset</span>
+                  <h3>solveset vs solve</h3>
+                  <p>El notebook usa <code>sp.solveset</code> para encontrar raíces porque maneja mejor los dominios.</p>
+                  <pre>sp.solveset(f1, x)
+list(sp.solveset(f1, x, domain=sp.S.Reals))</pre>
+                  <div class="highlight"><p>Añadir <code>domain=sp.S.Reals</code> descarta soluciones complejas.</p></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section" id="w1-s-optimizacion">
+              <p class="section-title">Optimización</p>
+              <div class="card">
+                <h3>Pasos para resolver un problema de optimización</h3>
+                <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Identificar las variables</strong><p>¿Qué dimensiones o cantidades intervienen?</p></div></div>
+                <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Encontrar la función a optimizar</strong><p>Coste, área, volumen... expresarla en función de una sola variable usando las restricciones del problema.</p></div></div>
+                <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Calcular los puntos críticos</strong><p>Derivar e igualar a cero. Resolver para x.</p></div></div>
+                <div class="step"><div class="step-num">4</div><div class="step-content"><strong>Verificar que tiene sentido físico</strong><p>Descartar soluciones negativas o fuera del dominio del problema.</p></div></div>
+                <div class="step"><div class="step-num">5</div><div class="step-content"><strong>Confirmar máximo o mínimo</strong><p>Usar la segunda derivada o evaluar en los extremos del dominio.</p></div></div>
+              </div>
+              <div class="grid2">
+                <div class="card">
+                  <span class="tag tag-sp">simbólico</span>
+                  <h3>Optimización con sympy</h3>
+                  <pre>x = sp.symbols('x')
+coste = 60*x**2 + 800/x
+
+derivada = sp.diff(coste, x)
+criticos = list(sp.N(sp.solveset(
+    derivada, x, domain=sp.S.Reals)))
+
+criticos = [c for c in criticos if c >= 0]</pre>
+                </div>
+                <div class="card">
+                  <span class="tag tag-sc">scipy</span>
+                  <h3>Optimización con scipy</h3>
+                  <pre>from scipy import optimize
+
+def f(x):
+    return 60*x**2 + 800/x
+
+optimize.fmin(f, 1)           # desde x=1
+optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
+                  <div class="highlight"><p>scipy y sympy son incompatibles. Con scipy hay que usar funciones def estándar, no expresiones simbólicas.</p></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section" id="w1-s-quiz">
+              <p class="section-title">Repaso rápido</p>
+              <div class="card" id="quiz-card">
+                <div class="q-num" id="q-num">Pregunta 1 de 10</div>
+                <div class="q-text" id="q-text"></div>
+                <div id="q-options"></div>
+                <div class="quiz-feedback" id="q-feedback"></div>
+                <button class="quiz-next" id="q-next" onclick="nextQ()">Siguiente →</button>
+              </div>
+              <div id="quiz-result" style="display:none;">
+                <div class="card">
+                  <h3 id="result-title"></h3>
+                  <p id="result-text" style="margin-top:0.5rem;"></p>
+                  <button class="quiz-next show" onclick="restartQuiz()" style="margin-top:0.75rem;">Reiniciar repaso</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END WIDGET CONTENT -->
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  function w1show(id, btn) {
+    document.querySelectorAll('#w1 .section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#w1 .nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('w1-s-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleWidget(id) {
+    document.getElementById(id).classList.toggle('collapsed');
+  }
+
+  function scrollToWidget(id, el) {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.getElementById('widgetCount').textContent =
+    document.querySelectorAll('.widget-wrapper').length;
+
+  // QUIZ
+  const questions = [
+    { q: "¿Qué significa que los límites laterales de f en x=3 sean distintos?", opts: ["Que f es continua en x=3","Que el límite en x=3 no existe","Que f tiene un máximo en x=3","Que f es derivable en x=3"], ans: 1, exp: "Si lim(+) ≠ lim(−), el límite bilateral en ese punto no existe." },
+    { q: "¿Qué hace sp.limit(f, x, sp.oo)?", opts: ["Calcula el límite en x=0","Calcula el límite cuando x tiende a infinito","Evalúa f en infinito","Busca asíntotas verticales"], ans: 1, exp: "sp.oo representa infinito en sympy. Esto calcula el límite cuando x → +∞, útil para asíntotas horizontales." },
+    { q: "¿Qué son los límites iterados de f(x,y)?", opts: ["El límite de f cuando x e y tienden a la vez","Calcular primero el límite en y, luego en x (y viceversa)","La derivada parcial respecto a x e y","El gradiente de f"], ans: 1, exp: "Los límites iterados calculan primero un límite y luego el otro. El orden puede dar resultados distintos." },
+    { q: "¿Cuál es la definición de derivada como límite?", opts: ["lim h→0 f(x)/h","lim h→0 (f(x+h) - f(x)) / h","lim x→0 f(x+h)","lim h→∞ f(x+h) - f(x)"], ans: 1, exp: "La derivada en x es el límite cuando h→0 del cociente incremental (f(x+h)-f(x))/h." },
+    { q: "¿Qué indica f''(x) > 0 en un punto crítico?", opts: ["Hay un máximo relativo","Hay un mínimo relativo","La función es constante","El punto no es crítico"], ans: 1, exp: "Segunda derivada positiva → la función es cóncava hacia arriba → mínimo relativo." },
+    { q: "¿Para qué sirve sp.solveset(f1, x, domain=sp.S.Reals)?", opts: ["Para calcular la integral de f1","Para encontrar los ceros de f1 descartando soluciones complejas","Para evaluar f1 en todos los reales","Para calcular el límite de f1"], ans: 1, exp: "solveset con domain=sp.S.Reals encuentra las raíces de la ecuación f1=0 solo entre los números reales." },
+    { q: "¿Qué es el gradiente de una función escalar f(x,y)?", opts: ["La integral de f","El vector (∂f/∂x, ∂f/∂y) de derivadas parciales","La segunda derivada de f","La matriz hessiana de f"], ans: 1, exp: "El gradiente es el vector formado por todas las derivadas parciales. Apunta en la dirección de máximo crecimiento." },
+    { q: "¿Por qué scipy y sympy son incompatibles?", opts: ["Porque usan versiones distintas de Python","Porque scipy trabaja con números y sympy con expresiones simbólicas","Porque scipy no tiene funciones matemáticas","No son incompatibles, se pueden usar juntos siempre"], ans: 1, exp: "scipy necesita funciones numéricas que devuelvan números concretos. sympy trabaja con expresiones simbólicas, no números." },
+    { q: "¿Cómo se buscan las asíntotas verticales de f(x) = P(x)/Q(x)?", opts: ["Calculando el límite en infinito","Igualando P(x) = 0","Igualando Q(x) = 0 y resolviendo","Calculando f'(x) = 0"], ans: 2, exp: "Las asíntotas verticales aparecen donde el denominador Q(x) vale cero (y el numerador no se cancela)." },
+    { q: "En optimización, ¿por qué se descartan soluciones negativas?", opts: ["Porque sympy no las calcula bien","Porque en problemas físicos las dimensiones siempre son positivas","Porque la segunda derivada las descarta","Porque scipy las ignora"], ans: 1, exp: "En problemas reales (dimensiones de una caja, área de una ventana...) los valores negativos no tienen sentido físico." }
+  ];
+
+  let current = 0, score = 0, answered = false;
+  const order = [...Array(questions.length).keys()].sort(() => Math.random()-0.5);
+
+  function loadQ() {
+    const q = questions[order[current]];
+    document.getElementById('q-num').textContent = 'Pregunta ' + (current+1) + ' de ' + questions.length;
+    document.getElementById('q-text').textContent = q.q;
+    const opts = document.getElementById('q-options');
+    opts.innerHTML = '';
+    q.opts.forEach((o, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-btn';
+      btn.textContent = o;
+      btn.onclick = () => answer(i, q);
+      opts.appendChild(btn);
+    });
+    document.getElementById('q-feedback').className = 'quiz-feedback';
+    document.getElementById('q-next').className = 'quiz-next';
+    answered = false;
+  }
+
+  function answer(i, q) {
+    if (answered) return;
+    answered = true;
+    const btns = document.querySelectorAll('#w1-s-quiz .quiz-btn');
+    btns.forEach((b, idx) => {
+      if (idx === q.ans) b.classList.add('correct');
+      else b.classList.add('wrong');
+    });
+    const fb = document.getElementById('q-feedback');
+    if (i === q.ans) {
+      score++;
+      fb.style.background = 'rgba(74,240,160,0.08)';
+      fb.style.color = '#4af0a0';
+    } else {
+      fb.style.background = 'rgba(240,74,74,0.08)';
+      fb.style.color = '#f04a4a';
+    }
+    fb.textContent = q.exp;
+    fb.classList.add('show');
+    document.getElementById('q-next').classList.add('show');
+  }
+
+  function nextQ() {
+    current++;
+    if (current >= questions.length) {
+      document.getElementById('quiz-card').style.display = 'none';
+      document.getElementById('quiz-result').style.display = 'block';
+      const pct = Math.round(score/questions.length*100);
+      document.getElementById('result-title').textContent = score + ' / ' + questions.length + ' correctas (' + pct + '%)';
+      document.getElementById('result-text').textContent = pct >= 80 ? 'Muy bien, tienes el tema dominado.' : pct >= 50 ? 'Bien, repasa los apartados donde fallaste.' : 'Repasa los conceptos con más calma y vuelve a intentarlo.';
+    } else { loadQ(); }
+  }
+
+  function restartQuiz() {
+    current = 0; score = 0; answered = false;
+    order.sort(() => Math.random()-0.5);
+    document.getElementById('quiz-card').style.display = 'block';
+    document.getElementById('quiz-result').style.display = 'none';
+    loadQ();
+  }
+
+  loadQ();
+</script>
+</body>
+</html>

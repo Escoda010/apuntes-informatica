@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matemática Discreta</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e11;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --border: #2a2a35;
+    --accent: #c8f04a;
+    --accent2: #7c6af7;
+    --accent3: #f07a4a;
+    --text: #e8e8f0;
+    --text-dim: #8888a0;
+    --text-muted: #55556a;
+    --success: #4af0a0;
+    --warning: #f0c44a;
+    --info: #4ab0f0;
+
+    /* compat vars used inside widgets */
+    --color-background-primary: #16161a;
+    --color-background-secondary: #1e1e24;
+    --color-background-info: #1a2035;
+    --color-background-warning: #2a1f0e;
+    --color-background-success: #0e2a1a;
+    --color-border-secondary: #2a2a35;
+    --color-border-tertiary: #222228;
+    --color-border-info: #3a5080;
+    --color-text-primary: #e8e8f0;
+    --color-text-secondary: #8888a0;
+    --color-text-info: #4ab0f0;
+    --color-text-warning: #f0c44a;
+    --color-text-success: #4af0a0;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND GRID ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 3rem 2rem 2rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(14,14,17,0.98) 0%, transparent 100%);
+    backdrop-filter: blur(8px);
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .subject-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .subject-tag::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .widget-count {
+    font-size: 2.5rem;
+    font-family: 'DM Serif Display', serif;
+    color: var(--text-dim);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  /* ── MAIN ── */
+  main {
+    position: relative;
+    z-index: 10;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ── SIDEBAR NAV ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static !important; }
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    padding-left: 2px;
+  }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-item {
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-item:hover {
+    color: var(--text);
+    background: var(--surface);
+    border-color: var(--border);
+  }
+
+  .nav-item.active {
+    color: var(--accent);
+    background: rgba(200, 240, 74, 0.07);
+    border-color: rgba(200, 240, 74, 0.2);
+  }
+
+  .nav-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    min-width: 20px;
+  }
+
+  .nav-item.active .nav-num { color: var(--accent); opacity: 0.6; }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1rem 0;
+  }
+
+  .add-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    line-height: 1.5;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── WIDGET CONTAINER ── */
+  .widgets-area {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .widget-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .widget-wrapper:hover { border-color: #3a3a50; }
+
+  .widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .widget-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .widget-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .widget-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .widget-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    margin-top: 1px;
+  }
+
+  .widget-chevron {
+    color: var(--text-muted);
+    font-size: 12px;
+    transition: transform 0.2s;
+  }
+
+  .widget-wrapper.collapsed .widget-chevron { transform: rotate(-90deg); }
+
+  .widget-body {
+    padding: 1.25rem;
+    overflow: hidden;
+  }
+
+  .widget-wrapper.collapsed .widget-body { display: none; }
+
+  /* ── LECCIÓN BADGE ── */
+  .leccion-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .leccion-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;color:var(--text-muted);text-decoration:none;margin-bottom:1rem;transition:color 0.15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">← Volver a inicio</a>
+      <div class="subject-tag">Matemáticas — Grado</div>
+      <h1>Matemática <em>Discreta</em></h1>
+    </div>
+    <div class="header-meta">
+      <div class="widget-count" id="widgetCount">1</div>
+      widget(s)
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-label">Widgets</div>
+      <ul class="nav-list" id="navList">
+        <li class="nav-item active" data-target="w1" onclick="scrollTo('w1', this)">
+          <span class="nav-num">01</span>
+          Lección 1 — Chuleta
+        </li>
+      </ul>
+      <div class="sidebar-divider"></div>
+      <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
+    </aside>
+
+    <!-- WIDGETS -->
+    <div class="widgets-area" id="widgetsArea">
+
+      <!-- WIDGET 1 -->
+      <div class="widget-wrapper" id="w1">
+        <div class="widget-header" onclick="toggleWidget('w1')">
+          <div class="widget-header-left">
+            <div class="widget-icon" style="background:rgba(200,240,74,0.1)">🧮</div>
+            <div>
+              <div class="widget-title">Chuleta completa — Lección 1</div>
+              <div class="widget-subtitle">Bases · Euclides · Bézout · Diofántica · MCD/MCM</div>
+            </div>
+          </div>
+          <span class="widget-chevron">▼</span>
+        </div>
+        <div class="widget-body">
+          <div class="leccion-badge">
+            <span class="leccion-dot"></span>
+            LECCIÓN 01
+          </div>
+
+          <!-- ══ WIDGET CONTENT ══ -->
+          <style>
+            #w1 *{box-sizing:border-box}
+            #w1 .wrap{padding:0}
+            #w1 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+            #w1 .tab{padding:8px 16px;font-size:13px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:var(--surface2);color:var(--text-dim);transition:all .15s;font-weight:500;font-family:'DM Sans',sans-serif}
+            #w1 .tab.active{background:rgba(200,240,74,0.1);color:var(--accent);border-color:rgba(200,240,74,0.3)}
+            #w1 .section{display:none}#w1 .section.active{display:block}
+            #w1 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+            #w1 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;margin-bottom:8px;font-weight:500;font-family:'DM Mono',monospace;letter-spacing:0.05em}
+            #w1 .tag-paso{background:rgba(74,176,240,0.1);color:#4ab0f0;border:1px solid rgba(74,176,240,0.2)}
+            #w1 .tag-ojo{background:rgba(240,196,74,0.1);color:#f0c44a;border:1px solid rgba(240,196,74,0.2)}
+            #w1 .tag-formula{background:rgba(74,240,160,0.1);color:#4af0a0;border:1px solid rgba(74,240,160,0.2)}
+            #w1 h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;font-family:'DM Sans',sans-serif}
+            #w1 p,#w1 li{font-size:14px;color:var(--text-dim);line-height:1.6}
+            #w1 li{margin-left:1.2rem;margin-bottom:6px}
+            #w1 .formula{background:#0e0e11;border-left:3px solid rgba(200,240,74,0.4);border-radius:0 8px 8px 0;padding:10px 14px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);margin:8px 0;line-height:1.9}
+            #w1 .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+            #w1 .num{min-width:28px;height:28px;border-radius:50%;background:rgba(200,240,74,0.1);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;font-family:'DM Mono',monospace;border:1px solid rgba(200,240,74,0.2)}
+            #w1 .step-content{flex:1}
+            #w1 .step-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px}
+            #w1 .step-desc{font-size:13px;color:var(--text-dim);line-height:1.5}
+            #w1 .divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+            #w1 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+            @media(max-width:500px){#w1 .grid2{grid-template-columns:1fr}}
+            #w1 .warn{background:rgba(240,196,74,0.08);border:1px solid rgba(240,196,74,0.2);border-radius:8px;padding:8px 12px;font-size:13px;color:#f0c44a;margin-top:8px}
+          </style>
+
+          <div class="wrap">
+            <div class="tabs">
+              <button class="tab active" onclick="w1show('bases', event)">Bases</button>
+              <button class="tab" onclick="w1show('euclides', event)">Euclides</button>
+              <button class="tab" onclick="w1show('bezout', event)">Bézout</button>
+              <button class="tab" onclick="w1show('diofantica', event)">Diofántica</button>
+              <button class="tab" onclick="w1show('factores', event)">MCD/MCM</button>
+            </div>
+
+            <div id="w1-bases" class="section active">
+              <div class="card">
+                <span class="tag tag-paso">Decimal → base t</span>
+                <div class="step" style="margin-top:8px">
+                  <div class="num">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Divide el número entre t</div>
+                    <div class="step-desc">Anota el cociente y el resto</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Divide el cociente entre t</div>
+                    <div class="step-desc">Repite hasta que el cociente sea 0</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Lee los restos de abajo hacia arriba</div>
+                    <div class="step-desc">Ese es el número en base t</div>
+                  </div>
+                </div>
+                <div class="warn">⚠ Ojo: son los RESTOS, no los cocientes</div>
+                <hr class="divider">
+                <div class="formula">Ej: 137 en base 2<br>137 = 2·68 + 1  → r=1<br>68  = 2·34 + 0  → r=0<br>34  = 2·17 + 0  → r=0<br>17  = 2·8  + 1  → r=1<br>8   = 2·4  + 0  → r=0<br>4   = 2·2  + 0  → r=0<br>2   = 2·1  + 0  → r=0<br>1   = 2·0  + 1  → r=1<br><br>Resultado: (10001001)₂</div>
+              </div>
+              <div class="card">
+                <span class="tag tag-formula">Base t → decimal</span>
+                <div class="step" style="margin-top:8px">
+                  <div class="num">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Multiplica cada dígito por t elevado a su posición</div>
+                    <div class="step-desc">El dígito más a la derecha es la posición 0</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Suma todo</div>
+                  </div>
+                </div>
+                <div class="formula">Ej: (4165)₇<br>4·7³ + 1·7² + 6·7¹ + 5·7⁰<br>= 1372 + 49 + 42 + 5 = 1468</div>
+              </div>
+            </div>
+
+            <div id="w1-euclides" class="section">
+              <div class="card">
+                <span class="tag tag-paso">Algoritmo de Euclides — mcd(a, b)</span>
+                <div class="step" style="margin-top:8px">
+                  <div class="num">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Divide a entre b</div>
+                    <div class="step-desc">a = b·q + r &nbsp; con 0 ≤ r &lt; b</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Ahora divide b entre r</div>
+                    <div class="step-desc">El divisor pasa a ser el resto anterior</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Repite hasta que el resto sea 0</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">4</div>
+                  <div class="step-content">
+                    <div class="step-title">mcd = último resto distinto de 0</div>
+                  </div>
+                </div>
+                <div class="warn">⚠ El cociente siempre es entero — quédate con la parte entera</div>
+                <hr class="divider">
+                <div class="formula">Ej: mcd(56, 34)<br>56 = 34·1 + 22<br>34 = 22·1 + 12<br>22 = 12·1 + 10<br>12 = 10·1 + 2<br>10 = 2·5  + 0  ← resto 0<br><br>mcd(56, 34) = 2</div>
+              </div>
+            </div>
+
+            <div id="w1-bezout" class="section">
+              <div class="card">
+                <span class="tag tag-paso">Bézout — encontrar s, t tal que mcd = a·s + b·t</span>
+                <div class="step" style="margin-top:8px">
+                  <div class="num">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Localiza el mcd en la tabla de Euclides</div>
+                    <div class="step-desc">Está en el penúltimo paso (donde aparece como resto)</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Despeja el mcd</div>
+                    <div class="step-desc">mcd = número grande − número pequeño · cociente</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Sube un paso, sustituye el resto más pequeño</div>
+                    <div class="step-desc">Búscalo en el paso anterior de Euclides y sustitúyelo</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">4</div>
+                  <div class="step-content">
+                    <div class="step-title">Agrupa coeficientes y repite</div>
+                    <div class="step-desc">Hasta que solo queden a y b</div>
+                  </div>
+                </div>
+                <div class="warn">⚠ Siempre eliminas el número más pequeño — vas de abajo hacia arriba</div>
+                <hr class="divider">
+                <div class="formula">Ej: mcd(56,34) = 2, s y t = ?<br><br>2 = 12 − 10·1<br>  = 12 − (22 − 12·1) = 2·12 − 22<br>  = 2·(34−22·1) − 22 = 2·34 − 3·22<br>  = 2·34 − 3·(56−34·1)<br>  = 56·(−3) + 34·5<br><br>s = −3,  t = 5<br>Verificación: 56·(−3)+34·5 = −168+170 = 2 ✓</div>
+              </div>
+            </div>
+
+            <div id="w1-diofantica" class="section">
+              <div class="card">
+                <span class="tag tag-paso">Ecuación diofántica — ax + by = c</span>
+                <div class="step" style="margin-top:8px">
+                  <div class="num">1</div>
+                  <div class="step-content">
+                    <div class="step-title">¿Tiene solución?</div>
+                    <div class="step-desc">Calcula mcd(a,b). Si mcd divide a c → hay solución. Si no → no hay solución.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Calcula s, t con Bézout</div>
+                    <div class="step-desc">mcd = a·s + b·t</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Solución particular</div>
+                    <div class="step-desc">k = c / mcd &nbsp;→&nbsp; x₀ = k·s,  y₀ = k·t</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">4</div>
+                  <div class="step-content">
+                    <div class="step-title">Calcula α y β</div>
+                    <div class="step-desc">α = a / mcd &nbsp;&nbsp; β = b / mcd</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">5</div>
+                  <div class="step-content">
+                    <div class="step-title">Solución general</div>
+                    <div class="step-desc">x = x₀ + β·k &nbsp;&nbsp; y = y₀ − α·k &nbsp;&nbsp; k ∈ ℤ</div>
+                  </div>
+                </div>
+                <div class="warn">⚠ Ojo con los signos en la solución general: x suma β, y resta α</div>
+                <hr class="divider">
+                <div class="formula">Ej: 56x + 20y = 8<br><br>mcd(56,20) = 4,  4|8 → hay solución<br>Bézout: 56·(−1) + 20·3 = 4<br>k = 8/4 = 2 → x₀=−2, y₀=6<br>α=14, β=5<br><br>x = −2 + 5k<br>y =  6 − 14k   k ∈ ℤ</div>
+              </div>
+            </div>
+
+            <div id="w1-factores" class="section">
+              <div class="card">
+                <span class="tag tag-paso">MCD y MCM por factorización prima</span>
+                <div class="step" style="margin-top:8px">
+                  <div class="num">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Descompón cada número en factores primos</div>
+                    <div class="step-desc">Divide entre 2, 3, 5, 7... hasta llegar a 1</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">2</div>
+                  <div class="step-content">
+                    <div class="step-title">MCD → mínimo exponente de cada primo común</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">3</div>
+                  <div class="step-content">
+                    <div class="step-title">MCM → máximo exponente de todos los primos</div>
+                  </div>
+                </div>
+                <hr class="divider">
+                <div class="formula">Ej: a=180, b=126<br>180 = 2²·3²·5<br>126 = 2¹·3²·7<br><br>mcd = 2¹·3² = 18  (mínimos)<br>mcm = 2²·3²·5·7 = 1260  (máximos)<br><br>Verificación: 180·126 = 18·1260 = 22680 ✓</div>
+              </div>
+              <div class="card">
+                <span class="tag tag-formula">Fórmula clave</span>
+                <h3 style="margin-top:8px">a · b = mcd(a,b) · mcm(a,b)</h3>
+                <p style="margin-top:6px">Si conoces tres de los cuatro valores, puedes despejar el cuarto.</p>
+                <div class="formula">mcm = (a · b) / mcd<br>mcd = (a · b) / mcm<br>a   = (mcd · mcm) / b</div>
+              </div>
+            </div>
+          </div>
+          <!-- ══ END WIDGET CONTENT ══ -->
+
+        </div>
+      </div>
+      <!-- END WIDGET 1 -->
+
+    </div>
+  </div>
+</main>
+
+<script>
+  // Tab switching dentro del widget 1
+  function w1show(id, event) {
+    document.querySelectorAll('#w1 .section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#w1 .tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('w1-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Colapsar/expandir widget
+  function toggleWidget(id) {
+    document.getElementById(id).classList.toggle('collapsed');
+  }
+
+  // Nav scroll
+  function scrollTo(id, el) {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Actualizar contador
+  document.getElementById('widgetCount').textContent =
+    document.querySelectorAll('.widget-wrapper').length;
+</script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingeniería Informática — Apuntes</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e11;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --border: #2a2a35;
+    --accent: #c8f04a;
+    --text: #e8e8f0;
+    --text-dim: #8888a0;
+    --text-muted: #55556a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 4rem 2rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pretitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pretitle::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  main {
+    position: relative;
+    z-index: 10;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    padding-left: 2px;
+  }
+
+  .subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .subject-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .subject-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(255,255,255,0.02));
+    pointer-events: none;
+  }
+
+  .subject-card:hover {
+    border-color: #3a3a50;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .subject-card.active:hover {
+    border-color: rgba(200,240,74,0.4);
+  }
+
+  .subject-card.active {
+    border-color: rgba(200,240,74,0.2);
+    background: linear-gradient(135deg, rgba(200,240,74,0.05) 0%, var(--surface) 60%);
+  }
+
+  .subject-card.empty {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .subject-card.empty:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .subject-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .status-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .status-badge.has-content {
+    border-color: rgba(200,240,74,0.3);
+    color: var(--accent);
+    background: rgba(200,240,74,0.07);
+  }
+
+  .subject-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .subject-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .widget-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .arrow {
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  .subject-card:hover .arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+  }
+
+  .subject-card.empty .arrow { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="pretitle">Ingeniería Informática</div>
+  <h1>Mis <em>Apuntes</em><br>Interactivos</h1>
+  <p class="subtitle">Widgets por asignatura, organizados por temas. Haz clic en una asignatura para ver sus apuntes.</p>
+</header>
+
+<main>
+  <div class="section-label">Asignaturas</div>
+  <div class="subjects-grid">
+
+    <a href="matematica_discreta.html" class="subject-card active">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(200,240,74,0.1)">🧮</div>
+        <span class="status-badge has-content">1 widget</span>
+      </div>
+      <div>
+        <div class="subject-name">Matemática Discreta</div>
+        <div class="subject-desc">Aritmética modular, grafos, combinatoria y lógica proposicional.</div>
+      </div>
+      <div class="card-footer">
+        <span class="widget-pill">Lección 1 — Aritmética modular</span>
+        <span class="arrow">→</span>
+      </div>
+    </a>
+
+    <a href="matematicas_2.html" class="subject-card active">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(124,106,247,0.1)">∫</div>
+        <span class="status-badge has-content">1 widget</span>
+      </div>
+      <div>
+        <div class="subject-name">Matemáticas 2</div>
+        <div class="subject-desc">Derivadas, límites, optimización y análisis de funciones con Python.</div>
+      </div>
+      <div class="card-footer">
+        <span class="widget-pill">Tema 2 — Derivadas y límites</span>
+        <span class="arrow">→</span>
+      </div>
+    </a>
+
+    <div class="subject-card empty">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(240,122,74,0.1)">🗄️</div>
+        <span class="status-badge">Sin widgets</span>
+      </div>
+      <div>
+        <div class="subject-name">Fundamentos de Bases de Datos</div>
+        <div class="subject-desc">Modelo relacional, SQL, normalización y diseño de esquemas.</div>
+      </div>
+      <div class="card-footer">
+        <span class="widget-pill">Próximamente</span>
+        <span class="arrow">→</span>
+      </div>
+    </div>
+
+    <div class="subject-card empty">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(74,176,240,0.1)">💻</div>
+        <span class="status-badge">Sin widgets</span>
+      </div>
+      <div>
+        <div class="subject-name">Estructura de los Computadores</div>
+        <div class="subject-desc">Arquitectura, ensamblador, memoria y sistemas de entrada/salida.</div>
+      </div>
+      <div class="card-footer">
+        <span class="widget-pill">Próximamente</span>
+        <span class="arrow">→</span>
+      </div>
+    </div>
+
+    <div class="subject-card empty">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(74,240,160,0.1)">⌨️</div>
+        <span class="status-badge">Sin widgets</span>
+      </div>
+      <div>
+        <div class="subject-name">Programación 2</div>
+        <div class="subject-desc">Estructuras de datos, algoritmos, POO avanzada y complejidad.</div>
+      </div>
+      <div class="card-footer">
+        <span class="widget-pill">Próximamente</span>
+        <span class="arrow">→</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>
