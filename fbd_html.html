@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundamentos de Bases de Datos — Apuntes</title>
+<style>
+  :root {
+    --green: #1D9E75;
+    --bg: #f9f9f9;
+    --card-bg: #fff;
+    --border: #e4e4e4;
+    --border-light: #efefef;
+    --text: #1a1a1a;
+    --text-sec: #555;
+    --mono: 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; }
+
+  /* HEADER */
+  .site-header { border-bottom: 0.5px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; background: var(--card-bg); }
+  .back-btn { text-decoration: none; color: var(--text-sec); font-size: 13px; display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 8px; border: 0.5px solid var(--border); background: var(--bg); transition: background .15s; }
+  .back-btn:hover { background: var(--border-light); }
+  .breadcrumb { font-size: 13px; color: var(--text-sec); }
+  .breadcrumb span { color: var(--text); font-weight: 500; }
+
+  /* HERO */
+  .hero { padding: 2rem 2rem 1.5rem; border-bottom: 0.5px solid var(--border); background: var(--card-bg); }
+  .subject-icon { font-size: 2rem; margin-bottom: .5rem; }
+  .subject-name { font-size: 22px; font-weight: 600; margin-bottom: .25rem; }
+  .subject-desc { font-size: 14px; color: var(--text-sec); }
+
+  /* WIDGET LIST */
+  .widget-list { padding: 1.5rem 2rem; max-width: 820px; }
+  .widget-card { background: var(--card-bg); border: 0.5px solid var(--border); border-radius: 14px; margin-bottom: 1rem; overflow: hidden; }
+  .widget-header { padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+  .widget-header:hover { background: var(--bg); }
+  .widget-info { display: flex; flex-direction: column; gap: 2px; }
+  .widget-title { font-size: 15px; font-weight: 500; }
+  .widget-meta { font-size: 12px; color: var(--text-sec); }
+  .widget-tags { display: flex; gap: 6px; margin-top: 4px; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; }
+  .tag-t08 { background: #E6F1FB; color: #0C447C; }
+  .tag-t09 { background: #E1F5EE; color: #085041; }
+  .tag-t10 { background: #EEEDFE; color: #3C3489; }
+  .chevron { font-size: 12px; color: var(--text-sec); transition: transform .2s; }
+  .widget-card.open .chevron { transform: rotate(180deg); }
+  .widget-body { display: none; border-top: 0.5px solid var(--border-light); }
+  .widget-card.open .widget-body { display: block; }
+
+  /* INNER WIDGET */
+  .wrap { padding: 1rem 1.25rem; }
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  .nb { padding: 6px 14px; border-radius: 99px; border: 0.5px solid var(--border); background: var(--bg); cursor: pointer; font-size: 13px; color: var(--text-sec); transition: background .15s, border-color .15s; }
+  .nb.on, .nb:hover { background: var(--green); border-color: var(--green); color: white; }
+  .section { display: none; }
+  .section.on { display: block; }
+  .icard { background: var(--bg); border: 0.5px solid var(--border-light); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .icard-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: .5rem; }
+  .icard-body { font-size: 14px; color: var(--text-sec); line-height: 1.7; }
+  .code { background: #1e1e2e; border-radius: 8px; padding: .65rem 1rem; font-family: var(--mono); font-size: 13px; color: #cdd6f4; margin: .75rem 0; border: 0.5px solid var(--border); white-space: pre-wrap; }
+  .warn { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .65rem 1rem; font-size: 13px; color: #501313; margin: .75rem 0; }
+  .ok { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .65rem 0.9rem; font-size: 13px; color: #27500A; margin: .75rem 0; }
+  .rule { border-left: 3px solid var(--green); padding: .5rem 1rem; margin: .75rem 0; font-size: 14px; color: var(--text); }
+  .sec-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 1.25rem; }
+  .askbtn { margin-top: .75rem; padding: .4rem 1rem; border-radius: 8px; border: 0.5px solid var(--border); background: var(--card-bg); color: var(--text); cursor: pointer; font-size: 13px; }
+  .askbtn:hover { background: var(--border-light); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="back-btn" href="index.html">← Volver</a>
+  <span class="breadcrumb">Apuntes / <span>Fundamentos de Bases de Datos</span></span>
+</header>
+
+<div class="hero">
+  <div class="subject-icon">🗄️</div>
+  <div class="subject-name">Fundamentos de Bases de Datos</div>
+  <div class="subject-desc">Modelo relacional, SQL, normalización y diseño de esquemas.</div>
+</div>
+
+<div class="widget-list">
+
+  <!-- WIDGET 1: SQL T08-T10 -->
+  <div class="widget-card open" id="wcard-sql">
+    <div class="widget-header" onclick="toggleWidget('wcard-sql')">
+      <div class="widget-info">
+        <div class="widget-title">SQL — Agregado, Agrupación y Filtrado</div>
+        <div class="widget-meta">Funciones de agregado · GROUP BY · HAVING · Orden de ejecución</div>
+        <div class="widget-tags">
+          <span class="tag tag-t08">T08</span>
+          <span class="tag tag-t09">T09</span>
+          <span class="tag tag-t10">T10</span>
+        </div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+
+    <div class="widget-body">
+      <div class="wrap">
+
+        <div class="nav">
+          <button class="nb on" onclick="show('funciones',this)">Funciones de agregado</button>
+          <button class="nb" onclick="show('groupby',this)">GROUP BY</button>
+          <button class="nb" onclick="show('having',this)">HAVING</button>
+          <button class="nb" onclick="show('orden',this)">Orden de ejecución</button>
+          <button class="nb" onclick="show('trucos',this)">Trucos y errores</button>
+        </div>
+
+        <!-- FUNCIONES DE AGREGADO -->
+        <div id="funciones" class="section on">
+          <p class="sec-title">Funciones de agregado</p>
+
+          <div class="icard">
+            <span class="tag tag-t08">T08</span>
+            <div class="icard-title">¿Qué son?</div>
+            <div class="icard-body">Calculan un único valor a partir de varias filas. Se usan en el SELECT y a veces en el HAVING. No se pueden usar en el WHERE.</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t08">T08</span>
+            <div class="icard-title">COUNT</div>
+            <div class="icard-body">Cuenta filas. Hay tres variantes importantes:</div>
+            <div class="code">COUNT(*)          -- todas las filas, incluyendo NULLs
+COUNT(columna)    -- solo filas donde columna no es NULL
+COUNT(DISTINCT c) -- valores únicos, sin repetir</div>
+            <div class="icard-body">Ejemplo real:</div>
+            <div class="code">-- Cuántas provincias distintas tienen nuestros usuarios
+SELECT COUNT(DISTINCT provincia) FROM usuario;</div>
+            <div class="ok">Si hay 10 usuarios de Alicante → COUNT(DISTINCT provincia) cuenta Alicante solo 1 vez.</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t08">T08</span>
+            <div class="icard-title">SUM, AVG, MAX, MIN</div>
+            <div class="code">SUM(cantidad)     -- suma todos los valores
+AVG(pvp)          -- promedio
+MAX(pantalla)     -- valor máximo
+MIN(nacido)       -- valor mínimo (con fechas: la más antigua)</div>
+            <div class="icard-body">Ejemplo real:</div>
+            <div class="code">-- Total en euros de la cesta de un usuario
+SELECT SUM(pvp) total
+FROM cesta, articulo
+WHERE usuario='bmm@agwab.com' AND articulo=cod;</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t08">T08</span>
+            <div class="icard-title">ROUND</div>
+            <div class="icard-body">Redondea el resultado a N decimales.</div>
+            <div class="code">SELECT ROUND(AVG(DISTINCT pvp), 2) mediaventa FROM articulo;
+--                                  ^--- 2 decimales</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t08">T08</span>
+            <div class="icard-title">Subconsulta para usar MAX/MIN en WHERE</div>
+            <div class="icard-body">No puedes poner MAX() directamente en el WHERE. Se resuelve con una subconsulta:</div>
+            <div class="warn">WHERE pvp = MAX(pvp)  ← ERROR, esto no funciona</div>
+            <div class="ok">WHERE pvp = (SELECT MAX(pvp) FROM articulo)  ← correcto</div>
+            <div class="code">-- Artículo más caro
+SELECT cod, nombre, pvp
+FROM articulo
+WHERE pvp = (SELECT MAX(pvp) FROM articulo);</div>
+          </div>
+        </div>
+
+        <!-- GROUP BY -->
+        <div id="groupby" class="section">
+          <p class="sec-title">GROUP BY</p>
+
+          <div class="icard">
+            <span class="tag tag-t09">T09</span>
+            <div class="icard-title">¿Para qué sirve?</div>
+            <div class="icard-body">Agrupa filas que tienen el mismo valor en una columna, para que los agregados (COUNT, SUM...) se calculen por separado para cada grupo.</div>
+            <div class="rule">Cuando el enunciado dice "por cada X" o "de cada X" → GROUP BY X</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t09">T09</span>
+            <div class="icard-title">Ejemplo básico</div>
+            <div class="code">-- Cantidad de líneas por cada pedido
+SELECT numpedido, COUNT(*)
+FROM linped
+GROUP BY numpedido;</div>
+            <div class="icard-body">Cada fila de linped es una línea. GROUP BY numpedido junta las filas del mismo pedido y COUNT(*) las cuenta. Resultado: una fila por pedido.</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t09">T09</span>
+            <div class="icard-title">La regla de oro</div>
+            <div class="rule">Todo lo que aparece en el SELECT y NO es un agregado (COUNT, SUM...) DEBE estar en el GROUP BY.</div>
+            <div class="warn">SELECT marca, nombre, COUNT(*) FROM articulo GROUP BY marca;
+-- ERROR: 'nombre' no está en el GROUP BY</div>
+            <div class="ok">SELECT marca, nombre, COUNT(*) FROM articulo GROUP BY marca, nombre;
+-- Correcto</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t09">T09</span>
+            <div class="icard-title">GROUP BY con varias tablas</div>
+            <div class="icard-body">Cuando haces JOIN, el GROUP BY incluye todas las columnas del SELECT que no son agregados, aunque vengan de tablas distintas:</div>
+            <div class="code">-- Cámaras pedidas: código, nombre, marca, total unidades y promedio importe
+SELECT l.articulo, a.nombre, a.marca, SUM(cantidad), AVG(importe)
+FROM linped l, articulo a
+WHERE l.articulo = a.cod
+AND articulo IN (SELECT cod FROM camara)
+GROUP BY l.articulo, a.nombre, a.marca;</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t09">T09</span>
+            <div class="icard-title">COUNT(*) vs COUNT(columna) con GROUP BY</div>
+            <div class="code">-- Artículos pedidos incluyendo los que nunca se han pedido (salen con 0)
+SELECT cod, nombre, COUNT(numpedido) veces
+FROM articulo a
+LEFT JOIN linped l ON (a.cod = l.articulo)
+GROUP BY cod, nombre;</div>
+            <div class="icard-body">COUNT(numpedido) no cuenta NULLs → artículos sin pedidos salen con 0. Con COUNT(*) saldrían con 1.</div>
+          </div>
+        </div>
+
+        <!-- HAVING -->
+        <div id="having" class="section">
+          <p class="sec-title">HAVING</p>
+
+          <div class="icard">
+            <span class="tag tag-t10">T10</span>
+            <div class="icard-title">¿Para qué sirve?</div>
+            <div class="icard-body">Filtra grupos después de agrupar. Es al GROUP BY lo que el WHERE es al SELECT.</div>
+            <div class="rule">WHERE filtra filas individuales. HAVING filtra grupos. WHERE va antes del GROUP BY, HAVING va después.</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t10">T10</span>
+            <div class="icard-title">Ejemplo claro</div>
+            <div class="code">-- Marcas con más de 100 artículos, ordenadas por precio medio
+SELECT marca, AVG(pvp) promedio
+FROM articulo
+WHERE cod NOT IN (SELECT cod FROM pack)
+GROUP BY marca
+HAVING COUNT(*) > 100
+ORDER BY promedio DESC;</div>
+            <div class="icard-body">WHERE elimina los packs antes de agrupar. HAVING filtra solo las marcas con más de 100 artículos.</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t10">T10</span>
+            <div class="icard-title">HAVING con cálculos complejos</div>
+            <div class="code">-- Provincias con promedio de importe total > 1500€
+SELECT provincia, COUNT(DISTINCT p.numpedido) pedidos
+FROM usuario u, pedido p, linped l
+WHERE u.email=p.usuario AND p.numpedido=l.numpedido
+GROUP BY provincia
+HAVING AVG(importe*cantidad) >= 1500;</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t10">T10</span>
+            <div class="icard-title">Detectar duplicados con HAVING</div>
+            <div class="code">-- Apellidos que están repetidos
+SELECT apellidos FROM usuario
+GROUP BY apellidos
+HAVING COUNT(*) >= 2;
+
+-- Localidades en 2 o más provincias
+SELECT pueblo, COUNT(*) provincias
+FROM localidad
+GROUP BY pueblo
+HAVING COUNT(*) >= 2;</div>
+          </div>
+
+          <div class="icard">
+            <span class="tag tag-t10">T10</span>
+            <div class="icard-title">HAVING + WHERE + ORDER BY juntos</div>
+            <div class="code">-- Meses con más de 10 pedidos: base imponible, IVA y total
+SELECT YEAR(fecha) año, MONTH(fecha) mes,
+  ROUND(SUM(importe*cantidad)/1.21, 2) base,
+  ROUND(SUM(importe*cantidad)/1.21*0.21, 2) IVA,
+  ROUND(SUM(importe*cantidad), 2) total
+FROM pedido p JOIN linped l ON l.numpedido=p.numpedido
+GROUP BY YEAR(fecha), MONTH(fecha)
+HAVING COUNT(DISTINCT l.numpedido) > 10
+ORDER BY YEAR(fecha), MONTH(fecha);</div>
+          </div>
+        </div>
+
+        <!-- ORDEN DE EJECUCIÓN -->
+        <div id="orden" class="section">
+          <p class="sec-title">Orden de ejecución SQL</p>
+
+          <div class="icard">
+            <div class="icard-title">El orden en que SQL ejecuta cada cláusula</div>
+            <div class="code">1. FROM      → qué tablas (y los JOIN)
+2. WHERE     → filtra filas individuales
+3. GROUP BY  → agrupa las filas restantes
+4. HAVING    → filtra grupos
+5. SELECT    → calcula y muestra columnas
+6. ORDER BY  → ordena el resultado
+7. LIMIT     → recorta las filas mostradas</div>
+            <div class="rule">Por eso WHERE no puede usar COUNT o SUM: todavía no se han calculado. Eso va en HAVING.</div>
+          </div>
+
+          <div class="icard">
+            <div class="icard-title">Consecuencias prácticas</div>
+            <div class="warn">WHERE COUNT(*) > 2  ← ERROR: WHERE se ejecuta antes de GROUP BY</div>
+            <div class="ok">GROUP BY x HAVING COUNT(*) > 2  ← correcto</div>
+          </div>
+
+          <div class="icard">
+            <div class="icard-title">LIMIT — mostrar solo N filas</div>
+            <div class="code">-- Los 5 usuarios que más han gastado
+SELECT u.email, u.nombre
+FROM usuario u
+JOIN pedido p ON u.email=p.usuario
+JOIN linped l ON l.numpedido=p.numpedido
+GROUP BY u.email, u.nombre
+ORDER BY SUM(importe*cantidad) DESC
+LIMIT 5;</div>
+          </div>
+        </div>
+
+        <!-- TRUCOS -->
+        <div id="trucos" class="section">
+          <p class="sec-title">Trucos y errores comunes</p>
+
+          <div class="icard">
+            <div class="icard-title">COUNT(*) vs COUNT(DISTINCT numpedido)</div>
+            <div class="icard-body">Cuando haces JOIN con linped y quieres contar pedidos, un pedido puede tener varias líneas → aparece varias veces.</div>
+            <div class="code">-- MAL: cuenta líneas, no pedidos
+SELECT fecha, COUNT(*) FROM pedido p, linped l
+WHERE p.numpedido=l.numpedido GROUP BY fecha;
+
+-- BIEN: cuenta pedidos distintos
+SELECT fecha, COUNT(DISTINCT l.numpedido)
+FROM pedido p, linped l
+WHERE p.numpedido=l.numpedido GROUP BY fecha;</div>
+          </div>
+
+          <div class="icard">
+            <div class="icard-title">Cálculo del IVA incluido</div>
+            <div class="code">base imponible = importe*cantidad / 1.21
+IVA            = importe*cantidad / 1.21 * 0.21
+total          = importe*cantidad
+
+ROUND(SUM(importe*cantidad)/1.21, 2)      -- base
+ROUND(SUM(importe*cantidad)/1.21*0.21, 2) -- IVA</div>
+          </div>
+
+          <div class="icard">
+            <div class="icard-title">IS NULL para valores vacíos</div>
+            <div class="code">-- Artículos sin PVP
+SELECT COUNT(*) FROM articulo WHERE pvp IS NULL;</div>
+            <div class="warn">pvp = NULL no funciona. Siempre: pvp IS NULL</div>
+          </div>
+
+          <div class="icard">
+            <div class="icard-title">STD — desviación estándar</div>
+            <div class="code">-- Media y desviación estándar de cantidad pedida por provincia
+SELECT p.codp, p.nombre, AVG(cantidad) media, STD(cantidad) desvest
+FROM provincia p, usuario u, pedido pd, linped l
+WHERE p.codp=u.provincia AND u.email=pd.usuario
+AND pd.numpedido=l.numpedido
+GROUP BY p.codp, p.nombre;</div>
+          </div>
+        </div>
+
+      </div><!-- /wrap -->
+    </div><!-- /widget-body -->
+  </div><!-- /widget-card -->
+
+</div><!-- /widget-list -->
+
+<script>
+function toggleWidget(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+</script>
+</body>
+</html>
