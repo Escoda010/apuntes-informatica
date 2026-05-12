@@ -315,44 +315,82 @@
 
   /* ── WIDGET CONTENT STYLES ── */
   #w1 .container { padding: 0; font-family: 'DM Sans', sans-serif; }
+  #w2 .container { padding: 0; font-family: 'DM Sans', sans-serif; }
   #w1 .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  #w2 .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
   #w1 .nav-btn { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-dim); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  #w2 .nav-btn { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-dim); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
   #w1 .nav-btn:hover { background: var(--surface); color: var(--text); }
+  #w2 .nav-btn:hover { background: var(--surface); color: var(--text); }
   #w1 .nav-btn.active { background: rgba(var(--accent-rgb), 0.1); color: var(--accent); border-color: rgba(var(--accent-rgb), 0.3); font-weight: 500; }
+  #w2 .nav-btn.active { background: rgba(var(--accent-rgb), 0.1); color: var(--accent); border-color: rgba(var(--accent-rgb), 0.3); font-weight: 500; }
   #w1 .section { display: none; }
+  #w2 .section { display: none; }
   #w1 .section.active { display: block; }
+  #w2 .section.active { display: block; }
   #w1 .card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  #w2 .card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
   #w1 .card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 0.75rem; }
+  #w2 .card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 0.75rem; }
   #w1 .card p { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin-bottom: 0.5rem; }
+  #w2 .card p { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin-bottom: 0.5rem; }
   #w1 .card p:last-child { margin-bottom: 0; }
+  #w2 .card p:last-child { margin-bottom: 0; }
   #w1 pre { background: #0a0a0d; border-radius: 8px; padding: 0.75rem 1rem; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); overflow-x: auto; margin: 0.5rem 0; line-height: 1.6; border: 1px solid var(--border); }
   #w1 .tag { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 500; margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; }
+  #w2 .tag { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 500; margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; }
   #w1 .tag-sp { background: rgba(124,106,247,0.1); color: #9d8fff; border: 1px solid rgba(124,106,247,0.2); }
+  #w2 .tag-sp { background: rgba(124,106,247,0.1); color: #9d8fff; border: 1px solid rgba(124,106,247,0.2); }
   #w1 .tag-np { background: rgba(74,176,240,0.1); color: #4ab0f0; border: 1px solid rgba(74,176,240,0.2); }
+  #w2 .tag-np { background: rgba(74,176,240,0.1); color: #4ab0f0; border: 1px solid rgba(74,176,240,0.2); }
   #w1 .tag-sc { background: rgba(240,196,74,0.1); color: #f0c44a; border: 1px solid rgba(240,196,74,0.2); }
+  #w2 .tag-sc { background: rgba(240,196,74,0.1); color: #f0c44a; border: 1px solid rgba(240,196,74,0.2); }
   #w1 .tag-py { background: rgba(74,240,160,0.1); color: #4af0a0; border: 1px solid rgba(74,240,160,0.2); }
+  #w2 .tag-py { background: rgba(74,240,160,0.1); color: #4af0a0; border: 1px solid rgba(74,240,160,0.2); }
   #w1 .tag-plt { background: rgba(200,240,74,0.1); color: #c8f04a; border: 1px solid rgba(200,240,74,0.2); }
+  #w2 .tag-plt { background: rgba(200,240,74,0.1); color: #c8f04a; border: 1px solid rgba(200,240,74,0.2); }
   #w1 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  #w2 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
   #w1 .highlight { border-left: 2px solid rgba(var(--accent-rgb), 0.5); padding-left: 0.75rem; margin: 0.5rem 0; }
+  #w2 .highlight { border-left: 2px solid rgba(var(--accent-rgb), 0.5); padding-left: 0.75rem; margin: 0.5rem 0; }
   #w1 .highlight p { color: var(--text-dim); font-size: 13px; }
+  #w2 .highlight p { color: var(--text-dim); font-size: 13px; }
   #w1 .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 1rem; font-family: 'DM Serif Display', serif; }
+  #w2 .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 1rem; font-family: 'DM Serif Display', serif; }
   #w1 .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.5rem; }
+  #w2 .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.5rem; }
   #w1 .pill { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface); }
+  #w2 .pill { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface); }
   #w1 .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 0.75rem; }
+  #w2 .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 0.75rem; }
   #w1 .step-num { min-width: 24px; height: 24px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.1); border: 1px solid rgba(var(--accent-rgb), 0.2); font-size: 12px; font-weight: 600; color: var(--accent); display: flex; align-items: center; justify-content: center; margin-top: 2px; font-family: 'DM Mono', monospace; }
+  #w2 .step-num { min-width: 24px; height: 24px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.1); border: 1px solid rgba(var(--accent-rgb), 0.2); font-size: 12px; font-weight: 600; color: var(--accent); display: flex; align-items: center; justify-content: center; margin-top: 2px; font-family: 'DM Mono', monospace; }
   #w1 .step-content { flex: 1; }
+  #w2 .step-content { flex: 1; }
   #w1 .step-content p { font-size: 13px; color: var(--text-dim); margin: 0; line-height: 1.5; }
+  #w2 .step-content p { font-size: 13px; color: var(--text-dim); margin: 0; line-height: 1.5; }
   #w1 .step-content strong { font-weight: 600; color: var(--text); font-size: 13px; }
+  #w2 .step-content strong { font-weight: 600; color: var(--text); font-size: 13px; }
   #w1 .quiz-btn { font-size: 13px; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; width: 100%; text-align: left; margin-bottom: 6px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  #w2 .quiz-btn { font-size: 13px; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; width: 100%; text-align: left; margin-bottom: 6px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
   #w1 .quiz-btn:hover { background: var(--surface); }
+  #w2 .quiz-btn:hover { background: var(--surface); }
   #w1 .quiz-btn.correct { background: rgba(74,240,160,0.1); color: #4af0a0; border-color: rgba(74,240,160,0.3); }
+  #w2 .quiz-btn.correct { background: rgba(74,240,160,0.1); color: #4af0a0; border-color: rgba(74,240,160,0.3); }
   #w1 .quiz-btn.wrong { background: rgba(240,74,74,0.1); color: #f04a4a; border-color: rgba(240,74,74,0.3); }
+  #w2 .quiz-btn.wrong { background: rgba(240,74,74,0.1); color: #f04a4a; border-color: rgba(240,74,74,0.3); }
   #w1 .quiz-feedback { font-size: 13px; margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 8px; display: none; }
+  #w2 .quiz-feedback { font-size: 13px; margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 8px; display: none; }
   #w1 .quiz-feedback.show { display: block; }
+  #w2 .quiz-feedback.show { display: block; }
   #w1 .quiz-next { font-size: 13px; padding: 6px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; margin-top: 0.75rem; display: none; font-family: 'DM Sans', sans-serif; }
+  #w2 .quiz-next { font-size: 13px; padding: 6px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; margin-top: 0.75rem; display: none; font-family: 'DM Sans', sans-serif; }
   #w1 .quiz-next.show { display: inline-block; }
+  #w2 .quiz-next.show { display: inline-block; }
   #w1 .q-num { font-size: 12px; color: var(--text-muted); margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; }
+  #w2 .q-num { font-size: 12px; color: var(--text-muted); margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; }
   #w1 .q-text { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 0.75rem; line-height: 1.5; }
+  #w2 .q-text { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 0.75rem; line-height: 1.5; }
   #w1 table.comp { width: 100%; font-size: 13px; border-collapse: collapse; }
   #w1 table.comp th { text-align: left; color: var(--text-muted); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--border); }
   #w1 table.comp td { padding: 6px 8px; color: var(--text); border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -384,6 +422,10 @@
       <ul class="nav-list" id="navList">
         <li class="nav-item active" onclick="scrollToWidget('w1', this)">
           <span class="nav-num">01</span>
+          Tema 1 — Python y librerías
+        </li>
+        <li class="nav-item" onclick="scrollToWidget('w2', this)">
+          <span class="nav-num">02</span>
           Tema 2 — Derivadas
         </li>
       </ul>
@@ -393,9 +435,355 @@
 
     <div class="widgets-area" id="widgetsArea">
 
-      <!-- WIDGET 1 -->
+      <!-- WIDGET 1 — TEMA 1 -->
       <div class="widget-wrapper" id="w1">
         <div class="widget-header" onclick="toggleWidget('w1')">
+          <div class="widget-header-left">
+            <div class="widget-icon" style="background:rgba(124,106,247,0.1)">🐍</div>
+            <div>
+              <div class="widget-title">Python y librerías — Tema 1</div>
+              <div class="widget-subtitle">numpy · sympy · scipy · matplotlib · estructuras · funciones</div>
+            </div>
+          </div>
+          <span class="widget-chevron">▼</span>
+        </div>
+        <div class="widget-body">
+          <div class="leccion-badge">
+            <span class="leccion-dot"></span>
+            TEMA 01
+          </div>
+
+          <div class="container">
+            <nav class="nav">
+              <button class="nav-btn active" onclick="t1show('librerias', this)">Librerías</button>
+              <button class="nav-btn" onclick="t1show('variables', this)">Variables y tipos</button>
+              <button class="nav-btn" onclick="t1show('estructuras', this)">Estructuras</button>
+              <button class="nav-btn" onclick="t1show('flujo', this)">Control de flujo</button>
+              <button class="nav-btn" onclick="t1show('funciones', this)">Funciones</button>
+              <button class="nav-btn" onclick="t1show('numpy', this)">numpy</button>
+              <button class="nav-btn" onclick="t1show('sympy', this)">sympy</button>
+              <button class="nav-btn" onclick="t1show('scipy', this)">scipy</button>
+              <button class="nav-btn" onclick="t1show('matplotlib', this)">matplotlib</button>
+              <button class="nav-btn" onclick="t1show('quiz1', this)">Repaso</button>
+            </nav>
+
+            <div class="section active" id="t1-s-librerias">
+              <p class="section-title">Librerías principales</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-np">numpy</span><h3>numpy — mundo numérico</h3><p>Para vectores, arrays y operaciones numéricas rápidas.</p><pre>import numpy as np</pre><div class="pill-row"><span class="pill">np.linspace</span><span class="pill">np.sin / np.cos</span><span class="pill">np.sqrt</span><span class="pill">np.abs</span><span class="pill">np.pi</span></div></div>
+                <div class="card"><span class="tag tag-sp">sympy</span><h3>sympy — mundo simbólico</h3><p>Para derivadas, integrales y cálculo exacto.</p><pre>import sympy as sp</pre><div class="pill-row"><span class="pill">sp.diff</span><span class="pill">sp.integrate</span><span class="pill">sp.limit</span><span class="pill">sp.lambdify</span><span class="pill">sp.symbols</span></div></div>
+                <div class="card"><span class="tag tag-plt">matplotlib</span><h3>matplotlib — gráficas</h3><p>Para representar funciones y resultados numéricos.</p><pre>import matplotlib.pyplot as plt</pre><div class="pill-row"><span class="pill">plt.plot</span><span class="pill">plt.show</span><span class="pill">plt.xlabel</span><span class="pill">plt.legend</span></div></div>
+                <div class="card"><span class="tag tag-sc">scipy</span><h3>scipy — métodos numéricos</h3><p>Para buscar raíces y resolver problemas numéricos.</p><pre>from scipy import optimize</pre><div class="pill-row"><span class="pill">optimize.newton</span><span class="pill">optimize.fmin</span></div></div>
+              </div>
+              <div class="card">
+                <h3>Regla clave: numpy vs sympy</h3>
+                <table class="comp">
+                  <tr><th></th><th>numpy (np)</th><th>sympy (sp)</th></tr>
+                  <tr><td>Trabaja con</td><td>Números concretos, arrays</td><td>Expresiones matemáticas exactas</td></tr>
+                  <tr><td>Resultado de cos(x)</td><td>Un número (ej. 0.5403)</td><td>La expresión cos(x)</td></tr>
+                  <tr><td>Úsalo con</td><td>scipy, matplotlib, arrays</td><td>Derivadas, integrales, límites</td></tr>
+                  <tr><td>Convertir entre ellos</td><td colspan="2">sp.lambdify(x, expr, "numpy")</td></tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="section" id="t1-s-variables">
+              <p class="section-title">Variables y tipos básicos</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-py">Python</span><h3>Tipos numéricos</h3><pre>a = 3        # int (entero)
+b = 2.5      # float (real)
+c = True     # bool</pre><p>Python asigna el tipo automáticamente.</p></div>
+                <div class="card"><span class="tag tag-py">Python</span><h3>Operadores</h3><pre>x + y   # suma
+x - y   # resta
+x * y   # producto
+x / y   # división
+x ** y  # potencia
+x // y  # división entera
+x % y   # resto</pre></div>
+                <div class="card"><span class="tag tag-py">Python</span><h3>f-strings — formatear salida</h3><pre>x = 1.41421356
+print(f"x = {x:.4f}")   # 4 decimales
+print(f"x = {x:.2e}")   # notación cient.</pre><div class="highlight"><p>Formatos: <code>.2f</code> → 2 decimales · <code>.6f</code> → 6 decimales · <code>.2e</code> → científica</p></div></div>
+                <div class="card"><span class="tag tag-py">Python</span><h3>Booleanos y comparaciones</h3><pre>x > 0           # True/False
+x == 0          # igual
+x != 0          # distinto
+x > 0 and x &lt; 2
+x &lt; 0 or x > 1
+not (x == 0)</pre></div>
+              </div>
+            </div>
+
+            <div class="section" id="t1-s-estructuras">
+              <p class="section-title">Estructuras de datos</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-py">lista</span><h3>Listas — colección ordenada</h3><pre>x = [0, 0.5, 1.0, 1.5, 2.0]
+x[0]      # primer elemento: 0
+x[-1]     # último: 2.0
+x[1:3]    # sublista: [0.5, 1.0]
+len(x)    # longitud: 5
+x.append(2.5)  # añadir elemento</pre><p>Uso principal: tablas de valores, sucesiones de aproximaciones.</p></div>
+                <div class="card"><span class="tag tag-py">tupla</span><h3>Tuplas — inmutables</h3><pre>intervalo = (-1, 1)
+intervalo[0]   # -1</pre><p>Uso principal: intervalos y parámetros fijos que no deben cambiar.</p></div>
+                <div class="card"><span class="tag tag-py">dict</span><h3>Diccionarios — resultados</h3><pre>resultado = {
+    "raiz": 1.4142,
+    "error": 1e-6,
+    "iteraciones": 10
+}
+resultado["raiz"]   # acceso por clave</pre><p>Uso principal: devolver resultados de métodos numéricos.</p></div>
+                <div class="card"><span class="tag tag-py">list comp</span><h3>List comprehensions</h3><pre># equivalente a un bucle for
+y = [f(xi) for xi in x]
+
+# con condición
+pares = [i for i in range(21) if i % 2 == 0]
+
+# cuadrados de pares
+cuad = [i**2 for i in range(21) if i % 2 == 0]</pre></div>
+              </div>
+            </div>
+
+            <div class="section" id="t1-s-flujo">
+              <p class="section-title">Control de flujo</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-py">if / elif / else</span><h3>Condicionales</h3><pre>if x > 0:
+    print("positivo")
+elif x &lt; 0:
+    print("negativo")
+else:
+    print("cero")</pre></div>
+                <div class="card"><span class="tag tag-py">for</span><h3>Bucle for</h3><pre># recorrer lista
+for xi in x:
+    print(xi)
+
+# número fijo de iteraciones
+for k in range(10):
+    print(k)
+
+# acumular resultados
+y = []
+for xi in x:
+    y.append(f(xi))</pre></div>
+                <div class="card"><span class="tag tag-py">while</span><h3>Bucle while — criterio de parada</h3><pre>error = 1.0
+tol = 1e-10
+n = 0
+
+while error > tol:
+    x_new = 0.5 * (x + 2/x)
+    error = abs(x_new - x)
+    x = x_new
+    n += 1</pre><div class="highlight"><p>Añade <code>and n &lt; max_iter</code> para evitar bucles infinitos.</p></div></div>
+                <div class="card"><span class="tag tag-py">factorial</span><h3>Ejemplo: factorial con validación</h3><pre>def factorial(n):
+    if n &lt; 0:
+        print("Error: n debe ser >= 0")
+        return          # devuelve None
+
+    resultado = 1
+    for i in range(2, n + 1):
+        resultado *= i
+    return resultado</pre></div>
+              </div>
+            </div>
+
+            <div class="section" id="t1-s-funciones">
+              <p class="section-title">Definición de funciones</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-py">def</span><h3>Función con def</h3><pre>def f(x):
+    return x**2 - 2
+
+f(2)      # → 2
+f(1.5)    # → 0.25</pre><p>Uso principal: funciones numéricas para evaluar, graficar o pasar a métodos numéricos.</p></div>
+                <div class="card"><span class="tag tag-py">lambda</span><h3>Función lambda</h3><pre>g = lambda x: x**2 - 2
+g(2)   # → 2
+
+# uso directo como argumento
+optimize.newton(lambda x: np.cos(x) - x, 0.5)</pre><p>Para funciones simples de una línea, especialmente como argumentos de scipy.</p></div>
+                <div class="card"><span class="tag tag-sp">sympy</span><h3>Función simbólica</h3><pre>x = sp.symbols('x')
+f_sym = x**3 - 2*x
+
+# derivada
+df_sym = sp.diff(f_sym, x)
+
+# integral (primitiva)
+F = sp.integrate(f_sym, x)
+
+# evaluar en un punto
+f_sym.subs(x, 2)      # exacto
+f_sym.subs(x, 2).evalf()  # decimal</pre></div>
+                <div class="card"><span class="tag tag-sp">lambdify</span><h3>Simbólico → numérico</h3><pre>x = sp.symbols('x')
+f_sym = x**3 - 2*x
+
+# convertir a función numpy
+f_num = sp.lambdify(x, f_sym, "numpy")
+
+# ahora funciona con arrays
+x_vals = np.linspace(-2, 2, 5)
+y = f_num(x_vals)</pre><div class="highlight"><p>Usa siempre <code>"numpy"</code> (no <code>"math"</code>) para poder evaluar en arrays.</p></div></div>
+              </div>
+            </div>
+
+            <div class="section" id="t1-s-numpy">
+              <p class="section-title">numpy</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-np">linspace</span><h3>Discretización de intervalos</h3><pre>x = np.linspace(a, b, n)
+# n puntos equiespaciados entre a y b
+# incluyendo ambos extremos
+
+x = np.linspace(0, 2*np.pi, 200)</pre><p>Es la función más usada de numpy en la asignatura.</p></div>
+                <div class="card"><span class="tag tag-np">funciones</span><h3>Funciones matemáticas</h3><pre>np.sin(x)    np.cos(x)
+np.exp(x)    np.log(x)
+np.sqrt(x)   np.abs(x)
+np.pi        np.e</pre><div class="highlight"><p>Usar siempre las de numpy con arrays, nunca las de <code>math</code>.</p></div></div>
+                <div class="card"><span class="tag tag-np">array</span><h3>Arrays y operaciones</h3><pre>x = np.array([0, 0.5, 1.0, 1.5])
+
+# operaciones elemento a elemento
+y = x**2 - 2
+z = np.sin(x)
+
+# estadísticas
+np.mean(y)
+np.max(y)</pre></div>
+                <div class="card"><span class="tag tag-np">método babilónico</span><h3>Ejemplo: √2 con while</h3><pre>x = 1.0
+tol = 1e-12
+while True:
+    x_new = 0.5 * (x + 2/x)
+    if abs(x_new - x) &lt; tol:
+        break
+    x = x_new
+sqrt2 = x_new</pre></div>
+              </div>
+            </div>
+
+            <div class="section" id="t1-s-sympy">
+              <p class="section-title">sympy — cálculo simbólico</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-sp">símbolos</span><h3>Declarar variables simbólicas</h3><pre>x = sp.symbols('x')
+
+# o varias a la vez
+x, y = sp.symbols('x y')
+
+# o usando sympy.abc
+from sympy.abc import x, y, h</pre><div class="highlight"><p>Siempre primero. Sin esto, Python no sabe que x es simbólica.</p></div></div>
+                <div class="card"><span class="tag tag-sp">derivada</span><h3>Derivadas</h3><pre># primera derivada
+sp.diff(f_sym, x)
+
+# segunda derivada
+sp.diff(f_sym, x, 2)
+
+# derivada parcial respecto a y
+sp.diff(g, y)</pre></div>
+                <div class="card"><span class="tag tag-sp">integral</span><h3>Integrales</h3><pre># primitiva (indefinida)
+sp.integrate(f_sym, x)
+
+# integral definida
+sp.integrate(f_sym, (x, 0, 1))</pre></div>
+                <div class="card"><span class="tag tag-sp">límites</span><h3>Límites</h3><pre># límite en un punto
+sp.limit(f, x, 3)
+
+# límite lateral derecho
+sp.limit(f, x, 3, '+')
+
+# límite lateral izquierdo
+sp.limit(f, x, 3, '-')
+
+# límite en infinito
+sp.limit(f, x, sp.oo)</pre></div>
+              </div>
+            </div>
+
+            <div class="section" id="t1-s-scipy">
+              <p class="section-title">scipy — métodos numéricos</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-sc">newton</span><h3>Buscar raíces — optimize.newton</h3><pre>from scipy import optimize
+
+# raíz de cos(x) - x cerca de 0.5
+root = optimize.newton(
+    lambda x: np.cos(x) - x,
+    x0=0.5
+)</pre><p>Le pasas la función y un punto inicial. Devuelve el valor de x donde la función vale 0.</p><div class="highlight"><p>Usa <code>np.cos</code>, no <code>sp.cos</code> — scipy trabaja en el mundo numérico.</p></div></div>
+                <div class="card"><span class="tag tag-sc">fmin</span><h3>Buscar mínimos — optimize.fmin</h3><pre>def f(x):
+    return 60*x**2 + 800/x
+
+# mínimo cerca de x=1
+optimize.fmin(f, 1)
+
+# mínimo en intervalo [-1, 2]
+optimize.fminbound(f, -1, 2)</pre><p>Para problemas de optimización donde buscas el mínimo de una función.</p></div>
+              </div>
+              <div class="card"><h3>Ejercicio 8 — babilónico vs newton</h3><pre>x = 1.0
+tol = 1e-10
+while True:
+    x_new = 0.5 * (x + 2/x)
+    if abs(x_new - x) &lt; tol:
+        break
+    x = x_new
+root_bab = x_new
+
+root_newton = optimize.newton(lambda x: x**2 - 2, x0=1.0)
+
+diff = abs(root_bab - root_newton)  # ≈ 1e-16</pre><div class="highlight"><p>Ambos métodos son equivalentes. Newton aplicado a x²−2 es exactamente la fórmula babilónica.</p></div></div>
+            </div>
+
+            <div class="section" id="t1-s-matplotlib">
+              <p class="section-title">matplotlib — visualización</p>
+              <div class="grid2">
+                <div class="card"><span class="tag tag-plt">básico</span><h3>Gráfica simple</h3><pre>x = np.linspace(-2, 2, 200)
+y = x**2 - 1
+
+plt.plot(x, y)
+plt.xlabel("x")
+plt.ylabel("f(x)")
+plt.title("Función cuadrática")
+plt.grid(True)
+plt.show()</pre></div>
+                <div class="card"><span class="tag tag-plt">varias curvas</span><h3>Varias curvas + leyenda</h3><pre>plt.plot(x, y1, label="f(x)")
+plt.plot(x, y2, label="g(x)")
+plt.legend()
+plt.grid(True)
+plt.show()</pre></div>
+                <div class="card"><span class="tag tag-plt">auxiliares</span><h3>Líneas y puntos auxiliares</h3><pre># línea horizontal en y=0
+plt.axhline(0, color="black")
+
+# línea vertical en x=1
+plt.axvline(1, color="gray")
+
+# marcar un punto
+plt.plot(x0, y0, 'ro')   # punto rojo
+plt.plot(x0, y0, 'k*')   # estrella negra</pre></div>
+                <div class="card"><span class="tag tag-plt">sympy</span><h3>Gráfica con sympy</h3><pre>from sympy.plotting import plot as symplot
+
+x = sp.symbols('x')
+p = symplot(x**2, (x, -5, 5))
+
+# dos curvas
+p = symplot(x**2, df, (x,-5,5), show=False)
+p[0].line_color = 'red'
+p.show()</pre></div>
+              </div>
+            </div>
+
+            <div class="section" id="t1-s-quiz1">
+              <p class="section-title">Repaso rápido</p>
+              <div class="card" id="quiz1-card">
+                <div class="q-num" id="q1-num">Pregunta 1 de 10</div>
+                <div class="q-text" id="q1-text"></div>
+                <div id="q1-options"></div>
+                <div class="quiz-feedback" id="q1-feedback"></div>
+                <button class="quiz-next" id="q1-next" onclick="nextQ1()">Siguiente →</button>
+              </div>
+              <div id="quiz1-result" style="display:none;">
+                <div class="card">
+                  <h3 id="result1-title"></h3>
+                  <p id="result1-text" style="margin-top:0.5rem;"></p>
+                  <button class="quiz-next show" onclick="restartQuiz1()" style="margin-top:0.75rem;">Reiniciar repaso</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END WIDGET 1 -->
+
+      <!-- WIDGET 2 — TEMA 2 -->
+      <div class="widget-wrapper" id="w2">
+        <div class="widget-header" onclick="toggleWidget('w2')">
           <div class="widget-header-left">
             <div class="widget-icon" style="background:rgba(124,106,247,0.1)">∫</div>
             <div>
@@ -414,15 +802,15 @@
           <!-- WIDGET CONTENT -->
           <div class="container">
             <nav class="nav">
-              <button class="nav-btn active" onclick="w1show('limites', this)">Límites</button>
-              <button class="nav-btn" onclick="w1show('derivada', this)">Derivada</button>
-              <button class="nav-btn" onclick="w1show('parciales', this)">Derivadas parciales</button>
-              <button class="nav-btn" onclick="w1show('analisis', this)">Análisis de funciones</button>
-              <button class="nav-btn" onclick="w1show('optimizacion', this)">Optimización</button>
-              <button class="nav-btn" onclick="w1show('quiz', this)">Repaso</button>
+              <button class="nav-btn active" onclick="w2show('limites', this)">Límites</button>
+              <button class="nav-btn" onclick="w2show('derivada', this)">Derivada</button>
+              <button class="nav-btn" onclick="w2show('parciales', this)">Derivadas parciales</button>
+              <button class="nav-btn" onclick="w2show('analisis', this)">Análisis de funciones</button>
+              <button class="nav-btn" onclick="w2show('optimizacion', this)">Optimización</button>
+              <button class="nav-btn" onclick="w2show('quiz', this)">Repaso</button>
             </nav>
 
-            <div class="section active" id="w1-s-limites">
+            <div class="section active" id="w2-s-limites">
               <p class="section-title">Límites</p>
               <div class="grid2">
                 <div class="card">
@@ -477,7 +865,7 @@ sp.limit(f, x, 3, '-')                   # → -1</pre>
               </div>
             </div>
 
-            <div class="section" id="w1-s-derivada">
+            <div class="section" id="w2-s-derivada">
               <p class="section-title">Derivada</p>
               <div class="grid2">
                 <div class="card">
@@ -522,7 +910,7 @@ p.show()</pre>
               </div>
             </div>
 
-            <div class="section" id="w1-s-parciales">
+            <div class="section" id="w2-s-parciales">
               <p class="section-title">Derivadas parciales</p>
               <div class="grid2">
                 <div class="card">
@@ -577,7 +965,7 @@ f.jacobian([x, y, z])   # matriz jacobiana</pre>
               </div>
             </div>
 
-            <div class="section" id="w1-s-analisis">
+            <div class="section" id="w2-s-analisis">
               <p class="section-title">Análisis de funciones</p>
               <div class="card">
                 <h3>Pasos para analizar una función</h3>
@@ -632,7 +1020,7 @@ list(sp.solveset(f1, x, domain=sp.S.Reals))</pre>
               </div>
             </div>
 
-            <div class="section" id="w1-s-optimizacion">
+            <div class="section" id="w2-s-optimizacion">
               <p class="section-title">Optimización</p>
               <div class="card">
                 <h3>Pasos para resolver un problema de optimización</h3>
@@ -670,7 +1058,7 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
               </div>
             </div>
 
-            <div class="section" id="w1-s-quiz">
+            <div class="section" id="w2-s-quiz">
               <p class="section-title">Repaso rápido</p>
               <div class="card" id="quiz-card">
                 <div class="q-num" id="q-num">Pregunta 1 de 10</div>
@@ -698,10 +1086,17 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
 </main>
 
 <script>
-  function w1show(id, btn) {
+  function t1show(id, btn) {
     document.querySelectorAll('#w1 .section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('#w1 .nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('w1-s-' + id).classList.add('active');
+    document.getElementById('t1-s-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function w2show(id, btn) {
+    document.querySelectorAll('#w2 .section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#w2 .nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('w2-s-' + id).classList.add('active');
     btn.classList.add('active');
   }
 
@@ -795,6 +1190,78 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
   }
 
   loadQ();
+
+  // QUIZ TEMA 1
+  const questions1 = [
+    { q: '¿Qué hace np.linspace(0, 1, 5)?', opts: ['Crea 5 números aleatorios entre 0 y 1','Crea 5 puntos equiespaciados entre 0 y 1 (incluidos)','Crea los números 0, 1, 2, 3, 4','Divide 1 entre 5'], ans: 1, exp: 'linspace(a, b, n) crea n puntos equiespaciados entre a y b, incluyendo ambos extremos.' },
+    { q: '¿Cuál es la diferencia clave entre numpy y sympy?', opts: ['numpy es más lento','numpy trabaja con números, sympy con expresiones exactas','sympy solo sirve para graficar','numpy calcula derivadas automáticamente'], ans: 1, exp: 'numpy = mundo numérico (números, arrays). sympy = mundo simbólico (expresiones matemáticas exactas).' },
+    { q: '¿Qué devuelve factorial(-1)?', opts: ['0','1','-1','None'], ans: 3, exp: 'Cuando n < 0, la función imprime el error y hace return sin valor, lo que en Python devuelve None.' },
+    { q: '¿Para qué sirve sp.lambdify?', opts: ['Para calcular límites','Para convertir una expresión simbólica en una función numérica','Para crear variables simbólicas','Para integrar numéricamente'], ans: 1, exp: 'lambdify convierte una expresión de sympy en una función Python que puede evaluarse sobre arrays de numpy.' },
+    { q: '¿Cuál es el criterio de parada del método babilónico?', opts: ['x_new > tolerancia','abs(x_new - x) < tolerancia','x_new == sqrt(2)','n_iter > 100'], ans: 1, exp: 'Se para cuando la diferencia entre dos aproximaciones consecutivas es menor que la tolerancia.' },
+    { q: '¿Qué función de scipy se usa para buscar raíces?', opts: ['scipy.roots','optimize.solve','optimize.newton','scipy.find_zero'], ans: 2, exp: 'optimize.newton(funcion, x0) busca una raíz de la función empezando desde x0.' },
+    { q: '¿Cuál es la sintaxis correcta de una list comprehension?', opts: ['[for x in lista: x**2]','[x**2 : for x in lista]','[x**2 for x in lista]','list(x**2, for x in lista)'], ans: 2, exp: 'La sintaxis es [expresión for elemento in colección] opcionalmente con if condición al final.' },
+    { q: '¿Con qué librería se usa cos(x) en scipy.optimize.newton?', opts: ['sp.cos','math.cos','np.cos','sin diferencia, cualquiera vale'], ans: 2, exp: 'scipy trabaja en el mundo numérico, así que hay que usar np.cos (numpy), no sp.cos (sympy).' },
+    { q: '¿Qué hace sp.diff(f, x, 2)?', opts: ['Calcula la derivada de f respecto a x','Calcula la segunda derivada de f respecto a x','Evalúa f en x=2','Calcula la integral de f dos veces'], ans: 1, exp: 'sp.diff(f, x, 2) calcula la segunda derivada de f respecto a x.' },
+    { q: '¿Qué tipo de estructura usarías para devolver raíz, error e iteraciones?', opts: ['Lista','Tupla','Diccionario','Conjunto'], ans: 2, exp: 'El diccionario es ideal porque permite acceder a cada resultado por su nombre: resultado["raiz"], resultado["error"]...' }
+  ];
+
+  let current1 = 0, score1 = 0, answered1 = false;
+  const order1 = [...Array(questions1.length).keys()].sort(() => Math.random()-0.5);
+
+  function loadQ1() {
+    const q = questions1[order1[current1]];
+    document.getElementById('q1-num').textContent = 'Pregunta ' + (current1+1) + ' de ' + questions1.length;
+    document.getElementById('q1-text').textContent = q.q;
+    const opts = document.getElementById('q1-options');
+    opts.innerHTML = '';
+    q.opts.forEach((o, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-btn';
+      btn.textContent = o;
+      btn.onclick = () => answer1(i, q);
+      opts.appendChild(btn);
+    });
+    document.getElementById('q1-feedback').className = 'quiz-feedback';
+    document.getElementById('q1-next').className = 'quiz-next';
+    answered1 = false;
+  }
+
+  function answer1(i, q) {
+    if (answered1) return;
+    answered1 = true;
+    const btns = document.querySelectorAll('#t1-s-quiz1 .quiz-btn');
+    btns.forEach((b, idx) => {
+      if (idx === q.ans) b.classList.add('correct');
+      else b.classList.add('wrong');
+    });
+    const fb = document.getElementById('q1-feedback');
+    if (i === q.ans) { score1++; fb.style.background = 'rgba(74,240,160,0.08)'; fb.style.color = '#4af0a0'; }
+    else { fb.style.background = 'rgba(240,74,74,0.08)'; fb.style.color = '#f04a4a'; }
+    fb.textContent = q.exp;
+    fb.classList.add('show');
+    document.getElementById('q1-next').classList.add('show');
+  }
+
+  function nextQ1() {
+    current1++;
+    if (current1 >= questions1.length) {
+      document.getElementById('quiz1-card').style.display = 'none';
+      document.getElementById('quiz1-result').style.display = 'block';
+      const pct = Math.round(score1/questions1.length*100);
+      document.getElementById('result1-title').textContent = score1 + ' / ' + questions1.length + ' correctas (' + pct + '%)';
+      document.getElementById('result1-text').textContent = pct >= 80 ? 'Muy bien, tienes el tema dominado.' : pct >= 50 ? 'Bien, repasa los apartados donde fallaste.' : 'Repasa los conceptos con más calma y vuelve a intentarlo.';
+    } else { loadQ1(); }
+  }
+
+  function restartQuiz1() {
+    current1 = 0; score1 = 0; answered1 = false;
+    order1.sort(() => Math.random()-0.5);
+    document.getElementById('quiz1-card').style.display = 'block';
+    document.getElementById('quiz1-result').style.display = 'none';
+    loadQ1();
+  }
+
+  loadQ1();
 </script>
 </body>
 </html>
