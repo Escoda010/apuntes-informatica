@@ -7,233 +7,52 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e0e11;
-    --surface: #16161a;
-    --surface2: #1e1e24;
-    --border: #2a2a35;
-    --accent: #c8f04a;
-    --text: #e8e8f0;
-    --text-dim: #8888a0;
-    --text-muted: #55556a;
+    --bg: #0e0e11; --surface: #16161a; --surface2: #1e1e24; --border: #2a2a35;
+    --text: #e8e8f0; --text-dim: #8888a0; --text-muted: #55556a;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.25; pointer-events: none; z-index: 0; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  header { position: relative; z-index: 10; padding: 4rem 2rem 3rem; max-width: 1100px; margin: 0 auto; }
+  .pretitle { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #c8f04a; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+  .pretitle::before { content: ''; width: 24px; height: 1px; background: #c8f04a; }
+  h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1rem; }
+  h1 em { font-style: italic; color: #c8f04a; }
+  .subtitle { font-size: 15px; color: var(--text-dim); max-width: 480px; line-height: 1.6; }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 40px 40px;
-    opacity: 0.25;
-    pointer-events: none;
-    z-index: 0;
-  }
+  main { position: relative; z-index: 10; max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem; padding-left: 2px; }
 
-  header {
-    position: relative;
-    z-index: 10;
-    padding: 4rem 2rem 3rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+  .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1rem; }
 
-  .pretitle {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .pretitle::before {
-    content: '';
-    width: 24px;
-    height: 1px;
-    background: var(--accent);
-  }
+  .subject-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.2s; display: flex; flex-direction: column; gap: 1rem; position: relative; overflow: hidden; }
+  .subject-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 60%, rgba(255,255,255,0.02)); pointer-events: none; }
+  .subject-card.active { cursor: pointer; }
+  .subject-card.active:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+  .subject-card.empty { opacity: 0.45; cursor: default; }
 
-  h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 400;
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-  }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .subject-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .status-badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+  .status-badge.has-content { border-color: rgba(200,240,74,0.3); color: #c8f04a; background: rgba(200,240,74,0.07); }
 
-  h1 em { font-style: italic; color: var(--accent); }
+  .subject-name { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 4px; }
+  .subject-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 
-  .subtitle {
-    font-size: 15px;
-    color: var(--text-dim);
-    max-width: 480px;
-    line-height: 1.6;
-  }
-
-  main {
-    position: relative;
-    z-index: 10;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 2rem 4rem;
-  }
-
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
-    padding-left: 2px;
-  }
-
-  .subjects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
-    margin-bottom: 3rem;
-  }
-
-  .subject-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.2s;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .subject-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 60%, rgba(255,255,255,0.02));
-    pointer-events: none;
-  }
-
-  .subject-card:hover {
-    border-color: #3a3a50;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  }
-
-  .subject-card.active:hover {
-    border-color: rgba(200,240,74,0.4);
-  }
-
-  .subject-card.active {
-    border-color: rgba(200,240,74,0.2);
-    background: linear-gradient(135deg, rgba(200,240,74,0.05) 0%, var(--surface) 60%);
-  }
-
-  .subject-card.empty {
-    opacity: 0.5;
-    cursor: default;
-  }
-
-  .subject-card.empty:hover {
-    transform: none;
-    box-shadow: none;
-    border-color: var(--border);
-  }
-
-  .card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .subject-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .status-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    padding: 3px 10px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-
-  .status-badge.has-content {
-    border-color: rgba(200,240,74,0.3);
-    color: var(--accent);
-    background: rgba(200,240,74,0.07);
-  }
-
-  .subject-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-  }
-
-  .subject-desc {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .widget-pill {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-
-  .arrow {
-    font-size: 14px;
-    color: var(--text-muted);
-    transition: transform 0.2s, color 0.2s;
-  }
-
-  .subject-card:hover .arrow {
-    transform: translateX(4px);
-    color: var(--accent);
-  }
-
+  .card-footer { display: flex; align-items: flex-end; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid var(--border); gap: 1rem; }
+  .widget-pills { display: flex; flex-direction: column; gap: 3px; }
+  .pill { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+  .pill.done { color: var(--text-dim); }
+  .arrow { font-size: 14px; color: var(--text-muted); transition: transform 0.2s, color 0.2s; flex-shrink: 0; margin-bottom: 2px; }
+  .subject-card.active:hover .arrow { transform: translateX(4px); color: #c8f04a; }
   .subject-card.empty .arrow { display: none; }
+
+  .subject-card.active[data-accent="green"]:hover { border-color: rgba(200,240,74,0.3); }
+  .subject-card.active[data-accent="purple"]:hover { border-color: rgba(124,106,247,0.3); }
+  .subject-card.active[data-accent="teal"]:hover { border-color: rgba(29,158,117,0.3); }
+  .subject-card.active[data-accent="blue"]:hover { border-color: rgba(74,176,240,0.3); }
+  .subject-card.active[data-accent="orange"]:hover { border-color: rgba(240,160,74,0.3); }
 </style>
 </head>
 <body>
@@ -248,7 +67,7 @@
   <div class="section-label">Asignaturas</div>
   <div class="subjects-grid">
 
-    <a href="matematica_discreta.html" class="subject-card active">
+    <a href="matematica_discreta.html" class="subject-card active" data-accent="green">
       <div class="card-top">
         <div class="subject-icon" style="background:rgba(200,240,74,0.1)">🧮</div>
         <span class="status-badge has-content">1 widget</span>
@@ -258,34 +77,47 @@
         <div class="subject-desc">Aritmética modular, grafos, combinatoria y lógica proposicional.</div>
       </div>
       <div class="card-footer">
-        <span class="widget-pill">Lección 1 — Aritmética modular</span>
+        <div class="widget-pills">
+          <span class="pill done">✓ Lección 1 — Aritmética modular</span>
+        </div>
         <span class="arrow">→</span>
       </div>
     </a>
 
-    <a href="matematicas_2.html" class="subject-card active">
+    <a href="matematicas_2.html" class="subject-card active" data-accent="purple">
       <div class="card-top">
         <div class="subject-icon" style="background:rgba(124,106,247,0.1)">∫</div>
-        <span class="status-badge has-content">1 widget</span>
+        <span class="status-badge has-content">3 widgets</span>
       </div>
       <div>
         <div class="subject-name">Matemáticas 2</div>
-        <div class="subject-desc">Derivadas, límites, optimización y análisis de funciones con Python.</div>
+        <div class="subject-desc">Cálculo, derivadas, límites, optimización y representación gráfica.</div>
       </div>
       <div class="card-footer">
-        <span class="widget-pill">Tema 2 — Derivadas y límites</span>
+        <div class="widget-pills">
+          <span class="pill done">✓ Tema 1 — Python y librerías</span>
+          <span class="pill done">✓ Tema 2 — Derivadas y límites</span>
+          <span class="pill done">✓ Gráficas — plt.plot y symplot</span>
+        </div>
         <span class="arrow">→</span>
       </div>
     </a>
 
-
-    <a class="subject-card" href="fbd.html">
-      <div class="subject-icon">🗄️</div>
-      <div class="subject-info">
+    <a href="fundamentos_bd.html" class="subject-card active" data-accent="teal">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(29,158,117,0.1)">🗄️</div>
+        <span class="status-badge has-content">2 widgets</span>
+      </div>
+      <div>
         <div class="subject-name">Fundamentos de Bases de Datos</div>
-        <div class="subject-desc">Modelo relacional, SQL, normalización y diseño de esquemas.</div>
-        <div class="widget-count">1 widget</div>
-        <div class="subject-link">T08–T10 — Agregado, agrupación y filtrado →</div>
+        <div class="subject-desc">SQL, modelo relacional, normalización y diseño de esquemas.</div>
+      </div>
+      <div class="card-footer">
+        <div class="widget-pills">
+          <span class="pill done">✓ T08-T10 — Agregado, GROUP BY, HAVING</span>
+          <span class="pill done">✓ T11 — Conjuntos SQL</span>
+        </div>
+        <span class="arrow">→</span>
       </div>
     </a>
 
@@ -299,14 +131,15 @@
         <div class="subject-desc">Arquitectura, ensamblador, memoria y sistemas de entrada/salida.</div>
       </div>
       <div class="card-footer">
-        <span class="widget-pill">Próximamente</span>
-        <span class="arrow">→</span>
+        <div class="widget-pills">
+          <span class="pill">Próximamente</span>
+        </div>
       </div>
     </div>
 
     <div class="subject-card empty">
       <div class="card-top">
-        <div class="subject-icon" style="background:rgba(74,240,160,0.1)">⌨️</div>
+        <div class="subject-icon" style="background:rgba(240,160,74,0.1)">⌨️</div>
         <span class="status-badge">Sin widgets</span>
       </div>
       <div>
@@ -314,8 +147,9 @@
         <div class="subject-desc">Estructuras de datos, algoritmos, POO avanzada y complejidad.</div>
       </div>
       <div class="card-footer">
-        <span class="widget-pill">Próximamente</span>
-        <span class="arrow">→</span>
+        <div class="widget-pills">
+          <span class="pill">Próximamente</span>
+        </div>
       </div>
     </div>
 
