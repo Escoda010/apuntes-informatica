@@ -428,6 +428,10 @@
           <span class="nav-num">02</span>
           Tema 2 — Derivadas
         </li>
+        <li class="nav-item" onclick="scrollToWidget('w3', this)">
+          <span class="nav-num">03</span>
+          Gráficas
+        </li>
       </ul>
       <div class="sidebar-divider"></div>
       <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
@@ -1081,6 +1085,267 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
         </div>
       </div>
 
+
+      <!-- WIDGET 3 — GRÁFICAS -->
+      <div class="widget-wrapper" id="w3">
+        <div class="widget-header" onclick="toggleWidget('w3')">
+          <div class="widget-header-left">
+            <div class="widget-icon" style="background:rgba(200,240,74,0.1)">📈</div>
+            <div>
+              <div class="widget-title">Gráficas — plt.plot y symplot</div>
+              <div class="widget-subtitle">numpy · sympy · matplotlib · opciones · cuándo usar cada una</div>
+            </div>
+          </div>
+          <span class="widget-chevron">▼</span>
+        </div>
+        <div class="widget-body">
+          <div class="leccion-badge"><span class="leccion-dot"></span>GRÁFICAS</div>
+          <style>
+            #w3 .nav-btn { font-size:13px; padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); cursor:pointer; transition:all 0.15s; font-family:'DM Sans',sans-serif; margin-bottom:2px; }
+            #w3 .nav-btn:hover { background:var(--surface); color:var(--text); }
+            #w3 .nav-btn.active { background:rgba(200,240,74,0.1); color:var(--accent); border-color:rgba(200,240,74,0.3); font-weight:500; }
+            #w3 .section { display:none; } #w3 .section.active { display:block; }
+            #w3 .card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; margin-bottom:1rem; }
+            #w3 .card h3 { font-size:15px; font-weight:600; color:var(--text); margin-bottom:0.75rem; }
+            #w3 .card p { font-size:14px; color:var(--text-dim); line-height:1.6; margin-bottom:0.5rem; }
+            #w3 pre { background:#0a0a0d; border-radius:8px; padding:0.75rem 1rem; font-family:'DM Mono',monospace; font-size:13px; color:var(--text); overflow-x:auto; margin:0.5rem 0; line-height:1.6; border:1px solid var(--border); }
+            #w3 .tag { display:inline-block; font-size:11px; padding:2px 10px; border-radius:20px; font-weight:500; margin-bottom:0.5rem; font-family:'DM Mono',monospace; }
+            #w3 .tag-np { background:rgba(74,176,240,0.1); color:#4ab0f0; border:1px solid rgba(74,176,240,0.2); }
+            #w3 .tag-sp { background:rgba(124,106,247,0.1); color:#9d8fff; border:1px solid rgba(124,106,247,0.2); }
+            #w3 .tag-plt { background:rgba(200,240,74,0.1); color:var(--accent); border:1px solid rgba(200,240,74,0.2); }
+            #w3 .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; margin-bottom:1rem; }
+            #w3 .highlight { border-left:2px solid rgba(200,240,74,0.4); padding-left:0.75rem; margin:0.5rem 0; }
+            #w3 .highlight p { font-size:13px; color:var(--text-dim); }
+            #w3 .section-title { font-size:18px; font-weight:600; color:var(--text); margin-bottom:1rem; font-family:'DM Serif Display',serif; }
+            #w3 .comment { color:#6a9955; }
+            #w3 table th { text-align:left; padding:8px; border-bottom:1px solid var(--border); color:var(--text-muted); font-weight:500; font-size:13px; }
+            #w3 table td { padding:8px; border-bottom:1px solid var(--border); font-size:13px; color:var(--text); vertical-align:top; }
+            #w3 table tr:last-child td { border-bottom:none; }
+            #w3 code { font-family:'DM Mono',monospace; font-size:12px; background:rgba(255,255,255,0.06); padding:1px 5px; border-radius:4px; }
+          </style>
+<div class="wrap">
+<h2 class="sr-only">Apuntes de gráficas — Matemáticas 2 UA</h2>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="w3show('w3-s-numpy', this)">plt.plot (numpy)</button>
+  <button class="nav-btn" onclick="w3show('w3-s-symplot', this)">symplot (sympy)</button>
+  <button class="nav-btn" onclick="w3show('w3-s-opciones', this)">Opciones y extras</button>
+  <button class="nav-btn" onclick="w3show('w3-s-cuando', this)">¿Cuándo uso cada una?</button>
+</nav>
+
+<div class="section active" id="w3-s-numpy">
+  <p class="section-title">Gráficas numéricas — plt.plot</p>
+  <p style="font-size:14px; color:var(--color-text-secondary); margin-bottom:1rem;">Para funciones numéricas con numpy. Necesitas discretizar el intervalo con <code>np.linspace</code>.</p>
+
+  <div class="card">
+    <span class="tag tag-plt">básico</span>
+    <h3>Gráfica mínima</h3>
+    <pre>import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(-2, 2, 200)  <span class="comment"># 200 puntos entre -2 y 2</span>
+y = x**2 - 1
+
+plt.plot(x, y)
+plt.show()</pre>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-plt">completa</span>
+    <h3>Gráfica con etiquetas y rejilla</h3>
+    <pre>plt.plot(x, y)
+plt.xlabel("x")
+plt.ylabel("f(x)")
+plt.title("Representación de una función")
+plt.grid(True)
+plt.show()</pre>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-plt">varias curvas</span>
+    <h3>Dos funciones en la misma gráfica</h3>
+    <pre>y1 = x**2 - 1
+y2 = x - 1
+
+plt.plot(x, y1, label="f(x)")
+plt.plot(x, y2, label="Aproximación")
+plt.legend()
+plt.grid(True)
+plt.show()</pre>
+    <div class="highlight"><p>Cada <code>plt.plot</code> añade una curva. Con <code>label</code> y <code>plt.legend()</code> aparece la leyenda.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-plt">con lambdify</span>
+    <h3>Gráfica de función simbólica con plt.plot</h3>
+    <pre>import sympy as sp
+
+x = sp.symbols('x')
+f = x**3 - x
+
+<span class="comment"># Convertir a función numérica</span>
+f_num = sp.lambdify(x, f, "numpy")
+
+xx = np.linspace(-10, 10, 1000)
+yy = f_num(xx)
+
+plt.plot(xx, yy)
+plt.grid(True)
+plt.show()</pre>
+    <div class="highlight"><p>Cuando tienes una expresión simbólica y quieres graficarla con <code>plt.plot</code>, primero conviértela con <code>lambdify</code>.</p></div>
+  </div>
+</div>
+
+<div class="section" id="w3-s-symplot">
+  <p class="section-title">Gráficas simbólicas — symplot</p>
+  <p style="font-size:14px; color:var(--color-text-secondary); margin-bottom:1rem;">Para funciones simbólicas de sympy. No necesitas <code>np.linspace</code>, sympy discretiza sola.</p>
+
+  <div class="card">
+    <span class="tag tag-sp">básico</span>
+    <h3>Gráfica simbólica simple</h3>
+    <pre>import sympy as sp
+from sympy.plotting import plot as symplot
+
+x = sp.symbols('x')
+
+symplot(x**2, (x, -5, 5))</pre>
+    <div class="highlight"><p><code>(x, -5, 5)</code> es el rango de representación: variable, mínimo, máximo.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sp">dos funciones</span>
+    <h3>Función y su derivada</h3>
+    <pre>x = sp.symbols('x')
+f = x**2
+df = sp.diff(f, x)   <span class="comment"># → 2x</span>
+
+p = symplot(f, df, (x, -5, 5), show=False)
+p[0].line_color = 'red'   <span class="comment"># color de f</span>
+p.show()</pre>
+    <div class="highlight"><p><code>show=False</code> evita que se dibuje antes de tiempo. Así puedes modificar colores antes de <code>p.show()</code>.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sp">con límites de ejes</span>
+    <h3>Limitar los ejes</h3>
+    <pre>p = symplot(f, xlim=(-6, 6), ylim=(-12, 12))
+p.show()</pre>
+    <p>Útil cuando la función tiene asíntotas y se dispara hacia infinito.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sp">asíntota</span>
+    <h3>Función con asíntota horizontal</h3>
+    <pre>x = sp.symbols('x')
+f = 2*(x**2 - 9) / (x**2 - 4)
+
+<span class="comment"># Dibuja f y la línea y=2 (asíntota horizontal)</span>
+p = symplot(f, 2, xlim=(-6, 6), ylim=(-12, 12), show=False)
+p.show()</pre>
+    <div class="highlight"><p>Puedes pasar un número (como <code>2</code>) y symplot lo dibuja como línea horizontal.</p></div>
+  </div>
+</div>
+
+<div class="section" id="w3-s-opciones">
+  <p class="section-title">Opciones y extras</p>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-plt">líneas auxiliares</span>
+      <h3>Líneas de referencia</h3>
+      <pre>plt.axhline(0, color="black")  <span class="comment"># y = 0</span>
+plt.axvline(0, color="gray")   <span class="comment"># x = 0</span></pre>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-plt">puntos</span>
+      <h3>Marcar puntos concretos</h3>
+      <pre>x0 = 1
+y0 = f(x0)
+
+plt.plot(x0, y0, 'ro')   <span class="comment"># punto rojo</span>
+plt.plot(x0, y0, 'k*')   <span class="comment"># estrella negra</span>
+plt.plot(criticosX, criticosY, 'k*')  <span class="comment"># lista de puntos</span></pre>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-plt">tamaño</span>
+      <h3>Tamaño de la figura</h3>
+      <pre>plt.figure(figsize=(8, 5))
+plt.plot(x, y)
+plt.show()</pre>
+      <p><code>figsize=(ancho, alto)</code> en pulgadas.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-sp">color symplot</span>
+      <h3>Colores en symplot</h3>
+      <pre>p = symplot(f, df, (x,-5,5), show=False)
+p[0].line_color = 'red'    <span class="comment"># primera función</span>
+p[1].line_color = 'blue'   <span class="comment"># segunda función</span>
+p.show()</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-plt">gráfica completa típica del examen</span>
+    <h3>Función con puntos críticos marcados</h3>
+    <pre>xx = np.linspace(-10, 10, 1000)
+yy = sp.lambdify(x, f)(xx)    <span class="comment"># f es simbólica</span>
+
+plt.plot(xx, yy, label="f(x)")
+plt.plot(criticosX, criticosY, 'k*', label="puntos críticos")
+plt.axhline(0, color="black")
+plt.legend()
+plt.grid(True)
+plt.show()</pre>
+  </div>
+</div>
+
+<div class="section" id="w3-s-cuando">
+  <p class="section-title">¿Cuándo uso cada una?</p>
+
+  <div class="card">
+    <h3>Regla general</h3>
+    <p style="margin-bottom:0.75rem;">Depende de cómo tengas definida la función:</p>
+    <table style="width:100%; font-size:13px; border-collapse:collapse;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:0.5px solid var(--color-border-tertiary); color:var(--color-text-secondary); font-weight:500;">Si la función es...</th>
+        <th style="text-align:left; padding:8px; border-bottom:0.5px solid var(--color-border-tertiary); color:var(--color-text-secondary); font-weight:500;">Usa</th>
+        <th style="text-align:left; padding:8px; border-bottom:0.5px solid var(--color-border-tertiary); color:var(--color-text-secondary); font-weight:500;">Por qué</th>
+      </tr>
+      <tr>
+        <td style="padding:8px; border-bottom:0.5px solid var(--color-border-tertiary);">Numérica con <code>def</code> o <code>lambda</code></td>
+        <td style="padding:8px; border-bottom:0.5px solid var(--color-border-tertiary);"><code>plt.plot</code></td>
+        <td style="padding:8px; border-bottom:0.5px solid var(--color-border-tertiary); color:var(--color-text-secondary);">Ya devuelve números, solo necesitas linspace</td>
+      </tr>
+      <tr>
+        <td style="padding:8px; border-bottom:0.5px solid var(--color-border-tertiary);">Simbólica con sympy</td>
+        <td style="padding:8px; border-bottom:0.5px solid var(--color-border-tertiary);"><code>symplot</code> o <code>lambdify</code> + <code>plt.plot</code></td>
+        <td style="padding:8px; border-bottom:0.5px solid var(--color-border-tertiary); color:var(--color-text-secondary);">symplot es más directo; lambdify si quieres marcar puntos</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Simbólica y quieres marcar puntos críticos</td>
+        <td style="padding:8px;"><code>lambdify</code> + <code>plt.plot</code></td>
+        <td style="padding:8px; color:var(--color-text-secondary);">symplot no permite añadir puntos fácilmente</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Aviso importante: x vs x1</h3>
+    <p>Si tienes <code>x</code> definida como símbolo de sympy, no puedes usarla también como array de numpy en la misma celda. Por eso en el notebook verás <code>x1</code> e <code>y1</code> para las gráficas numéricas.</p>
+    <pre>x = sp.symbols('x')       <span class="comment"># simbólica</span>
+x1 = np.linspace(-5, 5, 200)   <span class="comment"># numérica</span>
+y1 = x1**2
+plt.plot(x1, y1)</pre>
+  </div>
+</div>
+
+</div>
+        </div>
+      </div>
+      <!-- END WIDGET 3 -->
     </div>
   </div>
 </main>
@@ -1262,6 +1527,13 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
   }
 
   loadQ1();
+
+  function w3show(id, btn) {
+    document.querySelectorAll('#w3 .section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#w3 .nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
 </script>
 </body>
 </html>
