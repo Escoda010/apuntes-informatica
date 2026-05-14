@@ -3,1172 +3,160 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fundamentos de Bases de Datos — Apuntes</title>
+<title>Ingeniería Informática — Apuntes</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0e0e11; --surface: #16161a; --surface2: #1e1e24; --border: #2a2a35;
-    --accent: #1D9E75; --accent-rgb: 29,158,117;
     --text: #e8e8f0; --text-dim: #8888a0; --text-muted: #55556a;
-    --color-background-primary: #16161a; --color-background-secondary: #1e1e24;
-    --color-background-tertiary: #111114;
-    --color-background-info: #1a2a35; --color-background-warning: #2a1a0e;
-    --color-background-success: #0e2a1a; --color-background-danger: #2a0e0e;
-    --color-border-secondary: #2a2a35; --color-border-tertiary: #222228;
-    --color-border-info: #1D9E75; --color-border-primary: #3a3a50;
-    --color-text-primary: #e8e8f0; --color-text-secondary: #8888a0;
-    --color-text-info: #1D9E75; --color-text-warning: #f0c44a;
-    --color-text-success: #4af0a0; --color-text-danger: #f04a4a;
-    --border-radius-md: 8px; --border-radius-lg: 12px;
-    --font-mono: 'DM Mono', monospace; --font-sans: 'DM Sans', sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.3; pointer-events: none; z-index: 0; }
-  header { position: relative; z-index: 10; padding: 3rem 2rem 2rem; border-bottom: 1px solid var(--border); }
-  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
-  .back-link { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; margin-bottom: 1rem; transition: color 0.15s; }
-  .back-link:hover { color: var(--accent); }
-  .subject-tag { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
-  .subject-tag::before { content: ''; width: 20px; height: 1px; background: var(--accent); display: inline-block; }
-  h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; }
-  h1 em { font-style: italic; color: var(--accent); }
-  .header-meta { text-align: right; font-size: 13px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
-  .widget-count { font-size: 2.5rem; font-family: 'DM Serif Display', serif; color: var(--text-dim); line-height: 1; margin-bottom: 4px; }
-  main { position: relative; z-index: 10; max-width: 1100px; margin: 0 auto; padding: 2rem; }
-  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; align-items: start; }
-  @media (max-width: 768px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static !important; } }
-  .sidebar { position: sticky; top: 1.5rem; }
-  .sidebar-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem; padding-left: 2px; }
-  .nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-  .nav-item { cursor: pointer; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--text-dim); transition: all 0.15s; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; }
-  .nav-item:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
-  .nav-item.active { color: var(--accent); background: rgba(29,158,117,0.07); border-color: rgba(29,158,117,0.2); }
-  .nav-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); min-width: 20px; }
-  .nav-item.active .nav-num { color: var(--accent); opacity: 0.6; }
-  .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 0; }
-  .add-hint { font-size: 11px; color: var(--text-muted); padding: 10px 14px; background: var(--surface); border-radius: 10px; border: 1px dashed var(--border); line-height: 1.5; font-family: 'DM Mono', monospace; }
-  .widgets-area { display: flex; flex-direction: column; gap: 2rem; }
-  .widget-wrapper { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: border-color 0.2s; animation: fadeUp 0.4s ease both; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-  .widget-wrapper:hover { border-color: #3a3a50; }
-  .widget-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--surface2); cursor: pointer; user-select: none; }
-  .widget-header-left { display: flex; align-items: center; gap: 12px; }
-  .widget-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-  .widget-title { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
-  .widget-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 1px; }
-  .widget-chevron { color: var(--text-muted); font-size: 12px; transition: transform 0.2s; }
-  .widget-wrapper.collapsed .widget-chevron { transform: rotate(-90deg); }
-  .widget-body { padding: 1.25rem; }
-  .widget-wrapper.collapsed .widget-body { display: none; }
-  .leccion-badge { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); margin-bottom: 1.5rem; }
-  .leccion-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.25; pointer-events: none; z-index: 0; }
 
-  /* Widget content styles */
-  .widget-body .wrap, .widget-body .w { padding: 0; }
-  .widget-body .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
-  .widget-body .nb { padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface2); cursor: pointer; font-size: 13px; color: var(--text-dim); transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
-  .widget-body .nb:hover { background: var(--surface); color: var(--text); }
-  .widget-body .nb.on { background: rgba(29,158,117,0.15); border-color: rgba(29,158,117,0.4); color: var(--accent); font-weight: 500; }
-  .widget-body .section, .widget-body .sec { display: none; }
-  .widget-body .section.on, .widget-body .sec.on { display: block; }
-  .widget-body .card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-  .widget-body .card-title, .widget-body .ct { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: .5rem; }
-  .widget-body .card-body, .widget-body .cb { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
-  .widget-body .code { background: #0a0a0d; border-radius: 8px; padding: .65rem 1rem; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); margin: .75rem 0; border: 1px solid var(--border); white-space: pre-wrap; line-height: 1.7; }
-  .widget-body .tag { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 99px; margin-bottom: .5rem; font-weight: 500; font-family: 'DM Mono', monospace; }
-  .widget-body .tag-t08 { background: rgba(74,176,240,0.1); color: #4ab0f0; border: 1px solid rgba(74,176,240,0.2); }
-  .widget-body .tag-t09 { background: rgba(29,158,117,0.1); color: var(--accent); border: 1px solid rgba(29,158,117,0.2); }
-  .widget-body .tag-t10 { background: rgba(124,106,247,0.1); color: #9d8fff; border: 1px solid rgba(124,106,247,0.2); }
-  .widget-body .t11 { background: rgba(29,158,117,0.1); color: var(--accent); border: 1px solid rgba(29,158,117,0.2); }
-  .widget-body .tpdf { background: rgba(124,106,247,0.1); color: #9d8fff; border: 1px solid rgba(124,106,247,0.2); }
-  .widget-body .warn { background: rgba(240,74,74,0.07); border: 1px solid rgba(240,74,74,0.2); border-radius: 8px; padding: .65rem 1rem; font-size: 13px; color: #f07070; margin: .75rem 0; }
-  .widget-body .ok { background: rgba(29,158,117,0.07); border: 1px solid rgba(29,158,117,0.2); border-radius: 8px; padding: .65rem .9rem; font-size: 13px; color: var(--accent); margin: .75rem 0; }
-  .widget-body .rule { border-left: 3px solid var(--accent); padding: .5rem 1rem; margin: .75rem 0; font-size: 14px; color: var(--text); }
-  .widget-body .sec-title, .widget-body .stitle { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; font-family: 'DM Serif Display', serif; }
-  .widget-body .askbtn, .widget-body .ab { margin-top: .75rem; padding: .4rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-dim); cursor: pointer; font-size: 13px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
-  .widget-body .askbtn:hover, .widget-body .ab:hover { color: var(--text); border-color: var(--accent); }
-  .widget-body .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: .75rem 0; }
-  @media(max-width:500px) { .widget-body .grid2 { grid-template-columns: 1fr; } }
-  .widget-body .mini { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .65rem 1rem; font-size: 13px; color: var(--text-dim); text-align: center; }
-  .widget-body .mini strong { display: block; font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  header { position: relative; z-index: 10; padding: 4rem 2rem 3rem; max-width: 1100px; margin: 0 auto; }
+  .pretitle { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #c8f04a; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+  .pretitle::before { content: ''; width: 24px; height: 1px; background: #c8f04a; }
+  h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1rem; }
+  h1 em { font-style: italic; color: #c8f04a; }
+  .subtitle { font-size: 15px; color: var(--text-dim); max-width: 480px; line-height: 1.6; }
+
+  main { position: relative; z-index: 10; max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem; padding-left: 2px; }
+
+  .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1rem; }
+
+  .subject-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.2s; display: flex; flex-direction: column; gap: 1rem; position: relative; overflow: hidden; }
+  .subject-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 60%, rgba(255,255,255,0.02)); pointer-events: none; }
+  .subject-card.active { cursor: pointer; }
+  .subject-card.active:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+  .subject-card.empty { opacity: 0.45; cursor: default; }
+
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .subject-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .status-badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+  .status-badge.has-content { border-color: rgba(200,240,74,0.3); color: #c8f04a; background: rgba(200,240,74,0.07); }
+
+  .subject-name { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 4px; }
+  .subject-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  .card-footer { display: flex; align-items: flex-end; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid var(--border); gap: 1rem; }
+  .widget-pills { display: flex; flex-direction: column; gap: 3px; }
+  .pill { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+  .pill.done { color: var(--text-dim); }
+  .arrow { font-size: 14px; color: var(--text-muted); transition: transform 0.2s, color 0.2s; flex-shrink: 0; margin-bottom: 2px; }
+  .subject-card.active:hover .arrow { transform: translateX(4px); color: #c8f04a; }
+  .subject-card.empty .arrow { display: none; }
+
+  .subject-card.active[data-accent="green"]:hover { border-color: rgba(200,240,74,0.3); }
+  .subject-card.active[data-accent="purple"]:hover { border-color: rgba(124,106,247,0.3); }
+  .subject-card.active[data-accent="teal"]:hover { border-color: rgba(29,158,117,0.3); }
+  .subject-card.active[data-accent="blue"]:hover { border-color: rgba(74,176,240,0.3); }
+  .subject-card.active[data-accent="orange"]:hover { border-color: rgba(240,160,74,0.3); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-inner">
-    <div>
-      <a href="index.html" class="back-link">← Volver a inicio</a>
-      <div class="subject-tag">Bases de Datos — Grado</div>
-      <h1>Fundamentos de <em>Bases de Datos</em></h1>
-    </div>
-    <div class="header-meta">
-      <div class="widget-count">3</div>
-      widgets
-    </div>
-  </div>
+  <div class="pretitle">Ingeniería Informática</div>
+  <h1>Mis <em>Apuntes</em><br>Interactivos</h1>
+  <p class="subtitle">Widgets por asignatura, organizados por temas. Haz clic en una asignatura para ver sus apuntes.</p>
 </header>
 
 <main>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="sidebar-label">Widgets</div>
-      <ul class="nav-list">
-        <li class="nav-item active" onclick="scrollToWidget('w1', this)"><span class="nav-num">01</span>T08-T10 — SQL agregado</li>
-        <li class="nav-item" onclick="scrollToWidget('w2', this)"><span class="nav-num">02</span>T11 — Conjuntos SQL</li>
-        <li class="nav-item" onclick="scrollToWidget('w3', this)"><span class="nav-num">03</span>T12 — Tablas temporales</li>
-      </ul>
-      <div class="sidebar-divider"></div>
-      <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
-    </aside>
+  <div class="section-label">Asignaturas</div>
+  <div class="subjects-grid">
 
-    <div class="widgets-area">
-
-      <div class="widget-wrapper" id="w1">
-        <div class="widget-header" onclick="toggleWidget('w1')">
-          <div class="widget-header-left">
-            <div class="widget-icon" style="background:rgba(29,158,117,0.1)">🗄️</div>
-            <div>
-              <div class="widget-title">Funciones de agregado, GROUP BY y HAVING</div>
-              <div class="widget-subtitle">T08 · T09 · T10 — COUNT · SUM · AVG · GROUP BY · HAVING · Orden</div>
-            </div>
-          </div>
-          <span class="widget-chevron">▼</span>
-        </div>
-        <div class="widget-body">
-          <div class="leccion-badge"><span class="leccion-dot"></span>TEMAS 08 · 09 · 10</div>
-<div class="wrap">
-<h2 class="sr-only">Apuntes SQL interactivos — Fundamentos de Bases de Datos UA</h2>
-
-<div class="nav">
-  <button class="nb on" onclick="w1show('w1-funciones',this)">Funciones de agregado</button>
-  <button class="nb" onclick="w1show('w1-groupby',this)">GROUP BY</button>
-  <button class="nb" onclick="w1show('w1-having',this)">HAVING</button>
-  <button class="nb" onclick="w1show('w1-orden',this)">Orden de ejecución</button>
-  <button class="nb" onclick="w1show('w1-trucos',this)">Trucos y errores comunes</button>
-</div>
-
-<div id="w1-funciones" class="section on">
-  <p class="sec-title">Funciones de agregado</p>
-
-  <div class="card">
-    <span class="tag tag-t08">T08</span>
-    <div class="card-title">¿Qué son?</div>
-    <div class="card-body">Calculan un único valor a partir de varias filas. Se usan en el SELECT y a veces en el HAVING. No se pueden usar en el WHERE.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t08">T08</span>
-    <div class="card-title">COUNT</div>
-    <div class="card-body">Cuenta filas. Hay tres variantes importantes:</div>
-    <div class="code">COUNT(*)          -- todas las filas, incluyendo NULLs
-COUNT(columna)    -- solo filas donde columna no es NULL
-COUNT(DISTINCT c) -- valores únicos, sin repetir</div>
-    <div class="card-body">Ejemplo real:</div>
-    <div class="code">-- Cuántas provincias distintas tienen nuestros usuarios
-SELECT COUNT(DISTINCT provincia) FROM usuario;</div>
-    <div class="ok">Si hay 10 usuarios de Alicante → COUNT(DISTINCT provincia) cuenta Alicante solo 1 vez.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t08">T08</span>
-    <div class="card-title">SUM, AVG, MAX, MIN</div>
-    <div class="code">SUM(cantidad)     -- suma todos los valores
-AVG(pvp)          -- promedio
-MAX(pantalla)     -- valor máximo
-MIN(nacido)       -- valor mínimo (con fechas: la más antigua)</div>
-    <div class="card-body">Ejemplo real:</div>
-    <div class="code">-- Total en euros de la cesta de un usuario
-SELECT SUM(pvp) total
-FROM cesta, articulo
-WHERE usuario='bmm@agwab.com' AND articulo=cod;</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t08">T08</span>
-    <div class="card-title">ROUND</div>
-    <div class="card-body">Redondea el resultado a N decimales. El segundo parámetro es el número de decimales.</div>
-    <div class="code">SELECT ROUND(AVG(DISTINCT pvp), 2) mediaventa FROM articulo;
---                                  ^--- 2 decimales</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t08">T08</span>
-    <div class="card-title">Subconsulta para usar MAX/MIN en WHERE</div>
-    <div class="card-body">No puedes poner MAX() directamente en el WHERE. Se resuelve con una subconsulta:</div>
-    <div class="warn">WHERE pvp = MAX(pvp)  ← ERROR, esto no funciona</div>
-    <div class="ok">WHERE pvp = (SELECT MAX(pvp) FROM articulo)  ← correcto</div>
-    <div class="code">-- Artículo más caro
-SELECT cod, nombre, pvp
-FROM articulo
-WHERE pvp = (SELECT MAX(pvp) FROM articulo);</div>
-    <button class="askbtn" onclick="sendPrompt('Explícame mejor cómo funcionan las subconsultas en SQL de FBD')">¿Cómo funcionan las subconsultas? ↗</button>
-  </div>
-</div>
-
-<div id="w1-groupby" class="section">
-  <p class="sec-title">GROUP BY</p>
-
-  <div class="card">
-    <span class="tag tag-t09">T09</span>
-    <div class="card-title">¿Para qué sirve?</div>
-    <div class="card-body">Agrupa filas que tienen el mismo valor en una columna, para que los agregados (COUNT, SUM...) se calculen por separado para cada grupo.</div>
-    <div class="rule">Cuando el enunciado dice "por cada X" o "de cada X" → GROUP BY X</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t09">T09</span>
-    <div class="card-title">Ejemplo básico</div>
-    <div class="code">-- Cantidad de líneas por cada pedido
-SELECT numpedido, COUNT(*)
-FROM linped
-GROUP BY numpedido;</div>
-    <div class="card-body">Cada fila de linped es una línea. GROUP BY numpedido junta las filas del mismo pedido y COUNT(*) las cuenta. Resultado: una fila por pedido.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t09">T09</span>
-    <div class="card-title">La regla de oro</div>
-    <div class="rule">Todo lo que aparece en el SELECT y NO es un agregado (COUNT, SUM...) DEBE estar en el GROUP BY.</div>
-    <div class="warn">SELECT marca, nombre, COUNT(*) FROM articulo GROUP BY marca;
--- ERROR: 'nombre' no está en el GROUP BY</div>
-    <div class="ok">SELECT marca, nombre, COUNT(*) FROM articulo GROUP BY marca, nombre;
--- Correcto</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t09">T09</span>
-    <div class="card-title">GROUP BY con varias tablas</div>
-    <div class="card-body">Cuando haces JOIN, el GROUP BY incluye todas las columnas del SELECT que no son agregados, aunque vengan de tablas distintas:</div>
-    <div class="code">-- Cámaras pedidas: código, nombre, marca, total unidades y promedio importe
-SELECT l.articulo, a.nombre, a.marca, SUM(cantidad), AVG(importe)
-FROM linped l, articulo a
-WHERE l.articulo = a.cod
-AND articulo IN (SELECT cod FROM camara)
-GROUP BY l.articulo, a.nombre, a.marca;</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t09">T09</span>
-    <div class="card-title">COUNT(*) vs COUNT(columna) con GROUP BY</div>
-    <div class="code">-- Artículos pedidos incluyendo los que nunca se han pedido (salen con 0)
-SELECT cod, nombre, COUNT(numpedido) veces
-FROM articulo a
-LEFT JOIN linped l ON (a.cod = l.articulo)
-GROUP BY cod, nombre;</div>
-    <div class="card-body">Aquí COUNT(numpedido) es clave: los artículos sin pedidos tienen numpedido = NULL en el LEFT JOIN, y COUNT(columna) no cuenta NULLs → salen con 0. Con COUNT(*) saldrían con 1.</div>
-  </div>
-</div>
-
-<div id="w1-having" class="section">
-  <p class="sec-title">HAVING</p>
-
-  <div class="card">
-    <span class="tag tag-t10">T10</span>
-    <div class="card-title">¿Para qué sirve?</div>
-    <div class="card-body">Filtra grupos después de agrupar. Es al GROUP BY lo que el WHERE es al SELECT.</div>
-    <div class="rule">WHERE filtra filas individuales. HAVING filtra grupos. WHERE va antes del GROUP BY, HAVING va después.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t10">T10</span>
-    <div class="card-title">Ejemplo claro</div>
-    <div class="code">-- Marcas con más de 100 artículos, ordenadas por precio medio
-SELECT marca, AVG(pvp) promedio
-FROM articulo
-WHERE cod NOT IN (SELECT cod FROM pack)
-GROUP BY marca
-HAVING COUNT(*) > 100
-ORDER BY promedio DESC;</div>
-    <div class="card-body">WHERE elimina los packs antes de agrupar. HAVING filtra solo las marcas que, después de agrupar, tienen más de 100 artículos.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t10">T10</span>
-    <div class="card-title">HAVING con cálculos complejos</div>
-    <div class="code">-- Provincias con promedio de importe total > 1500€
-SELECT provincia, COUNT(DISTINCT p.numpedido) pedidos
-FROM usuario u, pedido p, linped l
-WHERE u.email=p.usuario AND p.numpedido=l.numpedido
-GROUP BY provincia
-HAVING AVG(importe*cantidad) >= 1500;</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t10">T10</span>
-    <div class="card-title">Detectar duplicados con HAVING</div>
-    <div class="card-body">Un uso muy común: encontrar valores repetidos en la tabla.</div>
-    <div class="code">-- Apellidos que están repetidos
-SELECT apellidos
-FROM usuario
-GROUP BY apellidos
-HAVING COUNT(*) >= 2;
-
--- Localidades que aparecen en 2 o más provincias
-SELECT pueblo, COUNT(*) provincias
-FROM localidad
-GROUP BY pueblo
-HAVING COUNT(*) >= 2;</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tag-t10">T10</span>
-    <div class="card-title">HAVING + WHERE + ORDER BY juntos</div>
-    <div class="code">-- Meses con más de 10 pedidos: base imponible, IVA y total
-SELECT YEAR(fecha) año, MONTH(fecha) mes,
-  ROUND(SUM(importe*cantidad)/1.21, 2) base,
-  ROUND(SUM(importe*cantidad)/1.21*0.21, 2) IVA,
-  ROUND(SUM(importe*cantidad), 2) total
-FROM pedido p JOIN linped l ON l.numpedido=p.numpedido
-GROUP BY YEAR(fecha), MONTH(fecha)
-HAVING COUNT(DISTINCT l.numpedido) > 10
-ORDER BY YEAR(fecha), MONTH(fecha);</div>
-    <button class="askbtn" onclick="sendPrompt('Explícame cómo se calcula el IVA en SQL cuando el IVA ya está incluido en el precio')">¿Cómo se calcula el IVA incluido? ↗</button>
-  </div>
-</div>
-
-<div id="w1-orden" class="section">
-  <p class="sec-title">Orden de ejecución SQL</p>
-
-  <div class="card">
-    <div class="card-title">El orden en que SQL ejecuta cada cláusula</div>
-    <div class="code">1. FROM      → qué tablas (y los JOIN)
-2. WHERE     → filtra filas individuales
-3. GROUP BY  → agrupa las filas restantes
-4. HAVING    → filtra grupos
-5. SELECT    → calcula y muestra columnas
-6. ORDER BY  → ordena el resultado
-7. LIMIT     → recorta las filas mostradas</div>
-    <div class="rule">Por eso WHERE no puede usar COUNT o SUM: todavía no se han calculado. Eso va en HAVING.</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Consecuencias prácticas</div>
-    <div class="warn">WHERE COUNT(*) > 2  ← ERROR: WHERE se ejecuta antes de GROUP BY</div>
-    <div class="ok">GROUP BY x HAVING COUNT(*) > 2  ← correcto</div>
-    <div class="warn">ORDER BY SUM(cantidad)  ← puedes hacerlo, pero...</div>
-    <div class="ok">ORDER BY 2  ← "ordena por la 2ª columna del SELECT", más limpio</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">LIMIT — mostrar solo N filas</div>
-    <div class="code">-- Los 5 usuarios que más han gastado
-SELECT u.email, u.nombre
-FROM usuario u
-JOIN pedido p ON u.email=p.usuario
-JOIN linped l ON l.numpedido=p.numpedido
-GROUP BY u.email, u.nombre
-ORDER BY SUM(importe*cantidad) DESC
-LIMIT 5;</div>
-  </div>
-</div>
-
-<div id="w1-trucos" class="section">
-  <p class="sec-title">Trucos y errores comunes</p>
-
-  <div class="card">
-    <div class="card-title">COUNT(*) vs COUNT(DISTINCT numpedido)</div>
-    <div class="card-body">Cuando haces JOIN con linped y quieres contar pedidos, un pedido puede tener varias líneas → aparece varias veces. Usa COUNT(DISTINCT numpedido).</div>
-    <div class="code">-- MAL: cuenta líneas, no pedidos
-SELECT fecha, COUNT(*) FROM pedido p, linped l
-WHERE p.numpedido=l.numpedido GROUP BY fecha;
-
--- BIEN: cuenta pedidos distintos
-SELECT fecha, COUNT(DISTINCT l.numpedido)
-FROM pedido p, linped l
-WHERE p.numpedido=l.numpedido GROUP BY fecha;</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Cálculo del IVA incluido</div>
-    <div class="card-body">Cuando el precio ya lleva el IVA incluido (21%) y te piden separarlo:</div>
-    <div class="code">-- importe*cantidad = precio total con IVA incluido
-base imponible = importe*cantidad / 1.21
-IVA            = importe*cantidad / 1.21 * 0.21
-total          = importe*cantidad</div>
-    <div class="code">ROUND(SUM(importe*cantidad)/1.21, 2)      -- base
-ROUND(SUM(importe*cantidad)/1.21*0.21, 2) -- IVA</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">GROUP BY forzado por ORDER BY</div>
-    <div class="card-body">A veces necesitas GROUP BY no para mostrar un agregado, sino solo para ordenar por él:</div>
-    <div class="code">-- Usuarios ordenados por lo que han gastado (sin mostrar el total)
-SELECT u.email, u.nombre
-FROM usuario u JOIN pedido p ON u.email=p.usuario
-JOIN linped l ON l.numpedido=p.numpedido
-GROUP BY u.email, u.nombre
-ORDER BY SUM(importe*cantidad) DESC;</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">IS NULL para valores vacíos</div>
-    <div class="code">-- Artículos sin PVP
-SELECT COUNT(*) FROM articulo WHERE pvp IS NULL;
-
--- Artículos sin PVP y descatalogados
-SELECT COUNT(*) FROM articulo a, stock s
-WHERE a.cod=s.articulo
-AND pvp IS NULL AND entrega='Descatalogado';</div>
-    <div class="warn">pvp = NULL no funciona. Siempre: pvp IS NULL</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">STD — desviación estándar</div>
-    <div class="code">-- Media y desviación estándar de cantidad pedida por provincia
-SELECT p.codp, p.nombre, AVG(cantidad) media, STD(cantidad) desvest
-FROM provincia p, usuario u, pedido pd, linped l
-WHERE p.codp=u.provincia AND u.email=pd.usuario
-AND pd.numpedido=l.numpedido
-GROUP BY p.codp, p.nombre;</div>
-  </div>
-
-  <button class="askbtn" onclick="sendPrompt('Tengo dudas sobre algún concepto de los apuntes de SQL de FBD, puedes ayudarme?')">Tengo una duda ↗</button>
-</div>
-
-</div>
-        </div>
+    <a href="matematica_discreta.html" class="subject-card active" data-accent="green">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(200,240,74,0.1)">🧮</div>
+        <span class="status-badge has-content">1 widget</span>
       </div>
-
-      <div class="widget-wrapper" id="w2">
-        <div class="widget-header" onclick="toggleWidget('w2')">
-          <div class="widget-header-left">
-            <div class="widget-icon" style="background:rgba(124,106,247,0.1)">🔗</div>
-            <div>
-              <div class="widget-title">Operadores de conjuntos SQL</div>
-              <div class="widget-subtitle">T11 — UNION · INTERSECT · EXCEPT · EXISTS · NATURAL JOIN</div>
-            </div>
-          </div>
-          <span class="widget-chevron">▼</span>
-        </div>
-        <div class="widget-body">
-          <div class="leccion-badge"><span class="leccion-dot"></span>TEMA 11</div>
-<div class="w">
-<h2 class="sr-only">Apuntes SQL conjuntos — T11 Fundamentos de Bases de Datos UA</h2>
-
-<div class="nav">
-  <button class="nb on" onclick="w2show('w2-union',this)">UNION</button>
-  <button class="nb" onclick="w2show('w2-intersect',this)">INTERSECT</button>
-  <button class="nb" onclick="w2show('w2-except',this)">EXCEPT</button>
-  <button class="nb" onclick="w2show('w2-exists',this)">EXISTS</button>
-  <button class="nb" onclick="w2show('w2-natural',this)">NATURAL JOIN</button>
-  <button class="nb" onclick="w2show('w2-trucos',this)">Trucos y errores</button>
-</div>
-
-<div id="w2-union" class="sec on">
-  <p class="stitle">UNION y UNION ALL</p>
-
-  <div class="card">
-    <span class="tag tpdf">PDF</span>
-    <div class="ct">¿Qué hace?</div>
-    <div class="cb">Junta los resultados de dos SELECT en uno solo. Las dos consultas deben tener el mismo número de columnas.</div>
-    <div class="rule">UNION elimina duplicados. UNION ALL los mantiene (y es más rápido).</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">UNION — ejemplo básico</div>
-    <div class="code">-- Artículos en cesta O en algún pedido
-SELECT articulo FROM cesta
-UNION
-SELECT articulo FROM linped;</div>
-    <div class="cb">Si un artículo está en los dos sitios, aparece solo una vez en el resultado.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">UNION ALL — cuando sabes que no hay duplicados</div>
-    <div class="code">-- Artículos de pack y de cesta, aunque se repitan
-SELECT p.articulo, a.nombre
-FROM ptienea p JOIN articulo a ON p.articulo = a.cod
-UNION ALL
-SELECT c.articulo, a.nombre
-FROM cesta c JOIN articulo a ON c.articulo = a.cod;</div>
-    <div class="cb">Usa UNION ALL cuando los conjuntos son disjuntos (no puede haber duplicados). Es menos trabajo para la base de datos.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">UNION para clasificar usuarios por gasto</div>
-    <div class="code">SELECT email, nombre, apellidos, 'GRAN CLIENTE' tipo
-FROM usuario JOIN pedido p ON p.usuario=email
-JOIN linped l ON l.numpedido=p.numpedido
-GROUP BY email, nombre, apellidos
-HAVING SUM(cantidad*importe) > 10000
-UNION ALL
-SELECT email, nombre, apellidos, 'CLIENTE MEDIO'
-FROM usuario JOIN pedido p ON p.usuario=email
-JOIN linped l ON l.numpedido=p.numpedido
-GROUP BY email, nombre, apellidos
-HAVING SUM(cantidad*importe) BETWEEN 6000 AND 10000
-UNION ALL
-SELECT email, nombre, apellidos, 'COMPRA POCO'
-FROM usuario JOIN pedido p ON p.usuario=email
-JOIN linped l ON l.numpedido=p.numpedido
-GROUP BY email, nombre, apellidos
-HAVING SUM(cantidad*importe) < 6000
-ORDER BY 3;</div>
-    <div class="cb">Cada SELECT clasifica un grupo. Se unen con UNION ALL porque un usuario solo puede caer en una categoría → no hay duplicados.</div>
-  </div>
-</div>
-
-<div id="w2-intersect" class="sec">
-  <p class="stitle">INTERSECT</p>
-
-  <div class="card">
-    <span class="tag tpdf">PDF</span>
-    <div class="ct">¿Qué hace?</div>
-    <div class="cb">Devuelve solo los valores que aparecen en AMBAS consultas. Es la intersección de conjuntos.</div>
-    <div class="rule">A INTERSECT B → solo lo que está en A y también en B.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Artículos en stock, en cesta Y pedidos</div>
-    <div class="code">SELECT articulo FROM stock
-INTERSECT
-SELECT articulo FROM cesta
-INTERSECT
-SELECT articulo FROM linped
-ORDER BY articulo;</div>
-    <div class="cb">Se pueden encadenar varios INTERSECT. Solo salen los artículos que están en los tres sitios a la vez.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Pedidos que incluyen cámaras Y televisores</div>
-    <div class="code">SELECT * FROM pedido
-WHERE numpedido IN (
-  SELECT numpedido FROM linped JOIN camara ON articulo = cod
-  INTERSECT
-  SELECT numpedido FROM linped JOIN tv ON articulo = cod
-);</div>
-    <div class="cb">Primero saca los pedidos con cámaras, luego los que tienen televisores. INTERSECT solo deja los que están en ambos.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Artículos en cesta que el usuario ya compró</div>
-    <div class="code">SELECT usuario, articulo FROM cesta
-INTERSECT
-SELECT p.usuario, l.articulo
-FROM pedido p JOIN linped l ON p.numPedido = l.numPedido;</div>
-    <div class="cb">Aquí INTERSECT trabaja con dos columnas a la vez: usuario y artículo deben coincidir en ambas consultas.</div>
-  </div>
-</div>
-
-<div id="w2-except" class="sec">
-  <p class="stitle">EXCEPT</p>
-
-  <div class="card">
-    <span class="tag tpdf">PDF</span>
-    <div class="ct">¿Qué hace?</div>
-    <div class="cb">Devuelve lo que está en la primera consulta pero NO en la segunda. Es la diferencia de conjuntos.</div>
-    <div class="rule">A EXCEPT B → lo que está en A pero no en B. El orden importa.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Artículos en cesta pero no en stock</div>
-    <div class="code">SELECT articulo FROM cesta
-EXCEPT
-SELECT articulo FROM stock;</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Usuarios con pedidos pero sin dirección alternativa</div>
-    <div class="code">SELECT usuario FROM pedido
-EXCEPT
-SELECT email FROM direnvio;</div>
-    <div class="cb">Saca todos los que han pedido y le quita los que tienen dirección alternativa. Lo que queda: los que pidieron pero nunca pusieron dirección alternativa.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Encadenar EXCEPT</div>
-    <div class="code">-- Artículos que no son pack ni han sido pedidos
-SELECT cod FROM articulo
-EXCEPT
-SELECT cod FROM pack
-EXCEPT
-SELECT articulo FROM linped;</div>
-    <div class="cb">Se aplican en orden: primero quita los packs, luego quita los pedidos. El resultado son artículos normales nunca pedidos.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Usuarios que han pedido televisores pero nunca cámaras</div>
-    <div class="code">SELECT email, nombre, apellidos
-FROM usuario u
-JOIN pedido p ON u.email=p.usuario
-JOIN linped l ON l.numpedido=p.numpedido
-JOIN tv ON tv.cod=l.articulo
-EXCEPT
-SELECT email, nombre, apellidos
-FROM usuario u
-JOIN pedido p ON u.email=p.usuario
-JOIN linped l ON l.numpedido=p.numpedido
-JOIN camara c ON c.cod=l.articulo;</div>
-    <div class="cb">Cada SELECT puede ser una consulta compleja con JOINs. EXCEPT resta el segundo resultado al primero.</div>
-  </div>
-</div>
-
-<div id="w2-exists" class="sec">
-  <p class="stitle">EXISTS y NOT EXISTS</p>
-
-  <div class="card">
-    <span class="tag tpdf">PDF</span>
-    <div class="ct">¿Qué hace?</div>
-    <div class="cb">No devuelve filas, solo comprueba si una subconsulta tiene resultados. Devuelve verdadero (1) o falso (0).</div>
-    <div class="rule">EXISTS → "existe alguna fila que cumpla esto". NOT EXISTS → "no existe ninguna fila que cumpla esto".</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Marcas con y sin artículos</div>
-    <div class="code">-- Marcas QUE tienen artículos
-SELECT marca FROM marca m
-WHERE EXISTS (SELECT 1 FROM articulo a WHERE a.marca = m.marca);
-
--- Marcas que NO tienen artículos
-SELECT marca FROM marca m
-WHERE NOT EXISTS (SELECT 1 FROM articulo a WHERE a.marca = m.marca);</div>
-    <div class="cb">El SELECT 1 dentro es irrelevante, solo importa si devuelve algo. La subconsulta usa m.marca de la consulta externa → es una subconsulta correlacionada.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">NOT EXISTS vs NOT IN — ojo con los NULLs</div>
-    <div class="warn">SELECT marca FROM marca WHERE marca NOT IN (SELECT marca FROM articulo);
--- PELIGRO: si articulo.marca tiene NULLs, devuelve tabla vacía</div>
-    <div class="ok">SELECT marca FROM marca m
-WHERE NOT EXISTS (SELECT 1 FROM articulo a WHERE a.marca = m.marca);
--- Correcto siempre, no le afectan los NULLs</div>
-    <div class="cb">Cuando hay NULLs en la columna de la subconsulta, NOT IN falla silenciosamente. NOT EXISTS siempre funciona bien. Usa NOT IN solo con listas de constantes o columnas que no admiten NULL.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Artículo incluido en TODOS los pedidos</div>
-    <div class="code">SELECT cod, nombre FROM articulo a
-WHERE NOT EXISTS (
-  SELECT 1 FROM pedido p
-  WHERE NOT EXISTS (
-    SELECT 1 FROM linped l
-    WHERE l.numpedido = p.numpedido
-    AND l.articulo = a.cod
-  )
-);</div>
-    <div class="cb">Doble NOT EXISTS: "artículo tal que NO existe pedido que NO lo incluya". Es el patrón para la división relacional.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">EXISTS como comprobación</div>
-    <div class="code">-- ¿Hay filas en la tabla marca?
-SELECT EXISTS (SELECT 1 FROM marca);
--- Devuelve 1 (sí) o 0 (no)
-
--- Mostrar 'sí' si hay filas
-SELECT 'sí' respuesta FROM dual
-WHERE EXISTS (SELECT 1 FROM marca);</div>
-  </div>
-</div>
-
-<div id="w2-natural" class="sec">
-  <p class="stitle">NATURAL JOIN</p>
-
-  <div class="card">
-    <span class="tag tpdf">PDF</span>
-    <div class="ct">¿Qué hace?</div>
-    <div class="cb">Une dos tablas automáticamente por todas las columnas que tienen el mismo nombre. No necesitas poner el ON.</div>
-    <div class="rule">Solo funciona bien cuando las columnas comunes son exactamente las que quieres usar para unir.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Ejemplo básico</div>
-    <div class="code">-- Equivalentes:
-SELECT * FROM articulo NATURAL JOIN memoria;
-
-SELECT * FROM articulo a, memoria m WHERE a.cod = m.cod;</div>
-    <div class="cb">Ambas hacen lo mismo porque la única columna común entre articulo y memoria es cod. Además, NATURAL JOIN no repite la columna común en el resultado.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Cuándo falla — demasiadas columnas comunes</div>
-    <div class="warn">SELECT * FROM usuario NATURAL JOIN direnvio;
--- Devuelve tabla VACÍA porque une por: email, calle, calle2, codpos, pueblo, provincia
--- Es casi imposible que todos esos campos coincidan a la vez</div>
-    <div class="cb">usuario y direnvio comparten 6 columnas con el mismo nombre. NATURAL JOIN las usa todas → condición imposible → ninguna fila coincide.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t11">T11</span>
-    <div class="ct">Cuándo produce producto cartesiano</div>
-    <div class="warn">SELECT * FROM cesta NATURAL JOIN pack;
--- Produce producto cartesiano porque no hay columnas comunes
--- cesta usa 'articulo', pack usa 'cod'</div>
-    <div class="cb">Si no hay columnas comunes, NATURAL JOIN se comporta como CROSS JOIN y genera todas las combinaciones posibles.</div>
-  </div>
-</div>
-
-<div id="w2-trucos" class="sec">
-  <p class="stitle">Trucos y errores comunes</p>
-
-  <div class="card">
-    <div class="ct">Las columnas deben coincidir en número</div>
-    <div class="warn">SELECT cod, nombre FROM articulo
-UNION
-SELECT articulo FROM linped;
--- ERROR: una tiene 2 columnas y la otra 1</div>
-    <div class="ok">SELECT cod FROM articulo
-UNION
-SELECT articulo FROM linped;  -- ambas con 1 columna</div>
-  </div>
-
-  <div class="card">
-    <div class="ct">ORDER BY solo al final de todo</div>
-    <div class="code">SELECT articulo FROM cesta
-UNION
-SELECT articulo FROM linped
-ORDER BY articulo;  -- solo aquí, al final del todo</div>
-    <div class="cb">No puedes poner ORDER BY en cada SELECT individual cuando usas UNION/INTERSECT/EXCEPT. Solo va una vez al final.</div>
-  </div>
-
-  <div class="card">
-    <div class="ct">NOT IN peligroso con NULLs</div>
-    <div class="code">-- Fechas de pedido que no coinciden con nacidos
--- NOT IN falla porque nacido tiene NULLs:
-SELECT fecha FROM pedido
-WHERE fecha NOT IN (SELECT nacido FROM usuario);
--- Devuelve 0 filas aunque debería devolver muchas
-
--- Correcto con EXCEPT:
-SELECT fecha FROM pedido
-EXCEPT
-SELECT nacido FROM usuario
-ORDER BY fecha;</div>
-  </div>
-
-  <div class="card">
-    <div class="ct">¿Cuándo usar cada operador?</div>
-    <div class="grid2">
-      <div class="mini"><strong>UNION</strong>esto O aquello, sin repetir</div>
-      <div class="mini"><strong>UNION ALL</strong>esto O aquello, con repetidos</div>
-      <div class="mini"><strong>INTERSECT</strong>esto Y aquello a la vez</div>
-      <div class="mini"><strong>EXCEPT</strong>esto pero NO aquello</div>
-    </div>
-    <div class="grid2">
-      <div class="mini"><strong>EXISTS</strong>¿existe alguno que...?</div>
-      <div class="mini"><strong>NOT EXISTS</strong>seguro con NULLs, mejor que NOT IN</div>
-    </div>
-  </div>
-
-  <button class="ab" onclick="sendPrompt('Tengo una duda sobre los operadores de conjuntos en SQL de FBD')">Tengo una duda ↗</button>
-</div>
-
-</div>
-        </div>
+      <div>
+        <div class="subject-name">Matemática Discreta</div>
+        <div class="subject-desc">Aritmética modular, grafos, combinatoria y lógica proposicional.</div>
       </div>
-
-
-      <div class="widget-wrapper" id="w3">
-        <div class="widget-header" onclick="toggleWidget('w3')">
-          <div class="widget-header-left">
-            <div class="widget-icon" style="background:rgba(200,240,74,0.1)">🧩</div>
-            <div>
-              <div class="widget-title">Tablas temporales y CTEs</div>
-              <div class="widget-subtitle">T12 — Subconsultas · FROM · WITH · Pivotar · Patrones</div>
-            </div>
-          </div>
-          <span class="widget-chevron">▼</span>
+      <div class="card-footer">
+        <div class="widget-pills">
+          <span class="pill done">✓ Lección 1 — Aritmética modular</span>
         </div>
-        <div class="widget-body">
-          <div class="leccion-badge"><span class="leccion-dot"></span>TEMA 12</div>
-<div class="w">
-<h2 class="sr-only">Apuntes tablas temporales T12 — Fundamentos de Bases de Datos UA</h2>
+        <span class="arrow">→</span>
+      </div>
+    </a>
 
-<div class="nav">
-  <button class="nb on" onclick="w3show('w3-columna',this)">Subconsulta como columna</button>
-  <button class="nb" onclick="w3show('w3-from',this)">Subconsulta en el FROM</button>
-  <button class="nb" onclick="w3show('w3-with',this)">WITH (CTE)</button>
-  <button class="nb" onclick="w3show('w3-pivot',this)">Pivotar tabla</button>
-  <button class="nb" onclick="w3show('w3-trucos',this)">Trucos y patrones</button>
-</div>
+    <a href="matematicas_2.html" class="subject-card active" data-accent="purple">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(124,106,247,0.1)">∫</div>
+        <span class="status-badge has-content">4 widgets</span>
+      </div>
+      <div>
+        <div class="subject-name">Matemáticas 2</div>
+        <div class="subject-desc">Cálculo, derivadas, límites, optimización y representación gráfica.</div>
+      </div>
+      <div class="card-footer">
+        <div class="widget-pills">
+          <span class="pill done">✓ Tema 1 — Python y librerías</span>
+          <span class="pill done">✓ Tema 2 — Derivadas y límites</span>
+          <span class="pill done">✓ Gráficas — plt.plot y symplot</span>
+          <span class="pill done">✓ Tema 3 — Cálculo integral</span>
+        </div>
+        <span class="arrow">→</span>
+      </div>
+    </a>
 
-<div id="w3-columna" class="sec on">
-  <p class="stitle">Subconsulta como columna</p>
+    <a href="fundamentos_bd.html" class="subject-card active" data-accent="teal">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(29,158,117,0.1)">🗄️</div>
+        <span class="status-badge has-content">3 widgets</span>
+      </div>
+      <div>
+        <div class="subject-name">Fundamentos de Bases de Datos</div>
+        <div class="subject-desc">SQL, modelo relacional, normalización y diseño de esquemas.</div>
+      </div>
+      <div class="card-footer">
+        <div class="widget-pills">
+          <span class="pill done">✓ T08-T10 — Agregado, GROUP BY, HAVING</span>
+          <span class="pill done">✓ T11 — Conjuntos SQL</span>
+          <span class="pill done">✓ T12 — Tablas temporales y CTEs</span>
+        </div>
+        <span class="arrow">→</span>
+      </div>
+    </a>
 
-  <div class="card">
-    <span class="tag tteo">Teoría</span>
-    <div class="ct">¿Qué es?</div>
-    <div class="cb">Una subconsulta dentro del SELECT que devuelve un único valor (1 columna, 1 fila) y lo muestra como una columna más del resultado.</div>
-    <div class="rule">Siempre debe devolver exactamente 1 columna y 1 fila. Si devuelve más, da error.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Mostrar varios conteos a la vez</div>
-    <div class="cb">Sin tablas temporales necesitarías varias consultas. Con subconsultas como columnas lo resuelves en una sola:</div>
-    <div class="code">-- Cantidad de televisores, cámaras y objetivos en una sola fila
-SELECT
-  (SELECT COUNT(*) FROM tv) tv,
-  (SELECT COUNT(*) FROM camara) camaras,
-  (SELECT COUNT(*) FROM objetivo) objetivos;</div>
-    <div class="cb">Cada subconsulta se ejecuta de forma independiente y devuelve un número. El resultado es una única fila con tres columnas.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Subconsulta como columna calculada</div>
-    <div class="cb">Puedes usar el resultado para hacer cálculos con otros valores de la fila:</div>
-    <div class="code">-- PVP de cada artículo y su % sobre el máximo global
-SELECT cod, pvp,
-  pvp / (SELECT MAX(pvp) FROM articulo) * 100 AS pct
-FROM articulo
-WHERE pvp BETWEEN 1000 AND 1200;</div>
-    <div class="cb">La subconsulta calcula el MAX una vez y ese valor se usa en cada fila para calcular el porcentaje.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Sustituir un valor por otro calculado</div>
-    <div class="code">-- TVs Sony mostrando la pantalla media de TVs 1920x1080 en vez de la suya
-SELECT tv.cod, panel,
-  (SELECT ROUND(AVG(pantalla),0) FROM tv WHERE resolucion='1920 x 1080') pantalla,
-  resolucion, tdt
-FROM tv, articulo a
-WHERE tv.cod = a.cod AND marca = 'SONY';</div>
-    <div class="cb">La columna pantalla no muestra el valor real del televisor, sino el promedio calculado por la subconsulta. Útil para comparar cada fila contra un valor global.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Porcentajes con subconsultas</div>
-    <div class="code">-- % de TVs, cámaras y objetivos sobre el total de artículos
-SELECT
-  (SELECT COUNT(*) FROM tv)/(SELECT COUNT(*) FROM articulo)*100 tvPC,
-  (SELECT COUNT(*) FROM camara)/(SELECT COUNT(*) FROM articulo)*100 camarasPC,
-  (SELECT COUNT(*) FROM objetivo)/(SELECT COUNT(*) FROM articulo)*100 objetivosPC;</div>
-    <div class="nota">Versión más eficiente: calcular el total una sola vez y reutilizarlo. Ver sección "Subconsulta en el FROM".</div>
-  </div>
-</div>
-
-<div id="w3-from" class="sec">
-  <p class="stitle">Subconsulta en el FROM</p>
-
-  <div class="card">
-    <span class="tag tteo">Teoría</span>
-    <div class="ct">¿Qué es?</div>
-    <div class="cb">Pones una consulta completa dentro del FROM y le das un alias. Se comporta como una tabla normal que puedes usar en el WHERE, JOIN, SELECT...</div>
-    <div class="rule">Siempre hay que darle un alias a la subconsulta del FROM, si no da error.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Ejemplo básico — reutilizar un cálculo</div>
-    <div class="code">-- Más eficiente: calcular total de artículos solo una vez
-SELECT
-  (SELECT COUNT(*) FROM tv) / t.total * 100 tvPC,
-  (SELECT COUNT(*) FROM camara) / t.total * 100 camarasPC,
-  (SELECT COUNT(*) FROM objetivo) / t.total * 100 objetivosPC
-FROM (SELECT COUNT(*) total FROM articulo) t;
---                                         ^ alias obligatorio</div>
-    <div class="cb">La subconsulta <code>t</code> devuelve una sola fila con el total. Luego se usa <code>t.total</code> en cada cálculo sin tener que repetir la consulta.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Subconsulta en FROM como tabla intermedia</div>
-    <div class="code">-- Provincias con promedio de importe de pedido > 2500€
-SELECT provincia, COUNT(*) pedidos
-FROM usuario u,
-  (SELECT usuario, p.numpedido, SUM(importe*cantidad) total
-   FROM pedido p JOIN linped l ON p.numpedido=l.numpedido
-   GROUP BY usuario, numpedido) pd
-WHERE u.email = pd.usuario
-GROUP BY provincia
-HAVING AVG(total) > 2500;</div>
-    <div class="cb">Primero la subconsulta <code>pd</code> calcula el importe total de cada pedido. Luego la consulta exterior agrupa por provincia y filtra con HAVING. Sin la subconsulta no podrías hacer <code>AVG(total por pedido)</code>.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Producto cartesiano entre subconsultas</div>
-    <div class="code">-- Total alicantinos, los de Agost, y su porcentaje
-SELECT totalAlicante, deAgost,
-  ROUND(deAgost/totalAlicante*100, 2) pct
-FROM
-  (SELECT COUNT(*) totalAlicante FROM usuario WHERE provincia='03') t1,
-  (SELECT COUNT(*) deAgost FROM usuario WHERE provincia='03' AND pueblo='0020') t2;</div>
-    <div class="cb">Cada subconsulta devuelve 1 fila × 1 columna. El producto cartesiano de dos tablas de 1 fila es... 1 fila. Es un truco habitual para combinar varios valores calculados.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">LEFT JOIN con subconsulta</div>
-    <div class="code">-- Usuarios de provincia 03, y si tienen pedido > 10000€ mostrarlo
-SELECT email, nombre, apellidos, numpedido, valor
-FROM usuario u LEFT JOIN
-  (SELECT p.numpedido, usuario, SUM(cantidad*importe) valor
-   FROM pedido p, linped l
-   WHERE p.numpedido = l.numpedido
-   GROUP BY numpedido, usuario
-   HAVING SUM(cantidad*importe) > 10000) calculo
-ON email = usuario
-WHERE provincia = '03'
-ORDER BY valor DESC;</div>
-    <div class="cb">El LEFT JOIN con la subconsulta hace que los usuarios sin pedidos grandes aparezcan igual, con NULL en numpedido y valor.</div>
-  </div>
-</div>
-
-<div id="w3-with" class="sec">
-  <p class="stitle">WITH — CTE (Common Table Expression)</p>
-
-  <div class="card">
-    <span class="tag tteo">Teoría</span>
-    <div class="ct">¿Qué es?</div>
-    <div class="cb">Es como una subconsulta en el FROM pero definida al principio, con nombre, y reutilizable varias veces en la misma consulta.</div>
-    <div class="code">WITH nombreCTE AS (
-  SELECT ...  -- la consulta temporal
-)
-SELECT ... FROM nombreCTE ...  -- la usas aquí</div>
-    <div class="rule">Ventaja: si necesitas usar el mismo cálculo en 3 sitios, lo defines una vez con WITH y lo reutilizas. Con subconsultas en el FROM tendrías que repetirlo.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">CTE básica — marca del artículo más caro</div>
-    <div class="code">WITH mmax AS (
-  SELECT marca FROM articulo
-  WHERE pvp = (SELECT MAX(pvp) FROM articulo)
-)
-SELECT articulo, importe
-FROM linped l
-JOIN articulo a ON l.articulo = a.cod
-CROSS JOIN mmax
-WHERE a.marca = mmax.marca;</div>
-    <div class="cb">La CTE calcula la marca del artículo más caro. Luego la consulta principal la usa para filtrar. Sin CTE tendrías que repetir esa subconsulta.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">CTE para comparar con la media de su grupo</div>
-    <div class="code">-- Artículos con PVP superior a la media de su propia marca
-WITH media_marca AS (
-  SELECT marca, AVG(pvp) AS media_pvp
-  FROM articulo
-  GROUP BY marca
-)
-SELECT a.cod, a.marca, a.pvp, l.importe
-FROM articulo a
-JOIN media_marca mm ON a.marca = mm.marca
-JOIN linped l ON l.articulo = a.cod
-WHERE a.pvp > mm.media_pvp;</div>
-    <div class="cb">La CTE calcula la media por marca. Luego se une con articulo para comparar cada artículo contra la media de su propia marca. Esto sería muy difícil sin tabla temporal.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Varias CTEs a la vez</div>
-    <div class="code">-- Proporciones de TVs, cámaras y objetivos
-WITH
-  t AS (SELECT COUNT(*) tvs FROM tv),
-  c AS (SELECT COUNT(*) cams FROM camara),
-  o AS (SELECT COUNT(*) objs FROM objetivo)
-SELECT
-  tvs/(tvs+cams+objs) promtv,
-  cams/(tvs+cams+objs) promcam,
-  objs/(tvs+cams+objs) promobj,
-  (tvs+cams+objs) total
-FROM t, c, o;</div>
-    <div class="cb">Se pueden definir varias CTEs separadas por comas después del WITH. Cada una tiene su nombre y todas están disponibles en la consulta final.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">CTE con cálculo en dos etapas</div>
-    <div class="code">-- Por provincia: promedio de la máxima cantidad pedida en cada pedido
-WITH maximos AS (
-  SELECT numpedido, MAX(cantidad) cants
-  FROM linped
-  GROUP BY numpedido
-)
-SELECT provincia, AVG(cants)
-FROM maximos m
-JOIN pedido p ON m.numpedido = p.numpedido
-JOIN usuario u ON p.usuario = u.email
-GROUP BY provincia;</div>
-    <div class="cb">Primero la CTE calcula el máximo de cantidad por pedido. Luego la consulta exterior calcula el promedio de esos máximos por provincia. Sin CTE no podrías hacer AVG sobre un MAX previamente calculado.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">La marca más vendida</div>
-    <div class="code">-- Marca con mayor cantidad total vendida
-WITH ventas_marca AS (
-  SELECT a.marca, SUM(l.cantidad) AS unidades
-  FROM articulo a JOIN linped l ON l.articulo = a.cod
-  GROUP BY a.marca
-)
-SELECT marca, unidades
-FROM ventas_marca
-WHERE unidades = (SELECT MAX(unidades) FROM ventas_marca);</div>
-    <div class="cb">La CTE se reutiliza dos veces: una en el FROM y otra en la subconsulta del WHERE. Sin CTE tendrías que escribir la misma consulta dos veces.</div>
-  </div>
-</div>
-
-<div id="w3-pivot" class="sec">
-  <p class="stitle">Pivotar una tabla</p>
-
-  <div class="card">
-    <span class="tag tteo">Teoría</span>
-    <div class="ct">¿Qué es pivotar?</div>
-    <div class="cb">Convertir filas en columnas. Por ejemplo, tener una fila por mes y convertirlo en una fila por usuario con una columna por cada mes.</div>
-    <div class="code">-- Normal: una fila por mes
-mes  | pedidos
-10   | 5
-11   | 3
-12   | 8
-
--- Pivotado: una sola fila
-octubre | noviembre | diciembre
-5       | 3         | 8</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Pivotar con subconsultas como columnas</div>
-    <div class="code">-- Pedidos en oct, nov, dic de cualquier año
-SELECT
-  (SELECT COUNT(*) FROM pedido WHERE MONTH(fecha)=10) octubre,
-  (SELECT COUNT(*) FROM pedido WHERE MONTH(fecha)=11) noviembre,
-  (SELECT COUNT(*) FROM pedido WHERE MONTH(fecha)=12) diciembre;</div>
-    <div class="cb">Cada columna es una subconsulta que filtra por un mes. Simple pero ineficiente si hay muchos meses porque recorre la tabla una vez por columna.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag t12">T12</span>
-    <div class="ct">Pivotar con CTE + IF — más eficiente</div>
-    <div class="code">WITH contados AS (
-  SELECT usuario, MONTH(fecha) mes, COUNT(*) pedidos
-  FROM pedido p JOIN usuario u ON p.usuario = u.email
-  WHERE YEAR(fecha) = 2010
-  GROUP BY usuario, MONTH(fecha)
-)
-SELECT usuario,
-  MAX(IF(mes=1,  pedidos, 0)) Ene,
-  MAX(IF(mes=2,  pedidos, 0)) Feb,
-  MAX(IF(mes=3,  pedidos, 0)) Mar,
-  MAX(IF(mes=10, pedidos, 0)) Oct,
-  MAX(IF(mes=11, pedidos, 0)) Nov,
-  MAX(IF(mes=12, pedidos, 0)) Dic
-FROM contados
-GROUP BY usuario
-HAVING SUM(pedidos) > 1;</div>
-    <div class="cb">La CTE calcula los datos una vez. Luego IF(mes=1, pedidos, 0) devuelve el valor si es enero o 0 si no. MAX() se queda con el valor real (no el 0). Solo recorre la tabla una vez.</div>
-  </div>
-
-  <div class="card">
-    <span class="tag tteo">Teoría</span>
-    <div class="ct">IFNULL — quitar los NULLs del pivotado</div>
-    <div class="code">-- Si un artículo no tiene pedidos en octubre, sale NULL
--- IFNULL lo sustituye por vacío o por 0
-IFNULL((SELECT veces FROM micte WHERE mes=10 AND micte.articulo=t2.articulo), 0) octubre</div>
-    <div class="cb">Cuando un artículo no aparece en un mes, la subconsulta no encuentra fila y devuelve NULL. IFNULL lo convierte en 0 o en lo que prefieras.</div>
-  </div>
-</div>
-
-<div id="w3-trucos" class="sec">
-  <p class="stitle">Trucos y patrones habituales</p>
-
-  <div class="card">
-    <div class="ct">¿Cuándo usar cada técnica?</div>
-    <div class="cb" style="margin-bottom:.75rem">La regla general es: piensa el problema en etapas.</div>
-    <div class="ok">Si necesitas un único valor calculado → subconsulta como columna</div>
-    <div class="ok">Si necesitas una tabla intermedia que usar una vez → subconsulta en el FROM</div>
-    <div class="ok">Si necesitas reutilizar el mismo cálculo varias veces → WITH (CTE)</div>
-  </div>
-
-  <div class="card">
-    <div class="ct">El patrón "dos etapas"</div>
-    <div class="cb">Muchos ejercicios de T12 siguen este patrón:</div>
-    <div class="code">-- Etapa 1: calcular lo que necesitas como tabla temporal
-WITH etapa1 AS (
-  SELECT usuario, SUM(importe*cantidad) total
-  FROM pedido p JOIN linped l ON p.numpedido=l.numpedido
-  GROUP BY usuario
-)
--- Etapa 2: usar ese resultado para lo que realmente pides
-SELECT provincia, AVG(total)
-FROM usuario u JOIN etapa1 ON u.email = etapa1.usuario
-GROUP BY provincia
-HAVING AVG(total) > 2500;</div>
-    <div class="cb">Si intentas hacerlo todo en una consulta, AVG(SUM(...)) da error porque no puedes anidar agregados. La tabla temporal lo resuelve.</div>
-  </div>
-
-  <div class="card">
-    <div class="ct">No se pueden anidar agregados</div>
-    <div class="warn">SELECT AVG(SUM(cantidad)) FROM linped GROUP BY articulo;
--- ERROR: no puedes hacer AVG de un SUM directamente</div>
-    <div class="ok">-- Solución: tabla temporal
-WITH sumas AS (
-  SELECT articulo, SUM(cantidad) total FROM linped GROUP BY articulo
-)
-SELECT AVG(total) FROM sumas;</div>
-  </div>
-
-  <div class="card">
-    <div class="ct">Producto cartesiano de subconsultas de 1 fila</div>
-    <div class="code">-- Útil para combinar varios valores calculados
-SELECT totalA, totalB, totalA/totalB*100 pct
-FROM
-  (SELECT COUNT(*) totalA FROM tabla_a) a,
-  (SELECT COUNT(*) totalB FROM tabla_b) b;</div>
-    <div class="cb">Cuando cada subconsulta devuelve exactamente 1 fila, el producto cartesiano también devuelve 1 fila. Es un patrón seguro y habitual en T12.</div>
-  </div>
-
-  <button class="ab" onclick="sendPrompt('Tengo una duda sobre tablas temporales o CTEs en SQL de FBD')">Tengo una duda ↗</button>
-</div>
-
-</div>
+    <div class="subject-card empty">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(74,176,240,0.1)">💻</div>
+        <span class="status-badge">Sin widgets</span>
+      </div>
+      <div>
+        <div class="subject-name">Estructura de los Computadores</div>
+        <div class="subject-desc">Arquitectura, ensamblador, memoria y sistemas de entrada/salida.</div>
+      </div>
+      <div class="card-footer">
+        <div class="widget-pills">
+          <span class="pill">Próximamente</span>
         </div>
       </div>
     </div>
+
+    <div class="subject-card empty">
+      <div class="card-top">
+        <div class="subject-icon" style="background:rgba(240,160,74,0.1)">⌨️</div>
+        <span class="status-badge">Sin widgets</span>
+      </div>
+      <div>
+        <div class="subject-name">Programación 2</div>
+        <div class="subject-desc">Estructuras de datos, algoritmos, POO avanzada y complejidad.</div>
+      </div>
+      <div class="card-footer">
+        <div class="widget-pills">
+          <span class="pill">Próximamente</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
 
-<script>
-  function toggleWidget(id) { document.getElementById(id).classList.toggle('collapsed'); }
-  function scrollToWidget(id, el) {
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-  function w1show(id, btn) {
-    document.querySelectorAll('#w1 .section, #w1 .sec').forEach(s => { s.classList.remove('on'); });
-    document.querySelectorAll('#w1 .nb').forEach(b => b.classList.remove('on'));
-    document.getElementById(id).classList.add('on');
-    btn.classList.add('on');
-  }
-  function w2show(id, btn) {
-    document.querySelectorAll('#w2 .section, #w2 .sec').forEach(s => { s.classList.remove('on'); });
-    document.querySelectorAll('#w2 .nb').forEach(b => b.classList.remove('on'));
-    document.getElementById(id).classList.add('on');
-    btn.classList.add('on');
-  }
-
-  function w3show(id, btn) {
-    document.querySelectorAll('#w3 .sec').forEach(s => s.classList.remove('on'));
-    document.querySelectorAll('#w3 .nb').forEach(b => b.classList.remove('on'));
-    document.getElementById(id).classList.add('on');
-    btn.classList.add('on');
-  }
-</script>
 </body>
 </html>
