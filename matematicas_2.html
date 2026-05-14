@@ -1824,7 +1824,7 @@ plt.show()</pre>
     document.querySelectorAll('.widget-wrapper').length;
 
   // QUIZ
-  const questions = [
+  const w2questions = [
     { q: "¿Qué significa que los límites laterales de f en x=3 sean distintos?", opts: ["Que f es continua en x=3","Que el límite en x=3 no existe","Que f tiene un máximo en x=3","Que f es derivable en x=3"], ans: 1, exp: "Si lim(+) ≠ lim(−), el límite bilateral en ese punto no existe." },
     { q: "¿Qué hace sp.limit(f, x, sp.oo)?", opts: ["Calcula el límite en x=0","Calcula el límite cuando x tiende a infinito","Evalúa f en infinito","Busca asíntotas verticales"], ans: 1, exp: "sp.oo representa infinito en sympy. Esto calcula el límite cuando x → +∞, útil para asíntotas horizontales." },
     { q: "¿Qué son los límites iterados de f(x,y)?", opts: ["El límite de f cuando x e y tienden a la vez","Calcular primero el límite en y, luego en x (y viceversa)","La derivada parcial respecto a x e y","El gradiente de f"], ans: 1, exp: "Los límites iterados calculan primero un límite y luego el otro. El orden puede dar resultados distintos." },
@@ -1837,12 +1837,12 @@ plt.show()</pre>
     { q: "En optimización, ¿por qué se descartan soluciones negativas?", opts: ["Porque sympy no las calcula bien","Porque en problemas físicos las dimensiones siempre son positivas","Porque la segunda derivada las descarta","Porque scipy las ignora"], ans: 1, exp: "En problemas reales (dimensiones de una caja, área de una ventana...) los valores negativos no tienen sentido físico." }
   ];
 
-  let current = 0, score = 0, answered = false;
-  const order = [...Array(questions.length).keys()].sort(() => Math.random()-0.5);
+  let w2current = 0, w2score = 0, w2answered = false;
+  const w2order = [...Array(w2w2questions.length).keys()].sort(() => Math.random()-0.5);
 
   function w2loadQ() {
-    const q = questions[order[current]];
-    document.getElementById('w2-q-num').textContent = 'Pregunta ' + (current+1) + ' de ' + questions.length;
+    const q = w2questions[w2order[current]];
+    document.getElementById('w2-q-num').textContent = 'Pregunta ' + (w2current+1) + ' de ' + w2questions.length;
     document.getElementById('w2-q-text').textContent = q.q;
     const opts = document.getElementById('w2-q-options');
     opts.innerHTML = '';
@@ -1859,8 +1859,8 @@ plt.show()</pre>
   }
 
   function w2answer(i, q) {
-    if (answered) return;
-    answered = true;
+    if (w2answered) return;
+    w2answered = true;
     const btns = document.querySelectorAll('#w1-s-quiz .quiz-btn');
     btns.forEach((b, idx) => {
       if (idx === q.ans) b.classList.add('correct');
@@ -1868,7 +1868,7 @@ plt.show()</pre>
     });
     const fb = document.getElementById('w2-q-feedback');
     if (i === q.ans) {
-      score++;
+      w2score++;
       fb.style.background = 'rgba(74,240,160,0.08)';
       fb.style.color = '#4af0a0';
     } else {
@@ -1881,19 +1881,19 @@ plt.show()</pre>
   }
 
   function w2nextQ() {
-    current++;
-    if (current >= questions.length) {
+    w2current++;
+    if (w2current >= w2questions.length) {
       document.getElementById('w2-quiz-card').style.display = 'none';
       document.getElementById('w2-quiz-result').style.display = 'block';
-      const pct = Math.round(score/questions.length*100);
-      document.getElementById('w2-result-title').textContent = score + ' / ' + questions.length + ' correctas (' + pct + '%)';
+      const pct = Math.round(w2score/w2questions.length*100);
+      document.getElementById('w2-result-title').textContent = score + ' / ' + w2questions.length + ' correctas (' + pct + '%)';
       document.getElementById('w2-result-text').textContent = pct >= 80 ? 'Muy bien, tienes el tema dominado.' : pct >= 50 ? 'Bien, repasa los apartados donde fallaste.' : 'Repasa los conceptos con más calma y vuelve a intentarlo.';
     } else { w2loadQ(); }
   }
 
   function w2restartQuiz() {
     current = 0; score = 0; answered = false;
-    order.sort(() => Math.random()-0.5);
+    w2order.sort(() => Math.random()-0.5);
     document.getElementById('w2-quiz-card').style.display = 'block';
     document.getElementById('w2-quiz-result').style.display = 'none';
     w2loadQ();
@@ -1980,7 +1980,7 @@ plt.show()</pre>
     btn.classList.add('active');
   }
 
-const questions = [
+const w4questions = [
   { q: "¿Qué hace xvalues[:-1] en la suma izquierda?", opts: ["Quita el primer punto","Quita el último punto","Quita todos los extremos","Invierte el array"], ans: 1, exp: "xvalues[:-1] coge todos los puntos menos el último, que son los extremos izquierdos de cada subintervalo." },
   { q: "¿Qué devuelve scipy.integrate.quad?", opts: ["Solo el valor","Una tupla (valor, error)","La expresión simbólica","El número de iteraciones"], ans: 1, exp: "quad devuelve una tupla. J[0] es el valor de la integral y J[1] es el error absoluto estimado." },
   { q: "¿Cuál es la fórmula del error relativo?", opts: ["valor_exacto - aproximacion","abs(valor_exacto - aproximacion)","abs(valor_exacto - aproximacion) / abs(valor_exacto)","aproximacion / valor_exacto"], ans: 2, exp: "El error relativo es la diferencia en valor absoluto dividida por el valor exacto en valor absoluto." },
@@ -1993,8 +1993,8 @@ const questions = [
   { q: "¿Cómo se representa el infinito en sympy?", opts: ["np.inf","float('inf')","sp.oo","math.inf"], ans: 2, exp: "En sympy el infinito es sp.oo (o solo oo si se importa de sympy). En scipy/numpy se usa np.inf." }
 ];
 
-let current = 0, score = 0, answered = false;
-const order = [...Array(questions.length).keys()].sort(() => Math.random()-0.5);
+let w4current = 0, w4score = 0, w4answered = false;
+const w4order = [...Array(w4w2questions.length).keys()].sort(() => Math.random()-0.5);
 
 function w4show(id, btn) {
   document.querySelectorAll('#w4 .section').forEach(s => s.classList.remove('active'));
@@ -2004,8 +2004,8 @@ function w4show(id, btn) {
 }
 
 function w4loadQ() {
-  const q = questions[order[current]];
-  document.getElementById('w4-q-num').textContent = 'Pregunta ' + (current+1) + ' de ' + questions.length;
+  const q = w4questions[order[current]];
+  document.getElementById('w4-q-num').textContent = 'Pregunta ' + (w4current+1) + ' de ' + w4questions.length;
   document.getElementById('w4-q-text').textContent = q.q;
   const opts = document.getElementById('w4-q-options');
   opts.innerHTML = '';
@@ -2023,13 +2023,13 @@ function w4loadQ() {
 }
 
 function w4answer(i, q) {
-  if (answered) return;
-  answered = true;
+  if (w4answered) return;
+  w4answered = true;
   document.querySelectorAll('#w4 .quiz-btn').forEach((b, idx) => {
     b.classList.add(idx === q.ans ? 'correct' : 'wrong');
   });
   const fb = document.getElementById('w4-q-feedback');
-  if (i === q.ans) { score++; fb.style.background = 'var(--color-background-success)'; fb.style.color = 'var(--color-text-success)'; }
+  if (i === q.ans) { w4score++; fb.style.background = 'var(--color-background-success)'; fb.style.color = 'var(--color-text-success)'; }
   else { fb.style.background = 'var(--color-background-danger)'; fb.style.color = 'var(--color-text-danger)'; }
   fb.textContent = q.exp;
   fb.classList.add('show');
@@ -2037,12 +2037,12 @@ function w4answer(i, q) {
 }
 
 function w4nextQ() {
-  current++;
-  if (current >= questions.length) {
+  w4current++;
+  if (w4current >= w4questions.length) {
     document.getElementById('w4-quiz-card').style.display = 'none';
     document.getElementById('w4-quiz-result').style.display = 'block';
-    const pct = Math.round(score/questions.length*100);
-    document.getElementById('w4-result-title').textContent = score + ' / ' + questions.length + ' correctas (' + pct + '%)';
+    const pct = Math.round(w4score/w4questions.length*100);
+    document.getElementById('w4-result-title').textContent = score + ' / ' + w4questions.length + ' correctas (' + pct + '%)';
     document.getElementById('w4-result-text').textContent = pct >= 80 ? 'Muy bien, tienes el tema dominado.' : pct >= 50 ? 'Bien, repasa los apartados donde fallaste.' : 'Repasa los conceptos con más calma y vuelve a intentarlo.';
   } else { w4loadQ(); }
 }
