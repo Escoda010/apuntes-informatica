@@ -105,7 +105,7 @@
       <h1>Fundamentos de <em>Bases de Datos</em></h1>
     </div>
     <div class="header-meta">
-      <div class="widget-count">2</div>
+      <div class="widget-count">3</div>
       widgets
     </div>
   </div>
@@ -118,6 +118,7 @@
       <ul class="nav-list">
         <li class="nav-item active" onclick="scrollToWidget('w1', this)"><span class="nav-num">01</span>T08-T10 — SQL agregado</li>
         <li class="nav-item" onclick="scrollToWidget('w2', this)"><span class="nav-num">02</span>T11 — Conjuntos SQL</li>
+        <li class="nav-item" onclick="scrollToWidget('w3', this)"><span class="nav-num">03</span>T12 — Tablas temporales</li>
       </ul>
       <div class="sidebar-divider"></div>
       <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
@@ -775,6 +776,369 @@ ORDER BY fecha;</div>
         </div>
       </div>
 
+
+      <div class="widget-wrapper" id="w3">
+        <div class="widget-header" onclick="toggleWidget('w3')">
+          <div class="widget-header-left">
+            <div class="widget-icon" style="background:rgba(200,240,74,0.1)">🧩</div>
+            <div>
+              <div class="widget-title">Tablas temporales y CTEs</div>
+              <div class="widget-subtitle">T12 — Subconsultas · FROM · WITH · Pivotar · Patrones</div>
+            </div>
+          </div>
+          <span class="widget-chevron">▼</span>
+        </div>
+        <div class="widget-body">
+          <div class="leccion-badge"><span class="leccion-dot"></span>TEMA 12</div>
+<div class="w">
+<h2 class="sr-only">Apuntes tablas temporales T12 — Fundamentos de Bases de Datos UA</h2>
+
+<div class="nav">
+  <button class="nb on" onclick="w3show('w3-columna',this)">Subconsulta como columna</button>
+  <button class="nb" onclick="w3show('w3-from',this)">Subconsulta en el FROM</button>
+  <button class="nb" onclick="w3show('w3-with',this)">WITH (CTE)</button>
+  <button class="nb" onclick="w3show('w3-pivot',this)">Pivotar tabla</button>
+  <button class="nb" onclick="w3show('w3-trucos',this)">Trucos y patrones</button>
+</div>
+
+<div id="w3-columna" class="sec on">
+  <p class="stitle">Subconsulta como columna</p>
+
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">¿Qué es?</div>
+    <div class="cb">Una subconsulta dentro del SELECT que devuelve un único valor (1 columna, 1 fila) y lo muestra como una columna más del resultado.</div>
+    <div class="rule">Siempre debe devolver exactamente 1 columna y 1 fila. Si devuelve más, da error.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Mostrar varios conteos a la vez</div>
+    <div class="cb">Sin tablas temporales necesitarías varias consultas. Con subconsultas como columnas lo resuelves en una sola:</div>
+    <div class="code">-- Cantidad de televisores, cámaras y objetivos en una sola fila
+SELECT
+  (SELECT COUNT(*) FROM tv) tv,
+  (SELECT COUNT(*) FROM camara) camaras,
+  (SELECT COUNT(*) FROM objetivo) objetivos;</div>
+    <div class="cb">Cada subconsulta se ejecuta de forma independiente y devuelve un número. El resultado es una única fila con tres columnas.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Subconsulta como columna calculada</div>
+    <div class="cb">Puedes usar el resultado para hacer cálculos con otros valores de la fila:</div>
+    <div class="code">-- PVP de cada artículo y su % sobre el máximo global
+SELECT cod, pvp,
+  pvp / (SELECT MAX(pvp) FROM articulo) * 100 AS pct
+FROM articulo
+WHERE pvp BETWEEN 1000 AND 1200;</div>
+    <div class="cb">La subconsulta calcula el MAX una vez y ese valor se usa en cada fila para calcular el porcentaje.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Sustituir un valor por otro calculado</div>
+    <div class="code">-- TVs Sony mostrando la pantalla media de TVs 1920x1080 en vez de la suya
+SELECT tv.cod, panel,
+  (SELECT ROUND(AVG(pantalla),0) FROM tv WHERE resolucion='1920 x 1080') pantalla,
+  resolucion, tdt
+FROM tv, articulo a
+WHERE tv.cod = a.cod AND marca = 'SONY';</div>
+    <div class="cb">La columna pantalla no muestra el valor real del televisor, sino el promedio calculado por la subconsulta. Útil para comparar cada fila contra un valor global.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Porcentajes con subconsultas</div>
+    <div class="code">-- % de TVs, cámaras y objetivos sobre el total de artículos
+SELECT
+  (SELECT COUNT(*) FROM tv)/(SELECT COUNT(*) FROM articulo)*100 tvPC,
+  (SELECT COUNT(*) FROM camara)/(SELECT COUNT(*) FROM articulo)*100 camarasPC,
+  (SELECT COUNT(*) FROM objetivo)/(SELECT COUNT(*) FROM articulo)*100 objetivosPC;</div>
+    <div class="nota">Versión más eficiente: calcular el total una sola vez y reutilizarlo. Ver sección "Subconsulta en el FROM".</div>
+  </div>
+</div>
+
+<div id="w3-from" class="sec">
+  <p class="stitle">Subconsulta en el FROM</p>
+
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">¿Qué es?</div>
+    <div class="cb">Pones una consulta completa dentro del FROM y le das un alias. Se comporta como una tabla normal que puedes usar en el WHERE, JOIN, SELECT...</div>
+    <div class="rule">Siempre hay que darle un alias a la subconsulta del FROM, si no da error.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Ejemplo básico — reutilizar un cálculo</div>
+    <div class="code">-- Más eficiente: calcular total de artículos solo una vez
+SELECT
+  (SELECT COUNT(*) FROM tv) / t.total * 100 tvPC,
+  (SELECT COUNT(*) FROM camara) / t.total * 100 camarasPC,
+  (SELECT COUNT(*) FROM objetivo) / t.total * 100 objetivosPC
+FROM (SELECT COUNT(*) total FROM articulo) t;
+--                                         ^ alias obligatorio</div>
+    <div class="cb">La subconsulta <code>t</code> devuelve una sola fila con el total. Luego se usa <code>t.total</code> en cada cálculo sin tener que repetir la consulta.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Subconsulta en FROM como tabla intermedia</div>
+    <div class="code">-- Provincias con promedio de importe de pedido > 2500€
+SELECT provincia, COUNT(*) pedidos
+FROM usuario u,
+  (SELECT usuario, p.numpedido, SUM(importe*cantidad) total
+   FROM pedido p JOIN linped l ON p.numpedido=l.numpedido
+   GROUP BY usuario, numpedido) pd
+WHERE u.email = pd.usuario
+GROUP BY provincia
+HAVING AVG(total) > 2500;</div>
+    <div class="cb">Primero la subconsulta <code>pd</code> calcula el importe total de cada pedido. Luego la consulta exterior agrupa por provincia y filtra con HAVING. Sin la subconsulta no podrías hacer <code>AVG(total por pedido)</code>.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Producto cartesiano entre subconsultas</div>
+    <div class="code">-- Total alicantinos, los de Agost, y su porcentaje
+SELECT totalAlicante, deAgost,
+  ROUND(deAgost/totalAlicante*100, 2) pct
+FROM
+  (SELECT COUNT(*) totalAlicante FROM usuario WHERE provincia='03') t1,
+  (SELECT COUNT(*) deAgost FROM usuario WHERE provincia='03' AND pueblo='0020') t2;</div>
+    <div class="cb">Cada subconsulta devuelve 1 fila × 1 columna. El producto cartesiano de dos tablas de 1 fila es... 1 fila. Es un truco habitual para combinar varios valores calculados.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">LEFT JOIN con subconsulta</div>
+    <div class="code">-- Usuarios de provincia 03, y si tienen pedido > 10000€ mostrarlo
+SELECT email, nombre, apellidos, numpedido, valor
+FROM usuario u LEFT JOIN
+  (SELECT p.numpedido, usuario, SUM(cantidad*importe) valor
+   FROM pedido p, linped l
+   WHERE p.numpedido = l.numpedido
+   GROUP BY numpedido, usuario
+   HAVING SUM(cantidad*importe) > 10000) calculo
+ON email = usuario
+WHERE provincia = '03'
+ORDER BY valor DESC;</div>
+    <div class="cb">El LEFT JOIN con la subconsulta hace que los usuarios sin pedidos grandes aparezcan igual, con NULL en numpedido y valor.</div>
+  </div>
+</div>
+
+<div id="w3-with" class="sec">
+  <p class="stitle">WITH — CTE (Common Table Expression)</p>
+
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">¿Qué es?</div>
+    <div class="cb">Es como una subconsulta en el FROM pero definida al principio, con nombre, y reutilizable varias veces en la misma consulta.</div>
+    <div class="code">WITH nombreCTE AS (
+  SELECT ...  -- la consulta temporal
+)
+SELECT ... FROM nombreCTE ...  -- la usas aquí</div>
+    <div class="rule">Ventaja: si necesitas usar el mismo cálculo en 3 sitios, lo defines una vez con WITH y lo reutilizas. Con subconsultas en el FROM tendrías que repetirlo.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">CTE básica — marca del artículo más caro</div>
+    <div class="code">WITH mmax AS (
+  SELECT marca FROM articulo
+  WHERE pvp = (SELECT MAX(pvp) FROM articulo)
+)
+SELECT articulo, importe
+FROM linped l
+JOIN articulo a ON l.articulo = a.cod
+CROSS JOIN mmax
+WHERE a.marca = mmax.marca;</div>
+    <div class="cb">La CTE calcula la marca del artículo más caro. Luego la consulta principal la usa para filtrar. Sin CTE tendrías que repetir esa subconsulta.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">CTE para comparar con la media de su grupo</div>
+    <div class="code">-- Artículos con PVP superior a la media de su propia marca
+WITH media_marca AS (
+  SELECT marca, AVG(pvp) AS media_pvp
+  FROM articulo
+  GROUP BY marca
+)
+SELECT a.cod, a.marca, a.pvp, l.importe
+FROM articulo a
+JOIN media_marca mm ON a.marca = mm.marca
+JOIN linped l ON l.articulo = a.cod
+WHERE a.pvp > mm.media_pvp;</div>
+    <div class="cb">La CTE calcula la media por marca. Luego se une con articulo para comparar cada artículo contra la media de su propia marca. Esto sería muy difícil sin tabla temporal.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Varias CTEs a la vez</div>
+    <div class="code">-- Proporciones de TVs, cámaras y objetivos
+WITH
+  t AS (SELECT COUNT(*) tvs FROM tv),
+  c AS (SELECT COUNT(*) cams FROM camara),
+  o AS (SELECT COUNT(*) objs FROM objetivo)
+SELECT
+  tvs/(tvs+cams+objs) promtv,
+  cams/(tvs+cams+objs) promcam,
+  objs/(tvs+cams+objs) promobj,
+  (tvs+cams+objs) total
+FROM t, c, o;</div>
+    <div class="cb">Se pueden definir varias CTEs separadas por comas después del WITH. Cada una tiene su nombre y todas están disponibles en la consulta final.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">CTE con cálculo en dos etapas</div>
+    <div class="code">-- Por provincia: promedio de la máxima cantidad pedida en cada pedido
+WITH maximos AS (
+  SELECT numpedido, MAX(cantidad) cants
+  FROM linped
+  GROUP BY numpedido
+)
+SELECT provincia, AVG(cants)
+FROM maximos m
+JOIN pedido p ON m.numpedido = p.numpedido
+JOIN usuario u ON p.usuario = u.email
+GROUP BY provincia;</div>
+    <div class="cb">Primero la CTE calcula el máximo de cantidad por pedido. Luego la consulta exterior calcula el promedio de esos máximos por provincia. Sin CTE no podrías hacer AVG sobre un MAX previamente calculado.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">La marca más vendida</div>
+    <div class="code">-- Marca con mayor cantidad total vendida
+WITH ventas_marca AS (
+  SELECT a.marca, SUM(l.cantidad) AS unidades
+  FROM articulo a JOIN linped l ON l.articulo = a.cod
+  GROUP BY a.marca
+)
+SELECT marca, unidades
+FROM ventas_marca
+WHERE unidades = (SELECT MAX(unidades) FROM ventas_marca);</div>
+    <div class="cb">La CTE se reutiliza dos veces: una en el FROM y otra en la subconsulta del WHERE. Sin CTE tendrías que escribir la misma consulta dos veces.</div>
+  </div>
+</div>
+
+<div id="w3-pivot" class="sec">
+  <p class="stitle">Pivotar una tabla</p>
+
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">¿Qué es pivotar?</div>
+    <div class="cb">Convertir filas en columnas. Por ejemplo, tener una fila por mes y convertirlo en una fila por usuario con una columna por cada mes.</div>
+    <div class="code">-- Normal: una fila por mes
+mes  | pedidos
+10   | 5
+11   | 3
+12   | 8
+
+-- Pivotado: una sola fila
+octubre | noviembre | diciembre
+5       | 3         | 8</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Pivotar con subconsultas como columnas</div>
+    <div class="code">-- Pedidos en oct, nov, dic de cualquier año
+SELECT
+  (SELECT COUNT(*) FROM pedido WHERE MONTH(fecha)=10) octubre,
+  (SELECT COUNT(*) FROM pedido WHERE MONTH(fecha)=11) noviembre,
+  (SELECT COUNT(*) FROM pedido WHERE MONTH(fecha)=12) diciembre;</div>
+    <div class="cb">Cada columna es una subconsulta que filtra por un mes. Simple pero ineficiente si hay muchos meses porque recorre la tabla una vez por columna.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag t12">T12</span>
+    <div class="ct">Pivotar con CTE + IF — más eficiente</div>
+    <div class="code">WITH contados AS (
+  SELECT usuario, MONTH(fecha) mes, COUNT(*) pedidos
+  FROM pedido p JOIN usuario u ON p.usuario = u.email
+  WHERE YEAR(fecha) = 2010
+  GROUP BY usuario, MONTH(fecha)
+)
+SELECT usuario,
+  MAX(IF(mes=1,  pedidos, 0)) Ene,
+  MAX(IF(mes=2,  pedidos, 0)) Feb,
+  MAX(IF(mes=3,  pedidos, 0)) Mar,
+  MAX(IF(mes=10, pedidos, 0)) Oct,
+  MAX(IF(mes=11, pedidos, 0)) Nov,
+  MAX(IF(mes=12, pedidos, 0)) Dic
+FROM contados
+GROUP BY usuario
+HAVING SUM(pedidos) > 1;</div>
+    <div class="cb">La CTE calcula los datos una vez. Luego IF(mes=1, pedidos, 0) devuelve el valor si es enero o 0 si no. MAX() se queda con el valor real (no el 0). Solo recorre la tabla una vez.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">IFNULL — quitar los NULLs del pivotado</div>
+    <div class="code">-- Si un artículo no tiene pedidos en octubre, sale NULL
+-- IFNULL lo sustituye por vacío o por 0
+IFNULL((SELECT veces FROM micte WHERE mes=10 AND micte.articulo=t2.articulo), 0) octubre</div>
+    <div class="cb">Cuando un artículo no aparece en un mes, la subconsulta no encuentra fila y devuelve NULL. IFNULL lo convierte en 0 o en lo que prefieras.</div>
+  </div>
+</div>
+
+<div id="w3-trucos" class="sec">
+  <p class="stitle">Trucos y patrones habituales</p>
+
+  <div class="card">
+    <div class="ct">¿Cuándo usar cada técnica?</div>
+    <div class="cb" style="margin-bottom:.75rem">La regla general es: piensa el problema en etapas.</div>
+    <div class="ok">Si necesitas un único valor calculado → subconsulta como columna</div>
+    <div class="ok">Si necesitas una tabla intermedia que usar una vez → subconsulta en el FROM</div>
+    <div class="ok">Si necesitas reutilizar el mismo cálculo varias veces → WITH (CTE)</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">El patrón "dos etapas"</div>
+    <div class="cb">Muchos ejercicios de T12 siguen este patrón:</div>
+    <div class="code">-- Etapa 1: calcular lo que necesitas como tabla temporal
+WITH etapa1 AS (
+  SELECT usuario, SUM(importe*cantidad) total
+  FROM pedido p JOIN linped l ON p.numpedido=l.numpedido
+  GROUP BY usuario
+)
+-- Etapa 2: usar ese resultado para lo que realmente pides
+SELECT provincia, AVG(total)
+FROM usuario u JOIN etapa1 ON u.email = etapa1.usuario
+GROUP BY provincia
+HAVING AVG(total) > 2500;</div>
+    <div class="cb">Si intentas hacerlo todo en una consulta, AVG(SUM(...)) da error porque no puedes anidar agregados. La tabla temporal lo resuelve.</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">No se pueden anidar agregados</div>
+    <div class="warn">SELECT AVG(SUM(cantidad)) FROM linped GROUP BY articulo;
+-- ERROR: no puedes hacer AVG de un SUM directamente</div>
+    <div class="ok">-- Solución: tabla temporal
+WITH sumas AS (
+  SELECT articulo, SUM(cantidad) total FROM linped GROUP BY articulo
+)
+SELECT AVG(total) FROM sumas;</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">Producto cartesiano de subconsultas de 1 fila</div>
+    <div class="code">-- Útil para combinar varios valores calculados
+SELECT totalA, totalB, totalA/totalB*100 pct
+FROM
+  (SELECT COUNT(*) totalA FROM tabla_a) a,
+  (SELECT COUNT(*) totalB FROM tabla_b) b;</div>
+    <div class="cb">Cuando cada subconsulta devuelve exactamente 1 fila, el producto cartesiano también devuelve 1 fila. Es un patrón seguro y habitual en T12.</div>
+  </div>
+
+  <button class="ab" onclick="sendPrompt('Tengo una duda sobre tablas temporales o CTEs en SQL de FBD')">Tengo una duda ↗</button>
+</div>
+
+</div>
+        </div>
+      </div>
     </div>
   </div>
 </main>
@@ -795,6 +1159,13 @@ ORDER BY fecha;</div>
   function w2show(id, btn) {
     document.querySelectorAll('#w2 .section, #w2 .sec').forEach(s => { s.classList.remove('on'); });
     document.querySelectorAll('#w2 .nb').forEach(b => b.classList.remove('on'));
+    document.getElementById(id).classList.add('on');
+    btn.classList.add('on');
+  }
+
+  function w3show(id, btn) {
+    document.querySelectorAll('#w3 .sec').forEach(s => s.classList.remove('on'));
+    document.querySelectorAll('#w3 .nb').forEach(b => b.classList.remove('on'));
     document.getElementById(id).classList.add('on');
     btn.classList.add('on');
   }
