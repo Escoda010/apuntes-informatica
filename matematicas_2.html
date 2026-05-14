@@ -1998,13 +1998,13 @@ const w4order = [...Array(w4w2questions.length).keys()].sort(() => Math.random()
 
 function w4show(id, btn) {
   document.querySelectorAll('#w4 .section').forEach(s => s.classList.remove('active'));
-  document.getElementById('s-' + id).classList.add('active');
+  document.getElementById(id).classList.add('active');
   document.querySelectorAll('#w4 .nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
 
 function w4loadQ() {
-  const q = w4questions[order[current]];
+  const q = w4questions[w4order[w4current]];
   document.getElementById('w4-q-num').textContent = 'Pregunta ' + (w4current+1) + ' de ' + w4questions.length;
   document.getElementById('w4-q-text').textContent = q.q;
   const opts = document.getElementById('w4-q-options');
