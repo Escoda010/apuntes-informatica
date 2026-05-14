@@ -1073,13 +1073,13 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
                 <div class="q-text" id="q-text"></div>
                 <div id="q-options"></div>
                 <div class="quiz-feedback" id="q-feedback"></div>
-                <button class="quiz-next" id="q-next" onclick="nextQ()">Siguiente →</button>
+                <button class="quiz-next" id="q-next" onclick="w2nextQ()">Siguiente →</button>
               </div>
               <div id="quiz-result" style="display:none;">
                 <div class="card">
                   <h3 id="result-title"></h3>
                   <p id="result-text" style="margin-top:0.5rem;"></p>
-                  <button class="quiz-next show" onclick="restartQuiz()" style="margin-top:0.75rem;">Reiniciar repaso</button>
+                  <button class="quiz-next show" onclick="w2restartQuiz()" style="margin-top:0.75rem;">Reiniciar repaso</button>
                 </div>
               </div>
             </div>
@@ -1840,7 +1840,7 @@ plt.show()</pre>
   let current = 0, score = 0, answered = false;
   const order = [...Array(questions.length).keys()].sort(() => Math.random()-0.5);
 
-  function loadQ() {
+  function w2loadQ() {
     const q = questions[order[current]];
     document.getElementById('q-num').textContent = 'Pregunta ' + (current+1) + ' de ' + questions.length;
     document.getElementById('q-text').textContent = q.q;
@@ -1850,7 +1850,7 @@ plt.show()</pre>
       const btn = document.createElement('button');
       btn.className = 'quiz-btn';
       btn.textContent = o;
-      btn.onclick = () => answer(i, q);
+      btn.onclick = () => w2answer(i, q);
       opts.appendChild(btn);
     });
     document.getElementById('q-feedback').className = 'quiz-feedback';
@@ -1858,7 +1858,7 @@ plt.show()</pre>
     answered = false;
   }
 
-  function answer(i, q) {
+  function w2answer(i, q) {
     if (answered) return;
     answered = true;
     const btns = document.querySelectorAll('#w1-s-quiz .quiz-btn');
@@ -1880,7 +1880,7 @@ plt.show()</pre>
     document.getElementById('q-next').classList.add('show');
   }
 
-  function nextQ() {
+  function w2nextQ() {
     current++;
     if (current >= questions.length) {
       document.getElementById('quiz-card').style.display = 'none';
@@ -1888,18 +1888,18 @@ plt.show()</pre>
       const pct = Math.round(score/questions.length*100);
       document.getElementById('result-title').textContent = score + ' / ' + questions.length + ' correctas (' + pct + '%)';
       document.getElementById('result-text').textContent = pct >= 80 ? 'Muy bien, tienes el tema dominado.' : pct >= 50 ? 'Bien, repasa los apartados donde fallaste.' : 'Repasa los conceptos con más calma y vuelve a intentarlo.';
-    } else { loadQ(); }
+    } else { w2loadQ(); }
   }
 
-  function restartQuiz() {
+  function w2restartQuiz() {
     current = 0; score = 0; answered = false;
     order.sort(() => Math.random()-0.5);
     document.getElementById('quiz-card').style.display = 'block';
     document.getElementById('quiz-result').style.display = 'none';
-    loadQ();
+    w2loadQ();
   }
 
-  loadQ();
+  w2loadQ();
 
   // QUIZ TEMA 1
   const questions1 = [
