@@ -1068,17 +1068,17 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
 
             <div class="section" id="w2-s-quiz">
               <p class="section-title">Repaso rápido</p>
-              <div class="card" id="quiz-card">
-                <div class="q-num" id="q-num">Pregunta 1 de 10</div>
-                <div class="q-text" id="q-text"></div>
-                <div id="q-options"></div>
-                <div class="quiz-feedback" id="q-feedback"></div>
-                <button class="quiz-next" id="q-next" onclick="w2nextQ()">Siguiente →</button>
+              <div class="card" id="w2-quiz-card">
+                <div class="q-num" id="w2-q-num">Pregunta 1 de 10</div>
+                <div class="q-text" id="w2-q-text"></div>
+                <div id="w2-q-options"></div>
+                <div class="quiz-feedback" id="w2-q-feedback"></div>
+                <button class="quiz-next" id="w2-q-next" onclick="w2nextQ()">Siguiente →</button>
               </div>
-              <div id="quiz-result" style="display:none;">
+              <div id="w2-quiz-result" style="display:none;">
                 <div class="card">
-                  <h3 id="result-title"></h3>
-                  <p id="result-text" style="margin-top:0.5rem;"></p>
+                  <h3 id="w2-result-title"></h3>
+                  <p id="w2-result-text" style="margin-top:0.5rem;"></p>
                   <button class="quiz-next show" onclick="w2restartQuiz()" style="margin-top:0.75rem;">Reiniciar repaso</button>
                 </div>
               </div>
@@ -1842,9 +1842,9 @@ plt.show()</pre>
 
   function w2loadQ() {
     const q = questions[order[current]];
-    document.getElementById('q-num').textContent = 'Pregunta ' + (current+1) + ' de ' + questions.length;
-    document.getElementById('q-text').textContent = q.q;
-    const opts = document.getElementById('q-options');
+    document.getElementById('w2-q-num').textContent = 'Pregunta ' + (current+1) + ' de ' + questions.length;
+    document.getElementById('w2-q-text').textContent = q.q;
+    const opts = document.getElementById('w2-q-options');
     opts.innerHTML = '';
     q.opts.forEach((o, i) => {
       const btn = document.createElement('button');
@@ -1853,8 +1853,8 @@ plt.show()</pre>
       btn.onclick = () => w2answer(i, q);
       opts.appendChild(btn);
     });
-    document.getElementById('q-feedback').className = 'quiz-feedback';
-    document.getElementById('q-next').className = 'quiz-next';
+    document.getElementById('w2-q-feedback').className = 'quiz-feedback';
+    document.getElementById('w2-q-next').className = 'quiz-next';
     answered = false;
   }
 
@@ -1866,7 +1866,7 @@ plt.show()</pre>
       if (idx === q.ans) b.classList.add('correct');
       else b.classList.add('wrong');
     });
-    const fb = document.getElementById('q-feedback');
+    const fb = document.getElementById('w2-q-feedback');
     if (i === q.ans) {
       score++;
       fb.style.background = 'rgba(74,240,160,0.08)';
@@ -1877,25 +1877,25 @@ plt.show()</pre>
     }
     fb.textContent = q.exp;
     fb.classList.add('show');
-    document.getElementById('q-next').classList.add('show');
+    document.getElementById('w2-q-next').classList.add('show');
   }
 
   function w2nextQ() {
     current++;
     if (current >= questions.length) {
-      document.getElementById('quiz-card').style.display = 'none';
-      document.getElementById('quiz-result').style.display = 'block';
+      document.getElementById('w2-quiz-card').style.display = 'none';
+      document.getElementById('w2-quiz-result').style.display = 'block';
       const pct = Math.round(score/questions.length*100);
-      document.getElementById('result-title').textContent = score + ' / ' + questions.length + ' correctas (' + pct + '%)';
-      document.getElementById('result-text').textContent = pct >= 80 ? 'Muy bien, tienes el tema dominado.' : pct >= 50 ? 'Bien, repasa los apartados donde fallaste.' : 'Repasa los conceptos con más calma y vuelve a intentarlo.';
+      document.getElementById('w2-result-title').textContent = score + ' / ' + questions.length + ' correctas (' + pct + '%)';
+      document.getElementById('w2-result-text').textContent = pct >= 80 ? 'Muy bien, tienes el tema dominado.' : pct >= 50 ? 'Bien, repasa los apartados donde fallaste.' : 'Repasa los conceptos con más calma y vuelve a intentarlo.';
     } else { w2loadQ(); }
   }
 
   function w2restartQuiz() {
     current = 0; score = 0; answered = false;
     order.sort(() => Math.random()-0.5);
-    document.getElementById('quiz-card').style.display = 'block';
-    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('w2-quiz-card').style.display = 'block';
+    document.getElementById('w2-quiz-result').style.display = 'none';
     w2loadQ();
   }
 
