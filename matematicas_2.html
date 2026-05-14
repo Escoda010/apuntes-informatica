@@ -432,6 +432,10 @@
           <span class="nav-num">03</span>
           Gráficas
         </li>
+        <li class="nav-item" onclick="scrollToWidget('w4', this)">
+          <span class="nav-num">04</span>
+          Tema 3 — Integral
+        </li>
       </ul>
       <div class="sidebar-divider"></div>
       <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
@@ -1346,6 +1350,447 @@ plt.plot(x1, y1)</pre>
         </div>
       </div>
       <!-- END WIDGET 3 -->
+
+      <!-- WIDGET 4 — TEMA 3 INTEGRAL -->
+      <div class="widget-wrapper" id="w4">
+        <div class="widget-header" onclick="toggleWidget('w4')">
+          <div class="widget-header-left">
+            <div class="widget-icon" style="background:rgba(124,106,247,0.1)">∬</div>
+            <div>
+              <div class="widget-title">Cálculo integral — Tema 3</div>
+              <div class="widget-subtitle">Riemann · Trapecio · Simpson · Exacta · scipy · Error · Múltiples · Gráficas</div>
+            </div>
+          </div>
+          <span class="widget-chevron">▼</span>
+        </div>
+        <div class="widget-body">
+          <div class="leccion-badge"><span class="leccion-dot"></span>TEMA 03</div>
+          <style>
+            #w4 .nav-btn { font-size:13px; padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); cursor:pointer; transition:all 0.15s; font-family:'DM Sans',sans-serif; margin-bottom:2px; }
+            #w4 .nav-btn:hover { background:var(--surface); color:var(--text); }
+            #w4 .nav-btn.active { background:rgba(124,106,247,0.1); color:#9d8fff; border-color:rgba(124,106,247,0.3); font-weight:500; }
+            #w4 .section { display:none; } #w4 .section.active { display:block; }
+            #w4 .card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; margin-bottom:1rem; }
+            #w4 .card h3 { font-size:15px; font-weight:600; color:var(--text); margin-bottom:0.75rem; }
+            #w4 .card p { font-size:14px; color:var(--text-dim); line-height:1.6; margin-bottom:0.5rem; }
+            #w4 pre { background:#0a0a0d; border-radius:8px; padding:0.75rem 1rem; font-family:'DM Mono',monospace; font-size:13px; color:var(--text); overflow-x:auto; margin:0.5rem 0; line-height:1.6; border:1px solid var(--border); }
+            #w4 .tag { display:inline-block; font-size:11px; padding:2px 10px; border-radius:20px; font-weight:500; margin-bottom:0.5rem; font-family:'DM Mono',monospace; }
+            #w4 .tag-sp { background:rgba(124,106,247,0.1); color:#9d8fff; border:1px solid rgba(124,106,247,0.2); }
+            #w4 .tag-np { background:rgba(74,176,240,0.1); color:#4ab0f0; border:1px solid rgba(74,176,240,0.2); }
+            #w4 .tag-sc { background:rgba(240,160,74,0.1); color:#f0a04a; border:1px solid rgba(240,160,74,0.2); }
+            #w4 .tag-plt { background:rgba(200,240,74,0.1); color:var(--accent); border:1px solid rgba(200,240,74,0.2); }
+            #w4 .tag-py { background:rgba(29,158,117,0.1); color:#1D9E75; border:1px solid rgba(29,158,117,0.2); }
+            #w4 .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; margin-bottom:1rem; }
+            #w4 .highlight { border-left:2px solid rgba(124,106,247,0.4); padding-left:0.75rem; margin:0.5rem 0; }
+            #w4 .highlight p { font-size:13px; color:var(--text-dim); }
+            #w4 .section-title { font-size:18px; font-weight:600; color:var(--text); margin-bottom:1rem; font-family:'DM Serif Display',serif; }
+            #w4 .comment { color:#6a9955; }
+            #w4 table.comp { width:100%; font-size:13px; border-collapse:collapse; }
+            #w4 table.comp th { text-align:left; color:var(--text-muted); font-weight:500; padding:8px; border-bottom:1px solid var(--border); }
+            #w4 table.comp td { padding:8px; color:var(--text); border-bottom:1px solid var(--border); vertical-align:top; }
+            #w4 table.comp tr:last-child td { border-bottom:none; }
+            #w4 .quiz-btn { font-size:13px; padding:7px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; width:100%; text-align:left; margin-bottom:6px; transition:all 0.15s; font-family:'DM Sans',sans-serif; }
+            #w4 .quiz-btn.correct { background:rgba(74,240,160,0.1); color:#4af0a0; border-color:rgba(74,240,160,0.3); }
+            #w4 .quiz-btn.wrong { background:rgba(240,74,74,0.1); color:#f04a4a; border-color:rgba(240,74,74,0.3); }
+            #w4 .quiz-feedback { font-size:13px; margin-top:0.5rem; padding:0.5rem 0.75rem; border-radius:8px; display:none; }
+            #w4 .quiz-feedback.show { display:block; }
+            #w4 .quiz-next { font-size:13px; padding:6px 16px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; margin-top:0.75rem; display:none; font-family:'DM Sans',sans-serif; }
+            #w4 .quiz-next.show { display:inline-block; }
+            #w4 .q-num { font-size:12px; color:var(--text-muted); margin-bottom:0.5rem; font-family:'DM Mono',monospace; }
+            #w4 .q-text { font-size:14px; font-weight:500; color:var(--text); margin-bottom:0.75rem; line-height:1.5; }
+          </style>
+          <div class="wrap">
+<nav class="nav">
+  <button class="nav-btn active" onclick="w4show('w4-s-sumas', this)">Sumas de Riemann</button>
+  <button class="nav-btn" onclick="w4show('w4-s-trapecio', this)">Trapecio y Simpson</button>
+  <button class="nav-btn" onclick="w4show('w4-s-exacta', this)">Integral exacta</button>
+  <button class="nav-btn" onclick="w4show('w4-s-scipy', this)">scipy</button>
+  <button class="nav-btn" onclick="w4show('w4-s-error', this)">Error relativo</button>
+  <button class="nav-btn" onclick="w4show('w4-s-multiples', this)">Integrales múltiples</button>
+  <button class="nav-btn" onclick="w4show('w4-s-graficas', this)">Gráficas</button>
+  <button class="nav-btn" onclick="w4show('w4-s-quiz', this)">Repaso</button>
+</nav>
+
+<!-- SUMAS DE RIEMANN -->
+<div class="section active" id="w4-s-sumas">
+  <p class="section-title">Sumas de Riemann</p>
+  <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;">Aproximan el área bajo una curva dividiendo el intervalo en n rectángulos. Cuantos más intervalos, más preciso.</p>
+
+  <div class="card">
+    <span class="tag tag-py">Ln — Suma izquierda</span>
+    <h3>Altura = extremo izquierdo de cada intervalo</h3>
+    <pre>import numpy as np
+import sympy as sp
+
+x = sp.symbols('x')
+
+def L_n(f, a, b, n):
+    xvalues = np.linspace(a, b, n)
+    yvalues = sp.lambdify(x, f)(xvalues[:-1])  <span class="comment"># quita el último punto</span>
+    Lsum = 0
+    for i in yvalues:
+        Lsum += i
+    Ax = (b - a) / n
+    return Ax * Lsum</pre>
+    <div class="highlight"><p><code>xvalues[:-1]</code> — usa todos los puntos menos el último (extremos izquierdos).</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-py">Rn — Suma derecha</span>
+    <h3>Altura = extremo derecho de cada intervalo</h3>
+    <pre>def R_n(f, a, b, n):
+    xvalues = np.linspace(a, b, n)
+    yvalues = sp.lambdify(x, f)(xvalues[1:])   <span class="comment"># quita el primer punto</span>
+    Rsum = 0
+    for i in yvalues:
+        Rsum += i
+    Ax = (b - a) / n
+    return Ax * Rsum</pre>
+    <div class="highlight"><p><code>xvalues[1:]</code> — usa todos los puntos menos el primero (extremos derechos).</p></div>
+  </div>
+
+  <div class="card">
+    <h3>Diferencia clave entre Ln y Rn</h3>
+    <table class="comp">
+      <tr><th>Método</th><th>Índices de xvalues</th><th>Puntos usados</th></tr>
+      <tr><td>Suma izquierda Ln</td><td><code>xvalues[:-1]</code></td><td>x₁, x₂, ..., xₙ (sin el último)</td></tr>
+      <tr><td>Suma derecha Rn</td><td><code>xvalues[1:]</code></td><td>x₂, x₃, ..., xₙ₊₁ (sin el primero)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- TRAPECIO Y SIMPSON -->
+<div class="section" id="w4-s-trapecio">
+  <p class="section-title">Trapecio y Simpson</p>
+
+  <div class="card">
+    <span class="tag tag-py">Suma trapezoidal — manual</span>
+    <h3>Promedia los dos extremos de cada intervalo</h3>
+    <pre>def suma_trapezoidal(f, a, b, n):
+    Ax = (b - a) / n
+    x_values = np.linspace(a, b, n)
+    y_values = sp.lambdify(x, f)(x_values)
+
+    total = 0
+    for i in range(len(y_values) - 1):
+        total += (y_values[i] + y_values[i+1]) / 2
+
+    return Ax * total</pre>
+    <div class="highlight"><p>Más precisa que Ln y Rn para el mismo n porque usa ambos extremos de cada subintervalo.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sc">Trapecio y Simpson con scipy</span>
+    <h3>Versión directa con numpy/scipy</h3>
+    <pre>from scipy import integrate
+import numpy as np
+
+def f(x):
+    return np.sin(x)
+
+a, b, n = 0, np.pi, 10
+x = np.linspace(a, b, n+1)
+y = f(x)
+
+<span class="comment"># Trapecio</span>
+trapecio = np.trapz(y, x)
+
+<span class="comment"># Simpson (n debe ser par)</span>
+simpson = integrate.simps(y, x)</pre>
+    <div class="highlight"><p>Simpson usa polinomios cuadráticos en cada subintervalo — más preciso que el trapecio. <strong>n debe ser par.</strong></p></div>
+  </div>
+
+  <div class="card">
+    <h3>Comparativa de métodos de aproximación</h3>
+    <table class="comp">
+      <tr><th>Método</th><th>Forma</th><th>Precisión</th></tr>
+      <tr><td>Suma izquierda Ln</td><td>Rectángulos (extremo izq.)</td><td>Baja</td></tr>
+      <tr><td>Suma derecha Rn</td><td>Rectángulos (extremo der.)</td><td>Baja</td></tr>
+      <tr><td>Trapezoidal</td><td>Trapecios</td><td>Media</td></tr>
+      <tr><td>Simpson</td><td>Polinomios cuadráticos</td><td>Alta</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- INTEGRAL EXACTA -->
+<div class="section" id="w4-s-exacta">
+  <p class="section-title">Integral exacta con sympy</p>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-sp">indefinida</span>
+      <h3>Integral indefinida (primitiva)</h3>
+      <pre>from sympy import integrate
+from sympy.abc import x
+
+fx = x**3 - 6*x
+integrate(fx, x)      <span class="comment"># → x⁴/4 - 3x²</span>
+
+<span class="comment"># sin especificar variable</span>
+fx2 = x**2 - 3*x + 2
+integrate(fx2)        <span class="comment"># asume x por defecto</span></pre>
+      <p>No añade la constante C, sympy la omite por defecto.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-sp">definida</span>
+      <h3>Integral definida</h3>
+      <pre>integrate(fx, (x, 0, 3))   <span class="comment"># ∫₀³ f dx</span>
+
+<span class="comment"># con infinito</span>
+from sympy import oo
+integrate(1/x**2, (x, 1, oo))</pre>
+      <div class="highlight"><p>Sintaxis: <code>(variable, límite_inferior, límite_superior)</code>.</p></div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-sp">objeto Integral</span>
+      <h3>Integral como objeto (como Derivative)</h3>
+      <pre>from sympy import Integral
+
+<span class="comment"># indefinida</span>
+Integral(fx, x).doit()
+
+<span class="comment"># definida</span>
+Integral(fx, (x, 0, 3)).doit()</pre>
+      <p>Muestra la notación matemática. <code>.doit()</code> ejecuta el cálculo.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-sp">con parámetros</span>
+      <h3>Función con constantes simbólicas</h3>
+      <pre>from sympy.abc import x, a, b, c
+
+f = a*x**2 + b*x + c
+integrate(f, x)   <span class="comment"># integra respecto a x</span>
+                  <span class="comment"># a, b, c son constantes</span></pre>
+      <div class="highlight"><p>Cuando hay varias variables, siempre especifica respecto a cuál integras.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCIPY -->
+<div class="section" id="w4-s-scipy">
+  <p class="section-title">Integrales numéricas con scipy</p>
+
+  <div class="card">
+    <span class="tag tag-sc">quad — integral simple</span>
+    <h3>Integral definida numérica</h3>
+    <pre>from scipy.integrate import quad
+
+def integrand(x):
+    return x**2 + x + 1
+
+a, b = 0, 3
+J = quad(integrand, a, b)
+<span class="comment"># J es una tupla: (valor, error_absoluto)</span>
+valor = J[0]
+error = J[1]</pre>
+    <div class="highlight"><p><code>quad</code> devuelve una tupla. Usa <code>J[0]</code> para el valor y <code>J[1]</code> para el error estimado.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sc">dblquad — integral doble</span>
+    <h3>Integral doble numérica</h3>
+    <pre>from scipy.integrate import dblquad
+
+def integrand(x, y):
+    return 16*x*y
+
+def xlimit(y):
+    return sqrt(1 - 4*y**2)   <span class="comment"># límite variable</span>
+
+<span class="comment"># dblquad(f, y_min, y_max, x_min(y), x_max(y))</span>
+i = dblquad(integrand, 0, 0.5, 0, xlimit)
+
+<span class="comment"># Opción con lambdify</span>
+from sympy import lambdify
+from sympy.abc import x, y
+i2 = dblquad(lambdify((x,y), 16*x*y), 0, 0.5, 0, xlimit)</pre>
+    <div class="highlight"><p>Los límites internos deben ser funciones, no números directamente, porque pueden depender de la variable externa.</p></div>
+  </div>
+
+  <div class="card">
+    <h3>quad vs integrate — ¿cuándo usar cada uno?</h3>
+    <table class="comp">
+      <tr><th></th><th>scipy.quad</th><th>sympy.integrate</th></tr>
+      <tr><td>Resultado</td><td>Número decimal</td><td>Expresión exacta</td></tr>
+      <tr><td>Función</td><td>def o lambda numérica</td><td>Expresión simbólica</td></tr>
+      <tr><td>Infinito</td><td>np.inf</td><td>sp.oo</td></tr>
+      <tr><td>Devuelve</td><td>Tupla (valor, error)</td><td>Expresión sympy</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ERROR RELATIVO -->
+<div class="section" id="w4-s-error">
+  <p class="section-title">Error relativo</p>
+
+  <div class="card">
+    <h3>Fórmula</h3>
+    <p>Mide cuánto se aleja la aproximación del valor exacto, en proporción al valor exacto:</p>
+    <pre>error = abs(valor_exacto - aproximacion) / abs(valor_exacto)</pre>
+    <div class="highlight"><p>Siempre con <code>abs()</code> para que el error sea positivo independientemente del signo.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sc">ejemplo completo</span>
+    <h3>Comparar tres métodos con scipy</h3>
+    <pre>from scipy import integrate
+import numpy as np
+
+def f(x):
+    return np.sin(x)
+
+a, b, n = 0, np.pi, 10
+
+<span class="comment"># Valor exacto</span>
+valor_exacto, _ = integrate.quad(f, a, b)
+
+<span class="comment"># Aproximaciones</span>
+x = np.linspace(a, b, n+1)
+y = f(x)
+trapecio = np.trapz(y, x)
+simpson  = integrate.simps(y, x)
+
+<span class="comment"># Errores relativos</span>
+error_trapecio = abs(valor_exacto - trapecio) / abs(valor_exacto)
+error_simpson  = abs(valor_exacto - simpson)  / abs(valor_exacto)
+
+print(f"Exacto:   {valor_exacto:.10f}")
+print(f"Trapecio: {trapecio:.10f} | Error: {error_trapecio:.2e}")
+print(f"Simpson:  {simpson:.10f}  | Error: {error_simpson:.2e}")</pre>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-py">con Ln y Rn</span>
+    <h3>Error relativo con sumas de Riemann</h3>
+    <pre>valor_real, _ = quad(lambda x: x**2 - 2*x + 3, a, b)
+Ln = L_n(f, a, b, n)
+Rn = R_n(f, a, b, n)
+STn = suma_trapezoidal(f, a, b, n)
+
+error_Ln  = abs(valor_real - Ln)  / abs(valor_real)
+error_Rn  = abs(valor_real - Rn)  / abs(valor_real)
+error_STn = abs(valor_real - STn) / abs(valor_real)</pre>
+  </div>
+</div>
+
+<!-- INTEGRALES MÚLTIPLES -->
+<div class="section" id="w4-s-multiples">
+  <p class="section-title">Integrales múltiples</p>
+
+  <div class="card">
+    <span class="tag tag-sp">doble iterada — sympy</span>
+    <h3>Integral doble simbólica paso a paso</h3>
+    <pre>from sympy.abc import x, y, a, b, c, d
+from sympy import integrate, simplify
+
+<span class="comment"># Primero la integral interior (en y), luego la exterior (en x)</span>
+I1 = integrate(1, (y, c, d))
+I2 = integrate(I1, (x, a, b))
+simplify(I2)</pre>
+    <div class="highlight"><p>Se resuelve de dentro hacia fuera: primero la integral interior, luego la exterior con el resultado.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sp">doble directa — sympy</span>
+    <h3>Integral doble directa</h3>
+    <pre>from sympy.abc import x, y
+from sympy import integrate
+
+f = x**2 / (2*y)
+
+<span class="comment"># ∫∫ f dxdy con 1≤x≤2 y 1≤y≤4</span>
+integrate(f, (x, 1, 2), (y, 1, 4))</pre>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sc">doble numérica — dblquad</span>
+    <h3>Integral doble con límites variables</h3>
+    <pre>from scipy.integrate import dblquad
+
+<span class="comment"># límites constantes</span>
+dblquad(lambda x, y: x**2/(2*y), 1, 4, 1, 2)
+
+<span class="comment"># límites variables</span>
+def xlimit(y):
+    return sqrt(1 - 4*y**2)
+
+dblquad(integrand, 0, 0.5, 0, xlimit)</pre>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-sc">triple — tplquad</span>
+    <h3>Integral triple</h3>
+    <pre>from scipy.integrate import tplquad
+import numpy as np
+
+tplquad(
+    lambda z, y, x: x**2 * np.sin(z),
+    0, np.sqrt(5),      <span class="comment"># límites x</span>
+    0, 2*np.pi,         <span class="comment"># límites y</span>
+    0, np.arctan(2)     <span class="comment"># límites z</span>
+)</pre>
+  </div>
+</div>
+
+<!-- GRÁFICAS -->
+<div class="section" id="w4-s-graficas">
+  <p class="section-title">Gráficas de integrales</p>
+
+  <div class="card">
+    <span class="tag tag-plt">fill_between</span>
+    <h3>Sombrear el área bajo la curva</h3>
+    <pre>from sympy import integrate, lambdify
+from sympy.abc import x
+import numpy as np
+import matplotlib.pyplot as plt
+
+fx = x**3 - 6*x
+Id = integrate(fx, (x, 0, 3))   <span class="comment"># valor exacto</span>
+
+xx = np.linspace(0, 3, 100)
+yy = lambdify(x, fx)(xx)
+
+plt.grid(alpha=0.4)
+plt.plot(xx, yy, 'r')
+plt.fill_between(xx, yy)         <span class="comment"># sombrea entre curva y eje x</span>
+plt.title(f"Integral = {float(Id):.4f}")
+plt.show()</pre>
+    <div class="highlight"><p><code>fill_between(x, y)</code> sombrea entre la curva y el eje x. <code>alpha</code> controla la transparencia.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-plt">entre dos curvas</span>
+    <h3>Sombrear entre dos funciones</h3>
+    <pre>plt.fill_between(xx, y1, y2, alpha=0.3)
+<span class="comment"># sombrea la región entre y1 e y2</span></pre>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="section" id="w4-s-quiz">
+  <p class="section-title">Repaso rápido</p>
+  <div class="card" id="w4-quiz-card">
+    <div class="q-num" id="w4-q-num"></div>
+    <div class="q-text" id="w4-q-text"></div>
+    <div id="w4-q-options"></div>
+    <div class="quiz-feedback" id="w4-q-feedback"></div>
+    <button class="quiz-next" id="w4-q-next" onclick="w4nextQ()">Siguiente →</button>
+  </div>
+  <div id="w4-quiz-result" style="display:none;">
+    <div class="card">
+      <h3 id="w4-result-title"></h3>
+      <p id="w4-result-text" style="margin-top:0.5rem;"></p>
+      <button class="quiz-next show" onclick="w4restartQuiz()" style="margin-top:0.75rem;">Reiniciar repaso</button>
+    </div>
+  </div>
+</div>
+</div>
+        </div>
+      </div>
+      <!-- END WIDGET 4 -->
     </div>
   </div>
 </main>
@@ -1534,6 +1979,84 @@ plt.plot(x1, y1)</pre>
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
   }
+
+const questions = [
+  { q: "¿Qué hace xvalues[:-1] en la suma izquierda?", opts: ["Quita el primer punto","Quita el último punto","Quita todos los extremos","Invierte el array"], ans: 1, exp: "xvalues[:-1] coge todos los puntos menos el último, que son los extremos izquierdos de cada subintervalo." },
+  { q: "¿Qué devuelve scipy.integrate.quad?", opts: ["Solo el valor","Una tupla (valor, error)","La expresión simbólica","El número de iteraciones"], ans: 1, exp: "quad devuelve una tupla. J[0] es el valor de la integral y J[1] es el error absoluto estimado." },
+  { q: "¿Cuál es la fórmula del error relativo?", opts: ["valor_exacto - aproximacion","abs(valor_exacto - aproximacion)","abs(valor_exacto - aproximacion) / abs(valor_exacto)","aproximacion / valor_exacto"], ans: 2, exp: "El error relativo es la diferencia en valor absoluto dividida por el valor exacto en valor absoluto." },
+  { q: "¿Qué hace plt.fill_between(x, y)?", opts: ["Dibuja la curva","Sombrea entre la curva y el eje x","Calcula la integral","Dibuja dos curvas"], ans: 1, exp: "fill_between sombrea la región entre y=f(x) y el eje x, visualizando el área de la integral." },
+  { q: "¿Qué restricción tiene la regla de Simpson?", opts: ["n debe ser impar","n debe ser par","n debe ser mayor que 10","No tiene restricciones"], ans: 1, exp: "La regla de Simpson requiere que n sea par porque trabaja con subintervalos de dos en dos." },
+  { q: "¿Cómo se calcula ∫₀³ (x³-6x) dx con sympy?", opts: ["integrate(fx, x, 0, 3)","integrate(fx, (x, 0, 3))","integrate(fx, x, (0,3))","integrate(fx, [0, 3])"], ans: 1, exp: "La sintaxis es integrate(funcion, (variable, limite_inf, limite_sup))." },
+  { q: "En integrales dobles con sympy, ¿en qué orden se resuelven?", opts: ["De fuera hacia dentro","De dentro hacia fuera: primero la integral interior","Siempre primero respecto a x","El orden no importa"], ans: 1, exp: "Se resuelven de dentro hacia fuera: primero la integral más interior, luego la exterior con el resultado." },
+  { q: "¿Cuál es más preciso para el mismo n?", opts: ["Suma izquierda","Suma derecha","Suma trapezoidal","Los tres son iguales"], ans: 2, exp: "La suma trapezoidal es más precisa porque promedia los dos extremos del subintervalo, reduciendo el error." },
+  { q: "¿Por qué los límites de dblquad deben ser funciones?", opts: ["Por limitaciones de Python","Porque pueden depender de la variable externa","Para mayor velocidad","Porque scipy no admite números"], ans: 1, exp: "En integrales dobles con límites variables, el límite interno puede depender de la variable externa." },
+  { q: "¿Cómo se representa el infinito en sympy?", opts: ["np.inf","float('inf')","sp.oo","math.inf"], ans: 2, exp: "En sympy el infinito es sp.oo (o solo oo si se importa de sympy). En scipy/numpy se usa np.inf." }
+];
+
+let current = 0, score = 0, answered = false;
+const order = [...Array(questions.length).keys()].sort(() => Math.random()-0.5);
+
+function w4show(id, btn) {
+  document.querySelectorAll('#w4 .section').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  document.querySelectorAll('#w4 .nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function w4loadQ() {
+  const q = questions[order[current]];
+  document.getElementById('w4-q-num').textContent = 'Pregunta ' + (current+1) + ' de ' + questions.length;
+  document.getElementById('w4-q-text').textContent = q.q;
+  const opts = document.getElementById('w4-q-options');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-btn';
+    btn.textContent = o;
+    btn.onclick = () => w4answer(i, q);
+    opts.appendChild(btn);
+  });
+  document.getElementById('w4-q-feedback').className = 'quiz-feedback';
+  document.getElementById('w4-q-feedback').textContent = '';
+  document.getElementById('w4-q-next').className = 'quiz-next';
+  answered = false;
+}
+
+function w4answer(i, q) {
+  if (answered) return;
+  answered = true;
+  document.querySelectorAll('#w4 .quiz-btn').forEach((b, idx) => {
+    b.classList.add(idx === q.ans ? 'correct' : 'wrong');
+  });
+  const fb = document.getElementById('w4-q-feedback');
+  if (i === q.ans) { score++; fb.style.background = 'var(--color-background-success)'; fb.style.color = 'var(--color-text-success)'; }
+  else { fb.style.background = 'var(--color-background-danger)'; fb.style.color = 'var(--color-text-danger)'; }
+  fb.textContent = q.exp;
+  fb.classList.add('show');
+  document.getElementById('w4-q-next').classList.add('show');
+}
+
+function w4nextQ() {
+  current++;
+  if (current >= questions.length) {
+    document.getElementById('w4-quiz-card').style.display = 'none';
+    document.getElementById('w4-quiz-result').style.display = 'block';
+    const pct = Math.round(score/questions.length*100);
+    document.getElementById('w4-result-title').textContent = score + ' / ' + questions.length + ' correctas (' + pct + '%)';
+    document.getElementById('w4-result-text').textContent = pct >= 80 ? 'Muy bien, tienes el tema dominado.' : pct >= 50 ? 'Bien, repasa los apartados donde fallaste.' : 'Repasa los conceptos con más calma y vuelve a intentarlo.';
+  } else { w4loadQ(); }
+}
+
+function w4restartQuiz() {
+  current = 0; score = 0; answered = false;
+  order.sort(() => Math.random()-0.5);
+  document.getElementById('w4-quiz-card').style.display = 'block';
+  document.getElementById('w4-quiz-result').style.display = 'none';
+  w4loadQ();
+}
+
+w4loadQ();
+
 </script>
 </body>
 </html>
