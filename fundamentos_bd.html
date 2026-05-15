@@ -6,97 +6,58 @@
 <title>Fundamentos de Bases de Datos — Apuntes</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0e11; --surface: #16161a; --surface2: #1e1e24; --border: #2a2a35;
-    --accent: #1D9E75; --accent-rgb: 29,158,117;
-    --text: #e8e8f0; --text-dim: #8888a0; --text-muted: #55556a;
-    --color-background-primary: #16161a; --color-background-secondary: #1e1e24;
-    --color-background-tertiary: #111114;
-    --color-background-info: #1a2a35; --color-background-warning: #2a1a0e;
-    --color-background-success: #0e2a1a; --color-background-danger: #2a0e0e;
-    --color-border-secondary: #2a2a35; --color-border-tertiary: #222228;
-    --color-border-info: #1D9E75; --color-border-primary: #3a3a50;
-    --color-text-primary: #e8e8f0; --color-text-secondary: #8888a0;
-    --color-text-info: #1D9E75; --color-text-warning: #f0c44a;
-    --color-text-success: #4af0a0; --color-text-danger: #f04a4a;
-    --border-radius-md: 8px; --border-radius-lg: 12px;
-    --font-mono: 'DM Mono', monospace; --font-sans: 'DM Sans', sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.3; pointer-events: none; z-index: 0; }
-  header { position: relative; z-index: 10; padding: 3rem 2rem 2rem; border-bottom: 1px solid var(--border); }
-  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
-  .back-link { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; margin-bottom: 1rem; transition: color 0.15s; }
-  .back-link:hover { color: var(--accent); }
-  .subject-tag { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
-  .subject-tag::before { content: ''; width: 20px; height: 1px; background: var(--accent); display: inline-block; }
-  h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; }
-  h1 em { font-style: italic; color: var(--accent); }
-  .header-meta { text-align: right; font-size: 13px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
-  .widget-count { font-size: 2.5rem; font-family: 'DM Serif Display', serif; color: var(--text-dim); line-height: 1; margin-bottom: 4px; }
-  main { position: relative; z-index: 10; max-width: 1100px; margin: 0 auto; padding: 2rem; }
-  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; align-items: start; }
-  @media (max-width: 768px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static !important; } }
-  .sidebar { position: sticky; top: 1.5rem; }
-  .sidebar-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem; padding-left: 2px; }
-  .nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-  .nav-item { cursor: pointer; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--text-dim); transition: all 0.15s; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; }
-  .nav-item:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
-  .nav-item.active { color: var(--accent); background: rgba(29,158,117,0.07); border-color: rgba(29,158,117,0.2); }
-  .nav-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); min-width: 20px; }
-  .nav-item.active .nav-num { color: var(--accent); opacity: 0.6; }
-  .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 0; }
-  .add-hint { font-size: 11px; color: var(--text-muted); padding: 10px 14px; background: var(--surface); border-radius: 10px; border: 1px dashed var(--border); line-height: 1.5; font-family: 'DM Mono', monospace; }
-  .widgets-area { display: flex; flex-direction: column; gap: 2rem; }
-  .widget-wrapper { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: border-color 0.2s; animation: fadeUp 0.4s ease both; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-  .widget-wrapper:hover { border-color: #3a3a50; }
-  .widget-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--surface2); cursor: pointer; user-select: none; }
-  .widget-header-left { display: flex; align-items: center; gap: 12px; }
-  .widget-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-  .widget-title { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
-  .widget-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 1px; }
-  .widget-chevron { color: var(--text-muted); font-size: 12px; transition: transform 0.2s; }
-  .widget-wrapper.collapsed .widget-chevron { transform: rotate(-90deg); }
-  .widget-body { padding: 1.25rem; }
-  .widget-wrapper.collapsed .widget-body { display: none; }
-  .leccion-badge { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); margin-bottom: 1.5rem; }
-  .leccion-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  :root { --accent:#1D9E75; --accent-rgb:29,158,117; }
 
-  /* Widget content styles */
-  .widget-body .wrap, .widget-body .w { padding: 0; }
-  .widget-body .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
-  .widget-body .nb { padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface2); cursor: pointer; font-size: 13px; color: var(--text-dim); transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
-  .widget-body .nb:hover { background: var(--surface); color: var(--text); }
-  .widget-body .nb.on { background: rgba(29,158,117,0.15); border-color: rgba(29,158,117,0.4); color: var(--accent); font-weight: 500; }
-  .widget-body .section, .widget-body .sec { display: none; }
-  .widget-body .section.on, .widget-body .sec.on { display: block; }
-  .widget-body .card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-  .widget-body .card-title, .widget-body .ct { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: .5rem; }
-  .widget-body .card-body, .widget-body .cb { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
-  .widget-body .code { background: #0a0a0d; border-radius: 8px; padding: .65rem 1rem; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); margin: .75rem 0; border: 1px solid var(--border); white-space: pre-wrap; line-height: 1.7; }
-  .widget-body .tag { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 99px; margin-bottom: .5rem; font-weight: 500; font-family: 'DM Mono', monospace; }
-  .widget-body .tag-t08 { background: rgba(74,176,240,0.1); color: #4ab0f0; border: 1px solid rgba(74,176,240,0.2); }
-  .widget-body .tag-t09 { background: rgba(29,158,117,0.1); color: var(--accent); border: 1px solid rgba(29,158,117,0.2); }
-  .widget-body .tag-t10 { background: rgba(124,106,247,0.1); color: #9d8fff; border: 1px solid rgba(124,106,247,0.2); }
-  .widget-body .t11 { background: rgba(29,158,117,0.1); color: var(--accent); border: 1px solid rgba(29,158,117,0.2); }
-  .widget-body .tpdf { background: rgba(124,106,247,0.1); color: #9d8fff; border: 1px solid rgba(124,106,247,0.2); }
-  .widget-body .warn { background: rgba(240,74,74,0.07); border: 1px solid rgba(240,74,74,0.2); border-radius: 8px; padding: .65rem 1rem; font-size: 13px; color: #f07070; margin: .75rem 0; }
-  .widget-body .ok { background: rgba(29,158,117,0.07); border: 1px solid rgba(29,158,117,0.2); border-radius: 8px; padding: .65rem .9rem; font-size: 13px; color: var(--accent); margin: .75rem 0; }
-  .widget-body .rule { border-left: 3px solid var(--accent); padding: .5rem 1rem; margin: .75rem 0; font-size: 14px; color: var(--text); }
-  .widget-body .sec-title, .widget-body .stitle { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; font-family: 'DM Serif Display', serif; }
-  .widget-body .askbtn, .widget-body .ab { margin-top: .75rem; padding: .4rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-dim); cursor: pointer; font-size: 13px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
-  .widget-body .askbtn:hover, .widget-body .ab:hover { color: var(--text); border-color: var(--accent); }
-  .widget-body .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: .75rem 0; }
-  @media(max-width:500px) { .widget-body .grid2 { grid-template-columns: 1fr; } }
-  .widget-body .mini { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .65rem 1rem; font-size: 13px; color: var(--text-dim); text-align: center; }
-  .widget-body .mini strong { display: block; font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  :root {
+    --bg:#0e0e11;--surface:#16161a;--surface2:#1e1e24;--border:#2a2a35;
+    --text:#e8e8f0;--text-dim:#8888a0;--text-muted:#55556a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.3;pointer-events:none;z-index:0}
+  header{position:relative;z-index:10;padding:3rem 2rem 2rem;border-bottom:1px solid var(--border)}
+  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+  .back-link{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--text-muted);text-decoration:none;margin-bottom:1rem;transition:color .15s}
+  .back-link:hover{color:var(--accent)}
+  .subject-tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;display:flex;align-items:center;gap:8px}
+  .subject-tag::before{content:'';width:20px;height:1px;background:var(--accent);display:inline-block}
+  h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:400;line-height:1.1;letter-spacing:-.02em}
+  h1 em{font-style:italic;color:var(--accent)}
+  .header-meta{text-align:right;font-size:13px;color:var(--text-muted);font-family:'DM Mono',monospace}
+  .widget-count{font-size:2.5rem;font-family:'DM Serif Display',serif;color:var(--text-dim);line-height:1;margin-bottom:4px}
+  main{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:2rem}
+  .layout{display:grid;grid-template-columns:220px 1fr;gap:2rem;align-items:start}
+  @media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{position:static!important}}
+  .sidebar{position:sticky;top:1.5rem}
+  .sidebar-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.75rem;padding-left:2px}
+  .nav-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .nav-item{cursor:pointer;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;color:var(--text-dim);transition:all .15s;display:flex;align-items:center;gap:10px;border:1px solid transparent}
+  .nav-item:hover{color:var(--text);background:var(--surface);border-color:var(--border)}
+  .nav-item.active{color:var(--accent);background:rgba(var(--accent-rgb),.07);border-color:rgba(var(--accent-rgb),.2)}
+  .nav-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);min-width:20px}
+  .nav-item.active .nav-num{color:var(--accent);opacity:.6}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 0}
+  .add-hint{font-size:11px;color:var(--text-muted);padding:10px 14px;background:var(--surface);border-radius:10px;border:1px dashed var(--border);line-height:1.5;font-family:'DM Mono',monospace}
+  .widgets-area{display:flex;flex-direction:column;gap:2rem}
+  .widget-wrapper{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .2s;animation:fadeUp .4s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .widget-wrapper:hover{border-color:#3a3a50}
+  .widget-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:var(--surface2);cursor:pointer;user-select:none}
+  .widget-header-left{display:flex;align-items:center;gap:12px}
+  .widget-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+  .widget-title{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+  .widget-subtitle{font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:1px}
+  .widget-chevron{color:var(--text-muted);font-size:12px;transition:transform .2s}
+  .widget-wrapper.collapsed .widget-chevron{transform:rotate(-90deg)}
+  .widget-body{padding:1.25rem}
+  .widget-wrapper.collapsed .widget-body{display:none}
+  .leccion-badge{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text-muted);margin-bottom:1.5rem}
+  .leccion-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-inner">
     <div>
@@ -110,26 +71,24 @@
     </div>
   </div>
 </header>
-
 <main>
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-label">Widgets</div>
       <ul class="nav-list">
-        <li class="nav-item active" onclick="scrollToWidget('w1', this)"><span class="nav-num">01</span>T08-T10 — SQL agregado</li>
-        <li class="nav-item" onclick="scrollToWidget('w2', this)"><span class="nav-num">02</span>T11 — Conjuntos SQL</li>
-        <li class="nav-item" onclick="scrollToWidget('w3', this)"><span class="nav-num">03</span>T12 — Tablas temporales</li>
+        <li class="nav-item active" onclick="scrollToWidget('fbd1',this)"><span class="nav-num">01</span>T08-T10 — SQL agregado</li>
+        <li class="nav-item" onclick="scrollToWidget('fbd2',this)"><span class="nav-num">02</span>T11 — Conjuntos SQL</li>
+        <li class="nav-item" onclick="scrollToWidget('fbd3',this)"><span class="nav-num">03</span>T12 — Tablas temporales</li>
       </ul>
       <div class="sidebar-divider"></div>
       <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
     </aside>
-
     <div class="widgets-area">
 
-      <div class="widget-wrapper" id="w1">
-        <div class="widget-header" onclick="toggleWidget('w1')">
+      <div class="widget-wrapper" id="fbd1">
+        <div class="widget-header" onclick="toggleWidget('fbd1')">
           <div class="widget-header-left">
-            <div class="widget-icon" style="background:rgba(29,158,117,0.1)">🗄️</div>
+            <div class="widget-icon" style="background:rgba(29,158,117,.1)">🗄️</div>
             <div>
               <div class="widget-title">Funciones de agregado, GROUP BY y HAVING</div>
               <div class="widget-subtitle">T08 · T09 · T10 — COUNT · SUM · AVG · GROUP BY · HAVING · Orden</div>
@@ -138,19 +97,71 @@
           <span class="widget-chevron">▼</span>
         </div>
         <div class="widget-body">
-          <div class="leccion-badge"><span class="leccion-dot"></span>TEMAS 08 · 09 · 10</div>
-<div class="wrap">
+          <div class="leccion-badge"><span class="leccion-dot"></span>TEMAS 08·09·10</div>
+          <style>
+  #fbd1 .nav-btn{font-size:13px;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd1 .nav-btn:hover{background:var(--surface);color:var(--text)}
+  #fbd1 .nav-btn.active{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
+  #fbd1 .tab{font-size:13px;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd1 .tab:hover{background:var(--surface);color:var(--text)}
+  #fbd1 .tab.active{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
+  #fbd1 .nb{font-size:13px;padding:6px 14px;border-radius:99px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd1 .nb:hover{background:var(--surface);color:var(--text)}
+  #fbd1 .nb.on{background:rgba(29,158,117,.15);color:#1D9E75;border-color:rgba(29,158,117,.4);font-weight:500}
+  #fbd1 .section{display:none} #fbd1 .section.active{display:block}
+  #fbd1 .section.on{display:block}
+  #fbd1 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+  #fbd1 .card h3,#fbd1 .card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:.75rem}
+  #fbd1 .card p,#fbd1 .card-body{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:.5rem}
+  #fbd1 pre,#fbd1 .code{background:#0a0a0d;border-radius:8px;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);overflow-x:auto;margin:.5rem 0;line-height:1.7;border:1px solid var(--border);white-space:pre-wrap}
+  #fbd1 code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
+  #fbd1 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
+  #fbd1 .tag-np,#fbd1 .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
+  #fbd1 .tag-sp,#fbd1 .tag-t10{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #fbd1 .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
+  #fbd1 .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
+  #fbd1 .tag-py,#fbd1 .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
+  #fbd1 .tag-paso{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
+  #fbd1 .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
+  #fbd1 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1rem}
+  #fbd1 .highlight,.#fbd1 .rule{border-left:2px solid rgba(29,158,117,.4);padding-left:.75rem;margin:.5rem 0}
+  #fbd1 .highlight p{font-size:13px;color:var(--text-dim)}
+  #fbd1 .section-title,#fbd1 .sec-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:1rem;font-family:'DM Serif Display',serif}
+  #fbd1 .comment{color:#6a9955}
+  #fbd1 table{width:100%;font-size:13px;border-collapse:collapse}
+  #fbd1 table th{text-align:left;color:var(--text-muted);font-weight:500;padding:8px;border-bottom:1px solid var(--border)}
+  #fbd1 table td{padding:8px;color:var(--text);border-bottom:1px solid var(--border);vertical-align:top}
+  #fbd1 table tr:last-child td{border-bottom:none}
+  #fbd1 .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:.75rem}
+  #fbd1 .num,#fbd1 .step-num{min-width:28px;height:28px;border-radius:50%;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.2);font-size:13px;font-weight:600;color:#1D9E75;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0}
+  #fbd1 .step-content{flex:1}
+  #fbd1 .step-title,.#fbd1 .step-content strong{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  #fbd1 .step-desc,#fbd1 .step-content p{font-size:13px;color:var(--text-dim);line-height:1.5;margin:0}
+  #fbd1 .formula{background:#0a0a0d;border-left:3px solid rgba(29,158,117,.5);border-radius:0 8px 8px 0;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);margin:.5rem 0;line-height:1.9}
+  #fbd1 .warn{background:rgba(240,74,74,.07);border:1px solid rgba(240,74,74,.2);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:#f07070;margin:.75rem 0}
+  #fbd1 .ok{background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.2);border-radius:8px;padding:.65rem .9rem;font-size:13px;color:#1D9E75;margin:.75rem 0}
+  #fbd1 .rule{border-left:3px solid #1D9E75;padding:.5rem 1rem;margin:.75rem 0;font-size:14px;color:var(--text)}
+  #fbd1 .divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+  #fbd1 .askbtn{margin-top:.75rem;padding:.4rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-size:13px;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd1 .askbtn:hover{color:var(--text);border-color:#1D9E75}
+  #fbd1 .pill{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--border);color:var(--text-muted);background:var(--surface);display:inline-block;margin:2px}
+  #fbd1 .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
+  #fbd1 .subsec{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .5rem}
+  #fbd1 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
+  #fbd1 .mini strong{display:block;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+</style>
+          <div class="wrap">
 <h2 class="sr-only">Apuntes SQL interactivos — Fundamentos de Bases de Datos UA</h2>
 
 <div class="nav">
-  <button class="nb on" onclick="w1show('w1-funciones',this)">Funciones de agregado</button>
-  <button class="nb" onclick="w1show('w1-groupby',this)">GROUP BY</button>
-  <button class="nb" onclick="w1show('w1-having',this)">HAVING</button>
-  <button class="nb" onclick="w1show('w1-orden',this)">Orden de ejecución</button>
-  <button class="nb" onclick="w1show('w1-trucos',this)">Trucos y errores comunes</button>
+  <button class="nb on" onclick="fbd1show('fbd1-funciones',this)">Funciones de agregado</button>
+  <button class="nb" onclick="fbd1show('fbd1-groupby',this)">GROUP BY</button>
+  <button class="nb" onclick="fbd1show('fbd1-having',this)">HAVING</button>
+  <button class="nb" onclick="fbd1show('fbd1-orden',this)">Orden de ejecución</button>
+  <button class="nb" onclick="fbd1show('fbd1-trucos',this)">Trucos y errores comunes</button>
 </div>
 
-<div id="w1-funciones" class="section on">
+<div id="fbd1-funciones" class="section on">
   <p class="sec-title">Funciones de agregado</p>
 
   <div class="card">
@@ -208,7 +219,7 @@ WHERE pvp = (SELECT MAX(pvp) FROM articulo);</div>
   </div>
 </div>
 
-<div id="w1-groupby" class="section">
+<div id="fbd1-groupby" class="section">
   <p class="sec-title">GROUP BY</p>
 
   <div class="card">
@@ -262,7 +273,7 @@ GROUP BY cod, nombre;</div>
   </div>
 </div>
 
-<div id="w1-having" class="section">
+<div id="fbd1-having" class="section">
   <p class="sec-title">HAVING</p>
 
   <div class="card">
@@ -329,7 +340,7 @@ ORDER BY YEAR(fecha), MONTH(fecha);</div>
   </div>
 </div>
 
-<div id="w1-orden" class="section">
+<div id="fbd1-orden" class="section">
   <p class="sec-title">Orden de ejecución SQL</p>
 
   <div class="card">
@@ -365,7 +376,7 @@ LIMIT 5;</div>
   </div>
 </div>
 
-<div id="w1-trucos" class="section">
+<div id="fbd1-trucos" class="section">
   <p class="sec-title">Trucos y errores comunes</p>
 
   <div class="card">
@@ -431,11 +442,10 @@ GROUP BY p.codp, p.nombre;</div>
 </div>
         </div>
       </div>
-
-      <div class="widget-wrapper" id="w2">
-        <div class="widget-header" onclick="toggleWidget('w2')">
+      <div class="widget-wrapper" id="fbd2">
+        <div class="widget-header" onclick="toggleWidget('fbd2')">
           <div class="widget-header-left">
-            <div class="widget-icon" style="background:rgba(124,106,247,0.1)">🔗</div>
+            <div class="widget-icon" style="background:rgba(29,158,117,.1)">🔗</div>
             <div>
               <div class="widget-title">Operadores de conjuntos SQL</div>
               <div class="widget-subtitle">T11 — UNION · INTERSECT · EXCEPT · EXISTS · NATURAL JOIN</div>
@@ -445,19 +455,71 @@ GROUP BY p.codp, p.nombre;</div>
         </div>
         <div class="widget-body">
           <div class="leccion-badge"><span class="leccion-dot"></span>TEMA 11</div>
-<div class="w">
+          <style>
+  #fbd2 .nav-btn{font-size:13px;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd2 .nav-btn:hover{background:var(--surface);color:var(--text)}
+  #fbd2 .nav-btn.active{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
+  #fbd2 .tab{font-size:13px;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd2 .tab:hover{background:var(--surface);color:var(--text)}
+  #fbd2 .tab.active{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
+  #fbd2 .nb{font-size:13px;padding:6px 14px;border-radius:99px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd2 .nb:hover{background:var(--surface);color:var(--text)}
+  #fbd2 .nb.on{background:rgba(29,158,117,.15);color:#1D9E75;border-color:rgba(29,158,117,.4);font-weight:500}
+  #fbd2 .section{display:none} #fbd2 .section.active{display:block}
+  #fbd2 .section.on{display:block}
+  #fbd2 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+  #fbd2 .card h3,#fbd2 .card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:.75rem}
+  #fbd2 .card p,#fbd2 .card-body{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:.5rem}
+  #fbd2 pre,#fbd2 .code{background:#0a0a0d;border-radius:8px;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);overflow-x:auto;margin:.5rem 0;line-height:1.7;border:1px solid var(--border);white-space:pre-wrap}
+  #fbd2 code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
+  #fbd2 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
+  #fbd2 .tag-np,#fbd2 .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
+  #fbd2 .tag-sp,#fbd2 .tag-t10{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #fbd2 .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
+  #fbd2 .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
+  #fbd2 .tag-py,#fbd2 .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
+  #fbd2 .tag-paso{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
+  #fbd2 .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
+  #fbd2 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1rem}
+  #fbd2 .highlight,.#fbd2 .rule{border-left:2px solid rgba(29,158,117,.4);padding-left:.75rem;margin:.5rem 0}
+  #fbd2 .highlight p{font-size:13px;color:var(--text-dim)}
+  #fbd2 .section-title,#fbd2 .sec-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:1rem;font-family:'DM Serif Display',serif}
+  #fbd2 .comment{color:#6a9955}
+  #fbd2 table{width:100%;font-size:13px;border-collapse:collapse}
+  #fbd2 table th{text-align:left;color:var(--text-muted);font-weight:500;padding:8px;border-bottom:1px solid var(--border)}
+  #fbd2 table td{padding:8px;color:var(--text);border-bottom:1px solid var(--border);vertical-align:top}
+  #fbd2 table tr:last-child td{border-bottom:none}
+  #fbd2 .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:.75rem}
+  #fbd2 .num,#fbd2 .step-num{min-width:28px;height:28px;border-radius:50%;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.2);font-size:13px;font-weight:600;color:#1D9E75;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0}
+  #fbd2 .step-content{flex:1}
+  #fbd2 .step-title,.#fbd2 .step-content strong{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  #fbd2 .step-desc,#fbd2 .step-content p{font-size:13px;color:var(--text-dim);line-height:1.5;margin:0}
+  #fbd2 .formula{background:#0a0a0d;border-left:3px solid rgba(29,158,117,.5);border-radius:0 8px 8px 0;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);margin:.5rem 0;line-height:1.9}
+  #fbd2 .warn{background:rgba(240,74,74,.07);border:1px solid rgba(240,74,74,.2);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:#f07070;margin:.75rem 0}
+  #fbd2 .ok{background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.2);border-radius:8px;padding:.65rem .9rem;font-size:13px;color:#1D9E75;margin:.75rem 0}
+  #fbd2 .rule{border-left:3px solid #1D9E75;padding:.5rem 1rem;margin:.75rem 0;font-size:14px;color:var(--text)}
+  #fbd2 .divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+  #fbd2 .askbtn{margin-top:.75rem;padding:.4rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-size:13px;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd2 .askbtn:hover{color:var(--text);border-color:#1D9E75}
+  #fbd2 .pill{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--border);color:var(--text-muted);background:var(--surface);display:inline-block;margin:2px}
+  #fbd2 .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
+  #fbd2 .subsec{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .5rem}
+  #fbd2 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
+  #fbd2 .mini strong{display:block;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+</style>
+          <div class="w">
 <h2 class="sr-only">Apuntes SQL conjuntos — T11 Fundamentos de Bases de Datos UA</h2>
 
 <div class="nav">
-  <button class="nb on" onclick="w2show('w2-union',this)">UNION</button>
-  <button class="nb" onclick="w2show('w2-intersect',this)">INTERSECT</button>
-  <button class="nb" onclick="w2show('w2-except',this)">EXCEPT</button>
-  <button class="nb" onclick="w2show('w2-exists',this)">EXISTS</button>
-  <button class="nb" onclick="w2show('w2-natural',this)">NATURAL JOIN</button>
-  <button class="nb" onclick="w2show('w2-trucos',this)">Trucos y errores</button>
+  <button class="nb on" onclick="fbd2show('fbd2-union',this)">UNION</button>
+  <button class="nb" onclick="fbd2show('fbd2-intersect',this)">INTERSECT</button>
+  <button class="nb" onclick="fbd2show('fbd2-except',this)">EXCEPT</button>
+  <button class="nb" onclick="fbd2show('fbd2-exists',this)">EXISTS</button>
+  <button class="nb" onclick="fbd2show('fbd2-natural',this)">NATURAL JOIN</button>
+  <button class="nb" onclick="fbd2show('fbd2-trucos',this)">Trucos y errores</button>
 </div>
 
-<div id="w2-union" class="sec on">
+<div id="fbd2-union" class="sec on">
   <p class="stitle">UNION y UNION ALL</p>
 
   <div class="card">
@@ -514,7 +576,7 @@ ORDER BY 3;</div>
   </div>
 </div>
 
-<div id="w2-intersect" class="sec">
+<div id="fbd2-intersect" class="sec">
   <p class="stitle">INTERSECT</p>
 
   <div class="card">
@@ -559,7 +621,7 @@ FROM pedido p JOIN linped l ON p.numPedido = l.numPedido;</div>
   </div>
 </div>
 
-<div id="w2-except" class="sec">
+<div id="fbd2-except" class="sec">
   <p class="stitle">EXCEPT</p>
 
   <div class="card">
@@ -616,7 +678,7 @@ JOIN camara c ON c.cod=l.articulo;</div>
   </div>
 </div>
 
-<div id="w2-exists" class="sec">
+<div id="fbd2-exists" class="sec">
   <p class="stitle">EXISTS y NOT EXISTS</p>
 
   <div class="card">
@@ -678,7 +740,7 @@ WHERE EXISTS (SELECT 1 FROM marca);</div>
   </div>
 </div>
 
-<div id="w2-natural" class="sec">
+<div id="fbd2-natural" class="sec">
   <p class="stitle">NATURAL JOIN</p>
 
   <div class="card">
@@ -717,7 +779,7 @@ SELECT * FROM articulo a, memoria m WHERE a.cod = m.cod;</div>
   </div>
 </div>
 
-<div id="w2-trucos" class="sec">
+<div id="fbd2-trucos" class="sec">
   <p class="stitle">Trucos y errores comunes</p>
 
   <div class="card">
@@ -775,12 +837,10 @@ ORDER BY fecha;</div>
 </div>
         </div>
       </div>
-
-
-      <div class="widget-wrapper" id="w3">
-        <div class="widget-header" onclick="toggleWidget('w3')">
+      <div class="widget-wrapper" id="fbd3">
+        <div class="widget-header" onclick="toggleWidget('fbd3')">
           <div class="widget-header-left">
-            <div class="widget-icon" style="background:rgba(200,240,74,0.1)">🧩</div>
+            <div class="widget-icon" style="background:rgba(29,158,117,.1)">🧩</div>
             <div>
               <div class="widget-title">Tablas temporales y CTEs</div>
               <div class="widget-subtitle">T12 — Subconsultas · FROM · WITH · Pivotar · Patrones</div>
@@ -790,18 +850,70 @@ ORDER BY fecha;</div>
         </div>
         <div class="widget-body">
           <div class="leccion-badge"><span class="leccion-dot"></span>TEMA 12</div>
-<div class="w">
+          <style>
+  #fbd3 .nav-btn{font-size:13px;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd3 .nav-btn:hover{background:var(--surface);color:var(--text)}
+  #fbd3 .nav-btn.active{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
+  #fbd3 .tab{font-size:13px;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd3 .tab:hover{background:var(--surface);color:var(--text)}
+  #fbd3 .tab.active{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
+  #fbd3 .nb{font-size:13px;padding:6px 14px;border-radius:99px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd3 .nb:hover{background:var(--surface);color:var(--text)}
+  #fbd3 .nb.on{background:rgba(29,158,117,.15);color:#1D9E75;border-color:rgba(29,158,117,.4);font-weight:500}
+  #fbd3 .section{display:none} #fbd3 .section.active{display:block}
+  #fbd3 .section.on{display:block}
+  #fbd3 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+  #fbd3 .card h3,#fbd3 .card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:.75rem}
+  #fbd3 .card p,#fbd3 .card-body{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:.5rem}
+  #fbd3 pre,#fbd3 .code{background:#0a0a0d;border-radius:8px;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);overflow-x:auto;margin:.5rem 0;line-height:1.7;border:1px solid var(--border);white-space:pre-wrap}
+  #fbd3 code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
+  #fbd3 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
+  #fbd3 .tag-np,#fbd3 .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
+  #fbd3 .tag-sp,#fbd3 .tag-t10{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #fbd3 .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
+  #fbd3 .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
+  #fbd3 .tag-py,#fbd3 .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
+  #fbd3 .tag-paso{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
+  #fbd3 .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
+  #fbd3 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1rem}
+  #fbd3 .highlight,.#fbd3 .rule{border-left:2px solid rgba(29,158,117,.4);padding-left:.75rem;margin:.5rem 0}
+  #fbd3 .highlight p{font-size:13px;color:var(--text-dim)}
+  #fbd3 .section-title,#fbd3 .sec-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:1rem;font-family:'DM Serif Display',serif}
+  #fbd3 .comment{color:#6a9955}
+  #fbd3 table{width:100%;font-size:13px;border-collapse:collapse}
+  #fbd3 table th{text-align:left;color:var(--text-muted);font-weight:500;padding:8px;border-bottom:1px solid var(--border)}
+  #fbd3 table td{padding:8px;color:var(--text);border-bottom:1px solid var(--border);vertical-align:top}
+  #fbd3 table tr:last-child td{border-bottom:none}
+  #fbd3 .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:.75rem}
+  #fbd3 .num,#fbd3 .step-num{min-width:28px;height:28px;border-radius:50%;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.2);font-size:13px;font-weight:600;color:#1D9E75;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0}
+  #fbd3 .step-content{flex:1}
+  #fbd3 .step-title,.#fbd3 .step-content strong{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  #fbd3 .step-desc,#fbd3 .step-content p{font-size:13px;color:var(--text-dim);line-height:1.5;margin:0}
+  #fbd3 .formula{background:#0a0a0d;border-left:3px solid rgba(29,158,117,.5);border-radius:0 8px 8px 0;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);margin:.5rem 0;line-height:1.9}
+  #fbd3 .warn{background:rgba(240,74,74,.07);border:1px solid rgba(240,74,74,.2);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:#f07070;margin:.75rem 0}
+  #fbd3 .ok{background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.2);border-radius:8px;padding:.65rem .9rem;font-size:13px;color:#1D9E75;margin:.75rem 0}
+  #fbd3 .rule{border-left:3px solid #1D9E75;padding:.5rem 1rem;margin:.75rem 0;font-size:14px;color:var(--text)}
+  #fbd3 .divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+  #fbd3 .askbtn{margin-top:.75rem;padding:.4rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-size:13px;transition:all .15s;font-family:'DM Sans',sans-serif}
+  #fbd3 .askbtn:hover{color:var(--text);border-color:#1D9E75}
+  #fbd3 .pill{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--border);color:var(--text-muted);background:var(--surface);display:inline-block;margin:2px}
+  #fbd3 .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
+  #fbd3 .subsec{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .5rem}
+  #fbd3 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
+  #fbd3 .mini strong{display:block;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+</style>
+          <div class="w">
 <h2 class="sr-only">Apuntes tablas temporales T12 — Fundamentos de Bases de Datos UA</h2>
 
 <div class="nav">
-  <button class="nb on" onclick="w3show('w3-columna',this)">Subconsulta como columna</button>
-  <button class="nb" onclick="w3show('w3-from',this)">Subconsulta en el FROM</button>
-  <button class="nb" onclick="w3show('w3-with',this)">WITH (CTE)</button>
-  <button class="nb" onclick="w3show('w3-pivot',this)">Pivotar tabla</button>
-  <button class="nb" onclick="w3show('w3-trucos',this)">Trucos y patrones</button>
+  <button class="nb on" onclick="fbd3show('fbd3-columna',this)">Subconsulta como columna</button>
+  <button class="nb" onclick="fbd3show('fbd3-from',this)">Subconsulta en el FROM</button>
+  <button class="nb" onclick="fbd3show('fbd3-with',this)">WITH (CTE)</button>
+  <button class="nb" onclick="fbd3show('fbd3-pivot',this)">Pivotar tabla</button>
+  <button class="nb" onclick="fbd3show('fbd3-trucos',this)">Trucos y patrones</button>
 </div>
 
-<div id="w3-columna" class="sec on">
+<div id="fbd3-columna" class="sec on">
   <p class="stitle">Subconsulta como columna</p>
 
   <div class="card">
@@ -859,7 +971,7 @@ SELECT
   </div>
 </div>
 
-<div id="w3-from" class="sec">
+<div id="fbd3-from" class="sec">
   <p class="stitle">Subconsulta en el FROM</p>
 
   <div class="card">
@@ -927,7 +1039,7 @@ ORDER BY valor DESC;</div>
   </div>
 </div>
 
-<div id="w3-with" class="sec">
+<div id="fbd3-with" class="sec">
   <p class="stitle">WITH — CTE (Common Table Expression)</p>
 
   <div class="card">
@@ -1023,7 +1135,7 @@ WHERE unidades = (SELECT MAX(unidades) FROM ventas_marca);</div>
   </div>
 </div>
 
-<div id="w3-pivot" class="sec">
+<div id="fbd3-pivot" class="sec">
   <p class="stitle">Pivotar una tabla</p>
 
   <div class="card">
@@ -1084,7 +1196,7 @@ IFNULL((SELECT veces FROM micte WHERE mes=10 AND micte.articulo=t2.articulo), 0)
   </div>
 </div>
 
-<div id="w3-trucos" class="sec">
+<div id="fbd3-trucos" class="sec">
   <p class="stitle">Trucos y patrones habituales</p>
 
   <div class="card">
@@ -1142,32 +1254,34 @@ FROM
     </div>
   </div>
 </main>
-
 <script>
-  function toggleWidget(id) { document.getElementById(id).classList.toggle('collapsed'); }
-  function scrollToWidget(id, el) {
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  function toggleWidget(id){document.getElementById(id).classList.toggle('collapsed')}
+  function scrollToWidget(id,el){
+    document.querySelectorAll('.nav-item').forEach(function(i){i.classList.remove('active')});
     el.classList.add('active');
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-  function w1show(id, btn) {
-    document.querySelectorAll('#w1 .section, #w1 .sec').forEach(s => { s.classList.remove('on'); });
-    document.querySelectorAll('#w1 .nb').forEach(b => b.classList.remove('on'));
-    document.getElementById(id).classList.add('on');
-    btn.classList.add('on');
-  }
-  function w2show(id, btn) {
-    document.querySelectorAll('#w2 .section, #w2 .sec').forEach(s => { s.classList.remove('on'); });
-    document.querySelectorAll('#w2 .nb').forEach(b => b.classList.remove('on'));
-    document.getElementById(id).classList.add('on');
-    btn.classList.add('on');
+    document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  function w3show(id, btn) {
-    document.querySelectorAll('#w3 .sec').forEach(s => s.classList.remove('on'));
-    document.querySelectorAll('#w3 .nb').forEach(b => b.classList.remove('on'));
-    document.getElementById(id).classList.add('on');
-    btn.classList.add('on');
+  function fbd1show(id, btn) {
+    document.querySelectorAll('#fbd1 .section').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#fbd1 .nav-btn, #fbd1 .tab, #fbd1 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el = document.getElementById(id);
+    if(el){el.classList.add('active');el.classList.add('on');}
+    if(btn){btn.classList.add('active');btn.classList.add('on');}
+  }
+  function fbd2show(id, btn) {
+    document.querySelectorAll('#fbd2 .section').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#fbd2 .nav-btn, #fbd2 .tab, #fbd2 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el = document.getElementById(id);
+    if(el){el.classList.add('active');el.classList.add('on');}
+    if(btn){btn.classList.add('active');btn.classList.add('on');}
+  }
+  function fbd3show(id, btn) {
+    document.querySelectorAll('#fbd3 .section').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#fbd3 .nav-btn, #fbd3 .tab, #fbd3 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el = document.getElementById(id);
+    if(el){el.classList.add('active');el.classList.add('on');}
+    if(btn){btn.classList.add('active');btn.classList.add('on');}
   }
 </script>
 </body>
