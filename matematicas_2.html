@@ -1838,10 +1838,10 @@ plt.show()</pre>
   ];
 
   let w2current = 0, w2score = 0, w2answered = false;
-  const w2order = [...Array(w2w2questions.length).keys()].sort(() => Math.random()-0.5);
+  const w2order = [...Array(w2questions.length).keys()].sort(() => Math.random()-0.5);
 
   function w2loadQ() {
-    const q = w2questions[w2order[current]];
+    const q = w2questions[w2order[w2current]];
     document.getElementById('w2-q-num').textContent = 'Pregunta ' + (w2current+1) + ' de ' + w2questions.length;
     document.getElementById('w2-q-text').textContent = q.q;
     const opts = document.getElementById('w2-q-options');
@@ -1994,7 +1994,7 @@ const w4questions = [
 ];
 
 let w4current = 0, w4score = 0, w4answered = false;
-const w4order = [...Array(w4w2questions.length).keys()].sort(() => Math.random()-0.5);
+const w4order = [...Array(w4questions.length).keys()].sort(() => Math.random()-0.5);
 
 function w4show(id, btn) {
   document.querySelectorAll('#w4 .section').forEach(s => s.classList.remove('active'));
