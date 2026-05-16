@@ -6,22 +6,31 @@
 <title>Matemática Discreta — Apuntes</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root { --accent:#c8f04a; --accent-rgb:200,240,74; }
+  :root{--accent:#c8f04a;--accent-rgb:200,240,74;}
+
+  :root{--bg:#0e0e11;--surface:#16161a;--surface2:#1e1e24;--border:#2a2a35;--text:#e8e8f0;--text-dim:#8888a0;--text-muted:#55556a}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
   body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.3;pointer-events:none;z-index:0}
-  :root{--bg:#0e0e11;--surface:#16161a;--surface2:#1e1e24;--border:#2a2a35;--text:#e8e8f0;--text-dim:#8888a0;--text-muted:#55556a}
   header{position:relative;z-index:10;padding:3rem 2rem 2rem;border-bottom:1px solid var(--border)}
-  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+  .header-inner{max-width:1100px;margin:0 auto}
   .back-link{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--text-muted);text-decoration:none;margin-bottom:1rem;transition:color .15s}
   .back-link:hover{color:var(--accent)}
   .subject-tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;display:flex;align-items:center;gap:8px}
   .subject-tag::before{content:'';width:20px;height:1px;background:var(--accent);display:inline-block}
   h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:400;line-height:1.1;letter-spacing:-.02em}
   h1 em{font-style:italic;color:var(--accent)}
-  .header-meta{text-align:right;font-size:13px;color:var(--text-muted);font-family:'DM Mono',monospace}
-  .widget-count{font-size:2.5rem;font-family:'DM Serif Display',serif;color:var(--text-dim);line-height:1;margin-bottom:4px}
   main{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:2rem}
+  .tab-bar{display:flex;gap:12px;margin-bottom:2rem}
+  .tab-btn{flex:1;padding:1rem;border-radius:14px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text-dim);transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .tab-btn:hover{border-color:#3a3a50;color:var(--text)}
+  .tab-btn.active{background:var(--surface2);border-color:rgba(var(--accent-rgb),.3);color:var(--text)}
+  .tab-btn .tb-icon{font-size:22px}
+  .tab-btn .tb-label{font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .tab-btn .tb-count{font-size:11px;font-family:'DM Mono',monospace;color:var(--text-muted)}
+  .tab-btn.active .tb-count{color:var(--accent)}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
   .layout{display:grid;grid-template-columns:220px 1fr;gap:2rem;align-items:start}
   @media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{position:static!important}}
   .sidebar{position:sticky;top:1.5rem}
@@ -50,54 +59,49 @@
   .leccion-badge{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text-muted);margin-bottom:1.5rem}
   .leccion-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;color:var(--text-muted);text-align:center;gap:1rem;border:1px dashed var(--border);border-radius:16px}
+  .empty-state .es-icon{font-size:2.5rem;opacity:.4}
+  .empty-state .es-title{font-size:15px;font-weight:500;color:var(--text-dim)}
+  .empty-state .es-sub{font-size:13px;font-family:'DM Mono',monospace}
 
-  .code-block { position: relative; }
-  .copy-btn {
-    position: absolute; top: 8px; right: 8px;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-    color: var(--text-muted); border-radius: 6px; padding: 4px 7px;
-    font-size: 13px; cursor: pointer; transition: all 0.15s;
-    opacity: 0; pointer-events: none; line-height: 1; display:flex; align-items:center;
-  }
-  .code-block:hover .copy-btn { opacity: 1; pointer-events: all; }
-  .copy-btn:hover { background: rgba(255,255,255,0.15); color: var(--text); }
-  .copy-btn.copied { color: #4af0a0; border-color: rgba(74,240,160,0.3); background: rgba(74,240,160,0.08); }
+  .code-block{position:relative}
+  .copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--text-muted);border-radius:6px;padding:4px 7px;font-size:13px;cursor:pointer;transition:all .15s;opacity:0;pointer-events:none;line-height:1;display:flex;align-items:center}
+  .code-block:hover .copy-btn{opacity:1;pointer-events:all}
+  .copy-btn:hover{background:rgba(255,255,255,.15);color:var(--text)}
+  .copy-btn.copied{color:#4af0a0;border-color:rgba(74,240,160,.3);background:rgba(74,240,160,.08)}
+
 </style>
 </head>
 <body>
 <header>
   <div class="header-inner">
-    <div>
-      <a href="index.html" class="back-link">← Volver a inicio</a>
-      <div class="subject-tag">Matemáticas — Grado</div>
-      <h1>Matemática <em>Discreta</em></h1>
-    </div>
-    <div class="header-meta">
-      <div class="widget-count">1</div>
-      widgets
-    </div>
+    <a href="index.html" class="back-link">← Volver a inicio</a>
+    <div class="subject-tag">Matemáticas — Grado</div>
+    <h1>Matemática <em>Discreta</em></h1>
   </div>
 </header>
 <main>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="sidebar-label">Widgets</div>
-      <ul class="nav-list">
+  <div class="tab-bar">
+    <button class="tab-btn" onclick="switchTab('teoria',this)">
+      <span class="tb-icon">📖</span>
+      <span class="tb-label">Teoría</span>
+      <span class="tb-count">0 widgets</span>
+    </button>
+    <button class="tab-btn active" onclick="switchTab('practica',this)">
+      <span class="tb-icon">💻</span>
+      <span class="tb-label">Práctica</span>
+      <span class="tb-count">1 widget</span>
+    </button>
+  </div>
+  <div id="panel-teoria" class="tab-panel"><div class="layout"><aside class="sidebar"><div class="sidebar-label">Widgets</div><ul class="nav-list"></ul><div class="sidebar-divider"></div><div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div></aside><div><div class="empty-state"><div class="es-icon">📖</div><div class="es-title">Teoría en construcción</div><div class="es-sub">Los widgets se irán añadiendo aquí</div></div></div></div></div>
+  <div id="panel-practica" class="tab-panel active"><div class="layout"><aside class="sidebar"><div class="sidebar-label">Widgets</div><ul class="nav-list">
         <li class="nav-item active" onclick="scrollToWidget('disc',this)"><span class="nav-num">01</span>Lección 1 — Chuleta completa</li>
-      </ul>
-      <div class="sidebar-divider"></div>
-      <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
-    </aside>
-    <div class="widgets-area">
-
+        </ul><div class="sidebar-divider"></div><div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div></aside><div><div class="widgets-area">
       <div class="widget-wrapper" id="disc">
         <div class="widget-header" onclick="toggleWidget('disc')">
           <div class="widget-header-left">
             <div class="widget-icon" style="background:rgba(200,240,74,.1)">🧮</div>
-            <div>
-              <div class="widget-title">Chuleta completa — Lección 1</div>
-              <div class="widget-subtitle">Bases · Euclides · Bézout · Diofántica · MCD/MCM</div>
-            </div>
+            <div><div class="widget-title">Chuleta completa — Lección 1</div><div class="widget-subtitle">Bases · Euclides · Bézout · Diofántica · MCD/MCM</div></div>
           </div>
           <span class="widget-chevron">▼</span>
         </div>
@@ -108,7 +112,8 @@
   #disc .nav-btn:hover,#disc .tab:hover,#disc .nb:hover{background:var(--surface);color:var(--text)}
   #disc .nav-btn.active,#disc .tab.active,#disc .nb.on{background:rgba(200,240,74,.1);color:#c8f04a;border-color:rgba(200,240,74,.3);font-weight:500}
   #disc .nav,#disc .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
-  #disc .section{display:none} #disc .section.active,#disc .section.on{display:block}
+  #disc .section{display:none}#disc .section.active,#disc .section.on{display:block}
+  #disc .sec{display:none}#disc .sec.on{display:block}
   #disc .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
   #disc .card h3,#disc .card-title,#disc .ct{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem}
   #disc .card p,#disc .card-body,#disc .cb{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:.4rem}
@@ -116,11 +121,11 @@
   #disc code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
   #disc .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
   #disc .tag-np,#disc .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
-  #disc .tag-sp,#disc .tag-t10{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #disc .tag-sp,#disc .tag-t10,#disc .tteo{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #disc .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
   #disc .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
   #disc .tag-py,#disc .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
-  #disc .tag-paso,#disc .t11,#disc .tpdf{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
+  #disc .tag-paso,#disc .t11,#disc .t13,#disc .tpdf{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
   #disc .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
   #disc .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem}
   #disc .highlight{border-left:2px solid rgba(200,240,74,.4);padding-left:.75rem;margin:.5rem 0}
@@ -145,18 +150,17 @@
   #disc .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
   #disc .subsec{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem}
   #disc .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
-  #disc .mini strong{display:block;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
-  #disc .wrap{padding:0}
-</style>
-          <div class="wrap">
-
+  #disc .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
+  #disc .wrap,#disc .w{padding:0}
+</style><div class="wrap">
+<h2 class="sr-only">Chuleta completa matemática discreta — Lección 1</h2>
 
 <div class="tabs">
-  
-  
-  
-  
-  
+  <button class="tab active" onclick="discshow('disc-bases')">Bases</button>
+  <button class="tab" onclick="discshow('disc-euclides')">Euclides</button>
+  <button class="tab" onclick="discshow('disc-bezout')">Bézout</button>
+  <button class="tab" onclick="discshow('disc-diofantica')">Diofántica</button>
+  <button class="tab" onclick="discshow('disc-factores')">MCD/MCM</button>
 </div>
 
 <div id="disc-bases" class="section active">
@@ -357,11 +361,15 @@
 
 </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </div></div></div></div></div>
 </main>
 <script>
+  function switchTab(tab,btn){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+    btn.classList.add('active');
+    document.getElementById('panel-teoria').classList.toggle('active',tab==='teoria');
+    document.getElementById('panel-practica').classList.toggle('active',tab==='practica');
+  }
   function toggleWidget(id){document.getElementById(id).classList.toggle('collapsed')}
   function scrollToWidget(id,el){
     document.querySelectorAll('.nav-item').forEach(function(i){i.classList.remove('active')});
@@ -369,34 +377,23 @@
     document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  function discshow(id, btn) {
-    document.querySelectorAll('#disc .section').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#disc .nav-btn, #disc .tab, #disc .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el = document.getElementById(id);
-    if(el){el.classList.add('active');el.classList.add('on');}
+  function discshow(id,btn){
+    document.querySelectorAll('#disc .section,#disc .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#disc .nav-btn,#disc .tab,#disc .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
     if(btn){btn.classList.add('active');btn.classList.add('on');}
   }
 
-  document.querySelectorAll('pre, .code, .formula').forEach(function(el) {
-    var wrapper = document.createElement('div');
-    wrapper.className = 'code-block';
-    wrapper.style.position = 'relative';
-    el.parentNode.insertBefore(wrapper, el);
-    wrapper.appendChild(el);
-    var btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-    btn.onclick = function() {
-      navigator.clipboard.writeText(el.innerText).then(function() {
-        btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4af0a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-        btn.classList.add('copied');
-        setTimeout(function() {
-          btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-          btn.classList.remove('copied');
-        }, 2000);
-      });
-    };
-    wrapper.appendChild(btn);
+  document.querySelectorAll('pre,.code,.formula').forEach(function(el){
+    var w=document.createElement('div');w.className='code-block';w.style.position='relative';
+    el.parentNode.insertBefore(w,el);w.appendChild(el);
+    var btn=document.createElement('button');btn.className='copy-btn';
+    btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    btn.onclick=function(){navigator.clipboard.writeText(el.innerText).then(function(){
+      btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4af0a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      btn.classList.add('copied');
+      setTimeout(function(){btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';btn.classList.remove('copied');},2000);
+    });};w.appendChild(btn);
   });
 
 </script>

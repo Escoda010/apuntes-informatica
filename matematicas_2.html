@@ -6,22 +6,31 @@
 <title>Matemáticas 2 — Apuntes</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root { --accent:#7c6af7; --accent-rgb:124,106,247; }
+  :root{--accent:#7c6af7;--accent-rgb:124,106,247;}
+
+  :root{--bg:#0e0e11;--surface:#16161a;--surface2:#1e1e24;--border:#2a2a35;--text:#e8e8f0;--text-dim:#8888a0;--text-muted:#55556a}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
   body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.3;pointer-events:none;z-index:0}
-  :root{--bg:#0e0e11;--surface:#16161a;--surface2:#1e1e24;--border:#2a2a35;--text:#e8e8f0;--text-dim:#8888a0;--text-muted:#55556a}
   header{position:relative;z-index:10;padding:3rem 2rem 2rem;border-bottom:1px solid var(--border)}
-  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+  .header-inner{max-width:1100px;margin:0 auto}
   .back-link{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--text-muted);text-decoration:none;margin-bottom:1rem;transition:color .15s}
   .back-link:hover{color:var(--accent)}
   .subject-tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;display:flex;align-items:center;gap:8px}
   .subject-tag::before{content:'';width:20px;height:1px;background:var(--accent);display:inline-block}
   h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:400;line-height:1.1;letter-spacing:-.02em}
   h1 em{font-style:italic;color:var(--accent)}
-  .header-meta{text-align:right;font-size:13px;color:var(--text-muted);font-family:'DM Mono',monospace}
-  .widget-count{font-size:2.5rem;font-family:'DM Serif Display',serif;color:var(--text-dim);line-height:1;margin-bottom:4px}
   main{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:2rem}
+  .tab-bar{display:flex;gap:12px;margin-bottom:2rem}
+  .tab-btn{flex:1;padding:1rem;border-radius:14px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text-dim);transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .tab-btn:hover{border-color:#3a3a50;color:var(--text)}
+  .tab-btn.active{background:var(--surface2);border-color:rgba(var(--accent-rgb),.3);color:var(--text)}
+  .tab-btn .tb-icon{font-size:22px}
+  .tab-btn .tb-label{font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .tab-btn .tb-count{font-size:11px;font-family:'DM Mono',monospace;color:var(--text-muted)}
+  .tab-btn.active .tb-count{color:var(--accent)}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
   .layout{display:grid;grid-template-columns:220px 1fr;gap:2rem;align-items:start}
   @media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{position:static!important}}
   .sidebar{position:sticky;top:1.5rem}
@@ -50,57 +59,376 @@
   .leccion-badge{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text-muted);margin-bottom:1.5rem}
   .leccion-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;color:var(--text-muted);text-align:center;gap:1rem;border:1px dashed var(--border);border-radius:16px}
+  .empty-state .es-icon{font-size:2.5rem;opacity:.4}
+  .empty-state .es-title{font-size:15px;font-weight:500;color:var(--text-dim)}
+  .empty-state .es-sub{font-size:13px;font-family:'DM Mono',monospace}
 
-  .code-block { position: relative; }
-  .copy-btn {
-    position: absolute; top: 8px; right: 8px;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-    color: var(--text-muted); border-radius: 6px; padding: 4px 7px;
-    font-size: 13px; cursor: pointer; transition: all 0.15s;
-    opacity: 0; pointer-events: none; line-height: 1; display:flex; align-items:center;
-  }
-  .code-block:hover .copy-btn { opacity: 1; pointer-events: all; }
-  .copy-btn:hover { background: rgba(255,255,255,0.15); color: var(--text); }
-  .copy-btn.copied { color: #4af0a0; border-color: rgba(74,240,160,0.3); background: rgba(74,240,160,0.08); }
+  .code-block{position:relative}
+  .copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--text-muted);border-radius:6px;padding:4px 7px;font-size:13px;cursor:pointer;transition:all .15s;opacity:0;pointer-events:none;line-height:1;display:flex;align-items:center}
+  .code-block:hover .copy-btn{opacity:1;pointer-events:all}
+  .copy-btn:hover{background:rgba(255,255,255,.15);color:var(--text)}
+  .copy-btn.copied{color:#4af0a0;border-color:rgba(74,240,160,.3);background:rgba(74,240,160,.08)}
+
 </style>
 </head>
 <body>
 <header>
   <div class="header-inner">
-    <div>
-      <a href="index.html" class="back-link">← Volver a inicio</a>
-      <div class="subject-tag">Matemáticas — Grado</div>
-      <h1>Matemáticas <em>2</em></h1>
-    </div>
-    <div class="header-meta">
-      <div class="widget-count">4</div>
-      widgets
-    </div>
+    <a href="index.html" class="back-link">← Volver a inicio</a>
+    <div class="subject-tag">Matemáticas — Grado</div>
+    <h1>Matemáticas <em>2</em></h1>
   </div>
 </header>
 <main>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="sidebar-label">Widgets</div>
-      <ul class="nav-list">
+  <div class="tab-bar">
+    <button class="tab-btn" onclick="switchTab('teoria',this)">
+      <span class="tb-icon">📖</span>
+      <span class="tb-label">Teoría</span>
+      <span class="tb-count">1 widget</span>
+    </button>
+    <button class="tab-btn active" onclick="switchTab('practica',this)">
+      <span class="tb-icon">💻</span>
+      <span class="tb-label">Práctica</span>
+      <span class="tb-count">4 widgets</span>
+    </button>
+  </div>
+  <div id="panel-teoria" class="tab-panel"><div class="layout"><aside class="sidebar"><div class="sidebar-label">Widgets</div><ul class="nav-list">
+        <li class="nav-item active" onclick="scrollToWidget('mt7',this)"><span class="nav-num">01</span>Tema 7 — Curvas paramétricas</li>
+        </ul><div class="sidebar-divider"></div><div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div></aside><div><div class="widgets-area">
+      <div class="widget-wrapper" id="mt7">
+        <div class="widget-header" onclick="toggleWidget('mt7')">
+          <div class="widget-header-left">
+            <div class="widget-icon" style="background:rgba(124,106,247,.1)">〰️</div>
+            <div><div class="widget-title">Curvas paramétricas — Tema 7</div><div class="widget-subtitle">Bézier · Bernstein · De Casteljau · Matricial · Superficies</div></div>
+          </div>
+          <span class="widget-chevron">▼</span>
+        </div>
+        <div class="widget-body">
+          <div class="leccion-badge"><span class="leccion-dot"></span>TEMA 07</div>
+          <style>
+  #mt7 .nav-btn,#mt7 .tab,#mt7 .nb{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #mt7 .nav-btn:hover,#mt7 .tab:hover,#mt7 .nb:hover{background:var(--surface);color:var(--text)}
+  #mt7 .nav-btn.active,#mt7 .tab.active,#mt7 .nb.on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
+  #mt7 .nav,#mt7 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
+  #mt7 .section{display:none}#mt7 .section.active,#mt7 .section.on{display:block}
+  #mt7 .sec{display:none}#mt7 .sec.on{display:block}
+  #mt7 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+  #mt7 .card h3,#mt7 .card-title,#mt7 .ct{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem}
+  #mt7 .card p,#mt7 .card-body,#mt7 .cb{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:.4rem}
+  #mt7 pre,#mt7 .code{background:#0a0a0d;border-radius:8px;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:12.5px;color:var(--text);overflow-x:auto;margin:.5rem 0;line-height:1.7;border:1px solid var(--border);white-space:pre-wrap}
+  #mt7 code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
+  #mt7 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
+  #mt7 .tag-np,#mt7 .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
+  #mt7 .tag-sp,#mt7 .tag-t10,#mt7 .tteo{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #mt7 .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
+  #mt7 .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
+  #mt7 .tag-py,#mt7 .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
+  #mt7 .tag-paso,#mt7 .t11,#mt7 .t13,#mt7 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #mt7 .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
+  #mt7 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem}
+  #mt7 .highlight{border-left:2px solid rgba(124,106,247,.4);padding-left:.75rem;margin:.5rem 0}
+  #mt7 .highlight p{font-size:13px;color:var(--text-dim)}
+  #mt7 .section-title,#mt7 .sec-title,#mt7 .stitle{font-size:17px;font-weight:600;color:var(--text);margin-bottom:1rem;font-family:'DM Serif Display',serif}
+  #mt7 .comment{color:#6a9955}
+  #mt7 table{width:100%;font-size:13px;border-collapse:collapse}
+  #mt7 table th{text-align:left;color:var(--text-muted);font-weight:500;padding:8px;border-bottom:1px solid var(--border)}
+  #mt7 table td{padding:8px;color:var(--text);border-bottom:1px solid var(--border);vertical-align:top}
+  #mt7 table tr:last-child td{border-bottom:none}
+  #mt7 .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:.75rem}
+  #mt7 .num,#mt7 .step-num{min-width:28px;height:28px;border-radius:50%;background:rgba(124,106,247,.1);border:1px solid rgba(124,106,247,.2);font-size:13px;font-weight:600;color:#9d8fff;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0}
+  #mt7 .step-content{flex:1}
+  #mt7 .step-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  #mt7 .step-desc,#mt7 .step-content p{font-size:13px;color:var(--text-dim);line-height:1.5;margin:0}
+  #mt7 .formula{background:#0a0a0d;border-left:3px solid rgba(124,106,247,.5);border-radius:0 8px 8px 0;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:12.5px;color:var(--text);margin:.5rem 0;line-height:1.9}
+  #mt7 .warn{background:rgba(240,74,74,.07);border:1px solid rgba(240,74,74,.2);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:#f07070;margin:.5rem 0}
+  #mt7 .ok{background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.2);border-radius:8px;padding:.65rem .9rem;font-size:13px;color:#1D9E75;margin:.5rem 0}
+  #mt7 .rule{border-left:3px solid #9d8fff;padding:.5rem 1rem;margin:.5rem 0;font-size:13px;color:var(--text)}
+  #mt7 .divider{border:none;border-top:1px solid var(--border);margin:.75rem 0}
+  #mt7 .pill{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--border);color:var(--text-muted);background:var(--surface);display:inline-block;margin:2px}
+  #mt7 .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
+  #mt7 .subsec{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem}
+  #mt7 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
+  #mt7 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
+  #mt7 .wrap,#mt7 .w{padding:0}
+</style><div class="wrap">
+<nav class="nav">
+  <button class="nav-btn active" onclick="mt7show('mt7-intro', this)">Introducción</button>
+  <button class="nav-btn" onclick="mt7show('mt7-bezier', this)">Curvas de Bézier</button>
+  <button class="nav-btn" onclick="mt7show('mt7-bernstein', this)">Bernstein</button>
+  <button class="nav-btn" onclick="mt7show('mt7-casteljau', this)">De Casteljau</button>
+  <button class="nav-btn" onclick="mt7show('mt7-matricial', this)">Forma matricial</button>
+  <button class="nav-btn" onclick="mt7show('mt7-propiedades', this)">Propiedades</button>
+  <button class="nav-btn" onclick="mt7show('mt7-superficies', this)">Superficies</button>
+  
+</nav>
+
+<div class="section active" id="mt7-intro">
+  <p class="section-title">Curvas paramétricas — introducción</p>
+  <div class="card">
+    <h3>Tres formas de representar curvas</h3>
+    <table class="comp">
+      <tr><th>Forma</th><th>Ejemplo</th><th>Limitación</th></tr>
+      <tr><td>Explícita y = f(x)</td><td>y = ax² + bx + c</td><td>Solo una y por cada x</td></tr>
+      <tr><td>Implícita f(x,y) = 0</td><td>x² + y² - r² = 0</td><td>Difícil de derivar e integrar</td></tr>
+      <tr><td>Paramétrica x = f₁(t), y = f₂(t)</td><td>x = cos(t), y = sin(t)</td><td>Necesita un parámetro extra</td></tr>
+    </table>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-blue">Parámetro t</span>
+      <h3>¿Qué es el parámetro t?</h3>
+      <p>Es una variable independiente que recorre el intervalo [0, 1]. Cuando t = 0 estamos en el primer punto de la curva; cuando t = 1 estamos en el último.</p>
+      <div class="formula">x = f₁(t) ; y = f₂(t) ; t ∈ [0, 1]</div>
+    </div>
+    <div class="card">
+      <span class="tag tag-teal">Ventajas</span>
+      <h3>¿Por qué polinomios?</h3>
+      <p>Se usan polinomios en t porque son eficientes, fáciles de derivar e integrar, y pueden aproximar cualquier función con la precisión que se quiera.</p>
+      <div class="highlight"><p>Se puede representar curvas cerradas, bucles y formas complejas que no son funciones en el sentido habitual.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="mt7-bezier">
+  <p class="section-title">Curvas de Bézier</p>
+  <div class="card">
+    <h3>Idea clave</h3>
+    <p>Se definen mediante puntos de control. La curva siempre empieza en P₀ y termina en el último punto. Los puntos intermedios "atraen" la curva sin que esta pase por ellos.</p>
+    <div class="highlight"><p>Desarrolladas en los años 60 para diseño de automóviles (De Casteljau en Citroën, 1959; Bézier en Renault, 1966).</p></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Lineal (grado 1)</span>
+      <h3>2 puntos de control</h3>
+      <p>La curva es una línea recta de P₀ a P₁.</p>
+      <div class="formula">P(t) = (1−t)P₀ + tP₁</div>
+    </div>
+    <div class="card">
+      <span class="tag tag-purple">Cuadrática (grado 2)</span>
+      <h3>3 puntos de control</h3>
+      <p>P₁ atrae la curva sin que pase por él. Polinomio de grado 2.</p>
+      <div class="formula">P(t) = (1−t)²P₀ + 2t(1−t)P₁ + t²P₂</div>
+    </div>
+    <div class="card">
+      <span class="tag tag-purple">Cúbica (grado 3)</span>
+      <h3>4 puntos de control</h3>
+      <p>Las más utilizadas por su equilibrio entre flexibilidad y complejidad computacional.</p>
+      <div class="formula">P(t) = (1−t)³P₀ + 3t(1−t)²P₁ + 3t²(1−t)P₂ + t³P₃</div>
+    </div>
+    <div class="card">
+      <span class="tag tag-purple">Grado n</span>
+      <h3>n+1 puntos de control</h3>
+      <p>El grado de la curva es siempre uno menos que el número de puntos de control.</p>
+      <div class="formula">b(t) = Σ Bᵢⁿ(t) · Pᵢ   i = 0,...,n</div>
+      <div class="highlight"><p>Los puntos de control forman el polígono de Bézier.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="mt7-bernstein">
+  <p class="section-title">Polinomios de Bernstein</p>
+  <div class="card">
+    <h3>Definición</h3>
+    <p>Son los coeficientes que ponderan cada punto de control en la curva de Bézier. Se obtienen desarrollando (t + (1−t))ⁿ = 1 por el binomio de Newton.</p>
+    <div class="formula">Bᵢⁿ(t) = C(n,i) · tⁱ · (1−t)ⁿ⁻ⁱ     ∀i = 0,...,n</div>
+    <p style="margin-top:0.5rem; font-size:13px; color:var(--color-text-secondary);">donde C(n,i) = n! / (i! · (n−i)!) es el número combinatorio.</p>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-amber">Grado 1</span>
+      <h3>B₀¹(t) y B₁¹(t)</h3>
+      <div class="formula">B₀¹(t) = 1 − t<br>B₁¹(t) = t</div>
+    </div>
+    <div class="card">
+      <span class="tag tag-amber">Grado 2</span>
+      <h3>B₀²(t), B₁²(t), B₂²(t)</h3>
+      <div class="formula">B₀²(t) = (1−t)²<br>B₁²(t) = 2t(1−t)<br>B₂²(t) = t²</div>
+    </div>
+    <div class="card">
+      <span class="tag tag-amber">Grado 3</span>
+      <h3>B₀³ a B₃³</h3>
+      <div class="formula">B₀³(t) = (1−t)³<br>B₁³(t) = 3t(1−t)²<br>B₂³(t) = 3t²(1−t)<br>B₃³(t) = t³</div>
+    </div>
+    <div class="card">
+      <span class="tag tag-teal">Propiedades</span>
+      <h3>Propiedades clave</h3>
+      <div class="prop">
+        <div class="prop-num">1</div>
+        <div class="prop-content"><strong>Partición de la unidad</strong><p>La suma de todos los Bᵢⁿ(t) para cualquier t ∈ [0,1] es siempre 1.</p></div>
+      </div>
+      <div class="prop">
+        <div class="prop-num">2</div>
+        <div class="prop-content"><strong>Positivos en (0,1)</strong><p>Todos los polinomios son positivos en el intervalo abierto (0,1).</p></div>
+      </div>
+      <div class="prop">
+        <div class="prop-num">3</div>
+        <div class="prop-content"><strong>Simétricos</strong><p>Bᵢⁿ(t) = Bₙ₋ᵢⁿ(1−t)</p></div>
+      </div>
+      <div class="prop">
+        <div class="prop-num">4</div>
+        <div class="prop-content"><strong>Recurrencia</strong><p>Bᵢⁿ(t) = (1−t)Bᵢⁿ⁻¹(t) + t·Bᵢ₋₁ⁿ⁻¹(t)</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Interpretación como pesos</h3>
+    <p>Para cada valor de t, los polinomios de Bernstein actúan como pesos que determinan cuánto "atrae" cada punto de control a la curva. Su suma siempre es 1, por eso la curva queda dentro del polígono de control.</p>
+    <table class="comp" style="margin-top:0.5rem;">
+      <tr><th>t</th><th>B₀³ (peso P₀)</th><th>B₁³ (peso P₁)</th><th>B₂³ (peso P₂)</th><th>B₃³ (peso P₃)</th></tr>
+      <tr><td>0</td><td>100%</td><td>0%</td><td>0%</td><td>0%</td></tr>
+      <tr><td>0.5</td><td>12.5%</td><td>37.5%</td><td>37.5%</td><td>12.5%</td></tr>
+      <tr><td>1</td><td>0%</td><td>0%</td><td>0%</td><td>100%</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section" id="mt7-casteljau">
+  <p class="section-title">Formulación de De Casteljau</p>
+  <div class="card">
+    <h3>Idea</h3>
+    <p>Aprovecha la propiedad de recurrencia de los polinomios de Bernstein para construir la curva de manera recursiva, interpolando entre puntos sucesivos.</p>
+    <div class="formula">bₖⁱ(t) = (1−t)·bₖ₋₁ⁱ(t) + t·bₖ₋₁ⁱ⁺¹(t)</div>
+    <p style="margin-top:0.5rem; font-size:13px; color:var(--color-text-secondary);">donde b₀ⁱ(t) = Pᵢ (los puntos de control son el punto de partida)</p>
+    <div class="highlight"><p>La curva de Bézier de grado n es b(t) = bₙ⁰(t), el punto final de la recursión.</p></div>
+  </div>
+  <div class="card">
+    <h3>Construcción recursiva (ejemplo cuadrático)</h3>
+    <div class="prop">
+      <div class="prop-num">1</div>
+      <div class="prop-content"><strong>Primera columna</strong><p>Puntos de control: P₀, P₁, P₂</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">2</div>
+      <div class="prop-content"><strong>Segunda columna</strong><p>Curvas lineales: b₁⁰ = (1−t)P₀ + tP₁ y b₁¹ = (1−t)P₁ + tP₂</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">3</div>
+      <div class="prop-content"><strong>Tercera columna</strong><p>Curva cuadrática: b₂⁰ = (1−t)·b₁⁰ + t·b₁¹</p></div>
+    </div>
+    <div class="highlight" style="margin-top:0.5rem;"><p>Ventaja principal: es numéricamente estable y permite subdividir curvas en subcurvas.</p></div>
+  </div>
+</div>
+
+<div class="section" id="mt7-matricial">
+  <p class="section-title">Forma matricial</p>
+  <div class="card">
+    <h3>Curvas cúbicas en forma matricial</h3>
+    <p>Las curvas cúbicas de Bézier (4 puntos de control) se pueden expresar como un producto de tres matrices: el vector de potencias de t, la matriz de Bézier, y el vector de puntos de control.</p>
+    <div class="formula">b(t) = [t³  t²  t  1] · M · [P₀  P₁  P₂  P₃]ᵀ</div>
+    <p style="margin-top:0.75rem; font-size:13px; color:var(--color-text-secondary);">La matriz de Bézier M es:</p>
+    <div class="formula">M = | −1   3  −3   1 |<br>    |  3  −6   3   0 |<br>    | −3   3   0   0 |<br>    |  1   0   0   0 |</div>
+    <div class="highlight"><p>Ventaja: el cálculo se reduce a multiplicaciones de matrices, muy eficiente computacionalmente.</p></div>
+  </div>
+  <div class="card">
+    <h3>¿Por qué cúbicas y no de grado mayor?</h3>
+    <p>Las cúbicas ofrecen flexibilidad razonable con 4 puntos de control sin disparar el coste computacional. Para curvas complejas se concatenan varias cúbicas en lugar de usar un único polinomio de grado alto.</p>
+  </div>
+</div>
+
+<div class="section" id="mt7-propiedades">
+  <p class="section-title">Propiedades de las curvas de Bézier</p>
+  <div class="card">
+    <div class="prop">
+      <div class="prop-num">1</div>
+      <div class="prop-content"><strong>Grado = n° puntos − 1</strong><p>Con n+1 puntos de control se obtiene una curva de grado n.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">2</div>
+      <div class="prop-content"><strong>Interpolación de extremos</strong><p>La curva pasa siempre por el primer (P₀) y el último (Pₙ) punto de control.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">3</div>
+      <div class="prop-content"><strong>Tangencia en los extremos</strong><p>La curva es tangente al primer y al último lado del polígono de Bézier.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">4</div>
+      <div class="prop-content"><strong>Envolvente convexa</strong><p>La curva nunca sale del interior de la envolvente convexa formada por los puntos de control.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">5</div>
+      <div class="prop-content"><strong>Control global</strong><p>Mover cualquier punto de control modifica toda la curva.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">6</div>
+      <div class="prop-content"><strong>Puntos repetidos = más peso</strong><p>Si varios puntos de control coinciden en la misma posición, la curva se acerca más a ese punto.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">7</div>
+      <div class="prop-content"><strong>Curvas cerradas</strong><p>Si P₀ = Pₙ, la curva es cerrada.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">8</div>
+      <div class="prop-content"><strong>Concatenación</strong><p>Curvas complejas se construyen uniendo varias curvas de grado menor. Es fundamental controlar la continuidad en las uniones.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">9</div>
+      <div class="prop-content"><strong>Cúbicas como estándar</strong><p>Las cúbicas dan flexibilidad suficiente sin el coste computacional de grados superiores.</p></div>
+    </div>
+    <div class="prop">
+      <div class="prop-num">10</div>
+      <div class="prop-content"><strong>Extensión a 3D</strong><p>Se pueden crear superficies 3D combinando curvas de Bézier.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="mt7-superficies">
+  <p class="section-title">Superficies de Bézier</p>
+  <div class="card">
+    <h3>Extensión de curvas a superficies</h3>
+    <p>Las superficies de Bézier generalizan las curvas a dos parámetros s y t, ambos en [0, 1]. Se denominan "parches" y tienen topología rectangular.</p>
+    <div class="formula">f(s,t) = (x(s,t), y(s,t), z(s,t))</div>
+  </div>
+  <div class="card">
+    <h3>Definición matemática</h3>
+    <p>Dados puntos de control Pᵢⱼ en ℝ³, la superficie de Bézier es:</p>
+    <div class="formula">b(s,t) = Σᵢ Σⱼ Bᵢᵐ(s) · Bⱼⁿ(t) · Pᵢⱼ</div>
+    <div class="highlight"><p>Es el producto tensorial de dos curvas de Bézier: una en la dirección s y otra en la dirección t.</p></div>
+  </div>
+  <div class="card">
+    <h3>Casos de uso reales</h3>
+    <table class="comp">
+      <tr><th>Aplicación</th><th>Ejemplo</th></tr>
+      <tr><td>Tipografía vectorial</td><td>Fuentes PostScript, letras de Google</td></tr>
+      <tr><td>Diseño industrial</td><td>Carrocerías de coches, fuselajes de aviones</td></tr>
+      <tr><td>Videojuegos</td><td>Rutas de animación, trayectorias de cámara</td></tr>
+      <tr><td>Arquitectura</td><td>Estructuras curvas, puentes</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section" id="s-quiz">
+  <p class="section-title">Repaso rápido</p>
+  <div class="card" id="quiz-card">
+    <div class="q-num" id="q-num"></div>
+    <div class="q-text" id="q-text"></div>
+    <div id="q-options"></div>
+    <div class="quiz-feedback" id="q-feedback"></div>
+    <button class="quiz-next" id="q-next" onclick="nextQ()">Siguiente →</button>
+  </div>
+  <div id="quiz-result" style="display:none;">
+    <div class="card">
+      <h3 id="result-title"></h3>
+      <p id="result-text" style="margin-top:0.5rem;"></p>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+        </div>
+      </div></div></div></div></div>
+  <div id="panel-practica" class="tab-panel active"><div class="layout"><aside class="sidebar"><div class="sidebar-label">Widgets</div><ul class="nav-list">
         <li class="nav-item active" onclick="scrollToWidget('w1',this)"><span class="nav-num">01</span>Tema 1 — Python</li>
         <li class="nav-item" onclick="scrollToWidget('w2',this)"><span class="nav-num">02</span>Tema 2 — Derivadas</li>
         <li class="nav-item" onclick="scrollToWidget('w3',this)"><span class="nav-num">03</span>Tema 3 — Integral</li>
         <li class="nav-item" onclick="scrollToWidget('w4',this)"><span class="nav-num">04</span>Gráficas</li>
-      </ul>
-      <div class="sidebar-divider"></div>
-      <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
-    </aside>
-    <div class="widgets-area">
-
+        </ul><div class="sidebar-divider"></div><div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div></aside><div><div class="widgets-area">
       <div class="widget-wrapper" id="w1">
         <div class="widget-header" onclick="toggleWidget('w1')">
           <div class="widget-header-left">
             <div class="widget-icon" style="background:rgba(124,106,247,.1)">🐍</div>
-            <div>
-              <div class="widget-title">Python y librerías — Tema 1</div>
-              <div class="widget-subtitle">numpy · sympy · scipy · matplotlib · estructuras · funciones</div>
-            </div>
+            <div><div class="widget-title">Python y librerías — Tema 1</div><div class="widget-subtitle">numpy · sympy · scipy · matplotlib</div></div>
           </div>
           <span class="widget-chevron">▼</span>
         </div>
@@ -111,7 +439,8 @@
   #w1 .nav-btn:hover,#w1 .tab:hover,#w1 .nb:hover{background:var(--surface);color:var(--text)}
   #w1 .nav-btn.active,#w1 .tab.active,#w1 .nb.on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
   #w1 .nav,#w1 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
-  #w1 .section{display:none} #w1 .section.active,#w1 .section.on{display:block}
+  #w1 .section{display:none}#w1 .section.active,#w1 .section.on{display:block}
+  #w1 .sec{display:none}#w1 .sec.on{display:block}
   #w1 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
   #w1 .card h3,#w1 .card-title,#w1 .ct{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem}
   #w1 .card p,#w1 .card-body,#w1 .cb{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:.4rem}
@@ -119,11 +448,11 @@
   #w1 code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
   #w1 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
   #w1 .tag-np,#w1 .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
-  #w1 .tag-sp,#w1 .tag-t10{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #w1 .tag-sp,#w1 .tag-t10,#w1 .tteo{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #w1 .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
   #w1 .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
   #w1 .tag-py,#w1 .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
-  #w1 .tag-paso,#w1 .t11,#w1 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #w1 .tag-paso,#w1 .t11,#w1 .t13,#w1 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #w1 .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
   #w1 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem}
   #w1 .highlight{border-left:2px solid rgba(124,106,247,.4);padding-left:.75rem;margin:.5rem 0}
@@ -148,11 +477,10 @@
   #w1 .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
   #w1 .subsec{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem}
   #w1 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
-  #w1 .mini strong{display:block;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
-  #w1 .wrap{padding:0}
-</style>
-          <div class="container">
-  
+  #w1 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
+  #w1 .wrap,#w1 .w{padding:0}
+</style><div class="container">
+  <h2 class="sr-only">Resumen interactivo del Tema 1 — Matemáticas 2</h2>
 
   <nav class="nav" id="nav">
     <button class="nav-btn active" onclick="w1show('w1-librerias')">Librerías</button>
@@ -640,19 +968,7 @@ p.show()</pre>
   </div>
 
   <!-- QUIZ -->
-  <div class="section" id="s-quiz">
-    <p class="section-title">Repaso rápido</p>
-    <div class="card" id="quiz-card">
-      <div class="q-num" id="q-num">Pregunta 1 de 10</div>
-      <div class="q-text" id="q-text"></div>
-      <div id="q-options"></div>
-      <div class="quiz-feedback" id="q-feedback"></div>
-      <button class="quiz-next" id="q-next" onclick="nextQ()">Siguiente →</button>
-    </div>
-    <div id="quiz-result" style="display:none;">
-      <div class="card">
-        <h3 id="result-title"></h3>
-        <p id="result-text" style="margin-top:0.5rem;"></p>
+  
         
       </div>
     </div>
@@ -664,10 +980,7 @@ p.show()</pre>
         <div class="widget-header" onclick="toggleWidget('w2')">
           <div class="widget-header-left">
             <div class="widget-icon" style="background:rgba(124,106,247,.1)">∫</div>
-            <div>
-              <div class="widget-title">Derivadas y límites — Tema 2</div>
-              <div class="widget-subtitle">Límites · Derivada · Parciales · Análisis · Optimización</div>
-            </div>
+            <div><div class="widget-title">Derivadas y límites — Tema 2</div><div class="widget-subtitle">Límites · Derivada · Parciales · Análisis · Optimización</div></div>
           </div>
           <span class="widget-chevron">▼</span>
         </div>
@@ -678,7 +991,8 @@ p.show()</pre>
   #w2 .nav-btn:hover,#w2 .tab:hover,#w2 .nb:hover{background:var(--surface);color:var(--text)}
   #w2 .nav-btn.active,#w2 .tab.active,#w2 .nb.on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
   #w2 .nav,#w2 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
-  #w2 .section{display:none} #w2 .section.active,#w2 .section.on{display:block}
+  #w2 .section{display:none}#w2 .section.active,#w2 .section.on{display:block}
+  #w2 .sec{display:none}#w2 .sec.on{display:block}
   #w2 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
   #w2 .card h3,#w2 .card-title,#w2 .ct{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem}
   #w2 .card p,#w2 .card-body,#w2 .cb{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:.4rem}
@@ -686,11 +1000,11 @@ p.show()</pre>
   #w2 code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
   #w2 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
   #w2 .tag-np,#w2 .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
-  #w2 .tag-sp,#w2 .tag-t10{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #w2 .tag-sp,#w2 .tag-t10,#w2 .tteo{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #w2 .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
   #w2 .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
   #w2 .tag-py,#w2 .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
-  #w2 .tag-paso,#w2 .t11,#w2 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #w2 .tag-paso,#w2 .t11,#w2 .t13,#w2 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #w2 .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
   #w2 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem}
   #w2 .highlight{border-left:2px solid rgba(124,106,247,.4);padding-left:.75rem;margin:.5rem 0}
@@ -715,11 +1029,10 @@ p.show()</pre>
   #w2 .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
   #w2 .subsec{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem}
   #w2 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
-  #w2 .mini strong{display:block;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
-  #w2 .wrap{padding:0}
-</style>
-          <div class="container">
-  
+  #w2 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
+  #w2 .wrap,#w2 .w{padding:0}
+</style><div class="container">
+  <h2 class="sr-only">Resumen interactivo del Tema 2 — Derivadas y límites</h2>
 
   <nav class="nav">
     <button class="nav-btn active" onclick="w2show('w2-limites', this)">Límites</button>
@@ -984,19 +1297,7 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
   </div>
 
   <!-- QUIZ -->
-  <div class="section" id="s-quiz">
-    <p class="section-title">Repaso rápido</p>
-    <div class="card" id="quiz-card">
-      <div class="q-num" id="q-num">Pregunta 1 de 10</div>
-      <div class="q-text" id="q-text"></div>
-      <div id="q-options"></div>
-      <div class="quiz-feedback" id="q-feedback"></div>
-      <button class="quiz-next" id="q-next" onclick="nextQ()">Siguiente →</button>
-    </div>
-    <div id="quiz-result" style="display:none;">
-      <div class="card">
-        <h3 id="result-title"></h3>
-        <p id="result-text" style="margin-top:0.5rem;"></p>
+  
         
       </div>
     </div>
@@ -1008,10 +1309,7 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
         <div class="widget-header" onclick="toggleWidget('w3')">
           <div class="widget-header-left">
             <div class="widget-icon" style="background:rgba(124,106,247,.1)">∬</div>
-            <div>
-              <div class="widget-title">Cálculo integral — Tema 3</div>
-              <div class="widget-subtitle">Riemann · Trapecio · Exacta · scipy · Error · Múltiples · Gráficas</div>
-            </div>
+            <div><div class="widget-title">Cálculo integral — Tema 3</div><div class="widget-subtitle">Riemann · Trapecio · Exacta · scipy · Error · Múltiples</div></div>
           </div>
           <span class="widget-chevron">▼</span>
         </div>
@@ -1022,7 +1320,8 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
   #w3 .nav-btn:hover,#w3 .tab:hover,#w3 .nb:hover{background:var(--surface);color:var(--text)}
   #w3 .nav-btn.active,#w3 .tab.active,#w3 .nb.on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
   #w3 .nav,#w3 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
-  #w3 .section{display:none} #w3 .section.active,#w3 .section.on{display:block}
+  #w3 .section{display:none}#w3 .section.active,#w3 .section.on{display:block}
+  #w3 .sec{display:none}#w3 .sec.on{display:block}
   #w3 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
   #w3 .card h3,#w3 .card-title,#w3 .ct{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem}
   #w3 .card p,#w3 .card-body,#w3 .cb{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:.4rem}
@@ -1030,11 +1329,11 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
   #w3 code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
   #w3 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
   #w3 .tag-np,#w3 .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
-  #w3 .tag-sp,#w3 .tag-t10{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #w3 .tag-sp,#w3 .tag-t10,#w3 .tteo{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #w3 .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
   #w3 .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
   #w3 .tag-py,#w3 .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
-  #w3 .tag-paso,#w3 .t11,#w3 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #w3 .tag-paso,#w3 .t11,#w3 .t13,#w3 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #w3 .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
   #w3 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem}
   #w3 .highlight{border-left:2px solid rgba(124,106,247,.4);padding-left:.75rem;margin:.5rem 0}
@@ -1059,10 +1358,9 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
   #w3 .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
   #w3 .subsec{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem}
   #w3 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
-  #w3 .mini strong{display:block;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
-  #w3 .wrap{padding:0}
-</style>
-          <div class="wrap">
+  #w3 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
+  #w3 .wrap,#w3 .w{padding:0}
+</style><div class="wrap">
 <nav class="nav">
   <button class="nav-btn active" onclick="w3show('w3-sumas', this)">Sumas de Riemann</button>
   <button class="nav-btn" onclick="w3show('w3-trapecio', this)">Trapecio y Simpson</button>
@@ -1333,9 +1631,9 @@ Ln = L_n(f, a, b, n)
 Rn = R_n(f, a, b, n)
 STn = suma_trapezoidal(f, a, b, n)
 
-error_Ln  = (valor_real - Ln)  / abs(valor_real)
-error_Rn  = (valor_real - Rn)  / abs(valor_real)
-error_STn = (valor_real - STn) / abs(valor_real)</pre>
+error_Ln  = abs(valor_real - Ln)  / abs(valor_real)
+error_Rn  = abs(valor_real - Rn)  / abs(valor_real)
+error_STn = abs(valor_real - STn) / abs(valor_real)</pre>
   </div>
 </div>
 
@@ -1433,19 +1731,7 @@ plt.show()</pre>
 </div>
 
 <!-- QUIZ -->
-<div class="section" id="s-quiz">
-  <p class="section-title">Repaso rápido</p>
-  <div class="card" id="quiz-card">
-    <div class="q-num" id="q-num"></div>
-    <div class="q-text" id="q-text"></div>
-    <div id="q-options"></div>
-    <div class="quiz-feedback" id="q-feedback"></div>
-    <button class="quiz-next" id="q-next" onclick="nextQ()">Siguiente →</button>
-  </div>
-  <div id="quiz-result" style="display:none;">
-    <div class="card">
-      <h3 id="result-title"></h3>
-      <p id="result-text" style="margin-top:0.5rem;"></p>
+
       
     </div>
   </div>
@@ -1457,10 +1743,7 @@ plt.show()</pre>
         <div class="widget-header" onclick="toggleWidget('w4')">
           <div class="widget-header-left">
             <div class="widget-icon" style="background:rgba(124,106,247,.1)">📈</div>
-            <div>
-              <div class="widget-title">Gráficas — plt.plot y symplot</div>
-              <div class="widget-subtitle">numpy · sympy · matplotlib · opciones · cuándo usar cada una</div>
-            </div>
+            <div><div class="widget-title">Gráficas — plt.plot y symplot</div><div class="widget-subtitle">numpy · sympy · matplotlib · opciones</div></div>
           </div>
           <span class="widget-chevron">▼</span>
         </div>
@@ -1471,7 +1754,8 @@ plt.show()</pre>
   #w4 .nav-btn:hover,#w4 .tab:hover,#w4 .nb:hover{background:var(--surface);color:var(--text)}
   #w4 .nav-btn.active,#w4 .tab.active,#w4 .nb.on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
   #w4 .nav,#w4 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
-  #w4 .section{display:none} #w4 .section.active,#w4 .section.on{display:block}
+  #w4 .section{display:none}#w4 .section.active,#w4 .section.on{display:block}
+  #w4 .sec{display:none}#w4 .sec.on{display:block}
   #w4 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
   #w4 .card h3,#w4 .card-title,#w4 .ct{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem}
   #w4 .card p,#w4 .card-body,#w4 .cb{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:.4rem}
@@ -1479,11 +1763,11 @@ plt.show()</pre>
   #w4 code{font-family:'DM Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
   #w4 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
   #w4 .tag-np,#w4 .tag-t08{background:rgba(74,176,240,.1);color:#4ab0f0;border:1px solid rgba(74,176,240,.2)}
-  #w4 .tag-sp,#w4 .tag-t10{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #w4 .tag-sp,#w4 .tag-t10,#w4 .tteo{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #w4 .tag-sc{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
   #w4 .tag-plt{background:rgba(200,240,74,.1);color:#c8f04a;border:1px solid rgba(200,240,74,.2)}
   #w4 .tag-py,#w4 .tag-t09{background:rgba(29,158,117,.1);color:#1D9E75;border:1px solid rgba(29,158,117,.2)}
-  #w4 .tag-paso,#w4 .t11,#w4 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+  #w4 .tag-paso,#w4 .t11,#w4 .t13,#w4 .tpdf{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
   #w4 .tag-formula{background:rgba(74,240,160,.1);color:#4af0a0;border:1px solid rgba(74,240,160,.2)}
   #w4 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem}
   #w4 .highlight{border-left:2px solid rgba(124,106,247,.4);padding-left:.75rem;margin:.5rem 0}
@@ -1508,11 +1792,10 @@ plt.show()</pre>
   #w4 .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
   #w4 .subsec{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem}
   #w4 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
-  #w4 .mini strong{display:block;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
-  #w4 .wrap{padding:0}
-</style>
-          <div class="wrap">
-
+  #w4 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
+  #w4 .wrap,#w4 .w{padding:0}
+</style><div class="wrap">
+<h2 class="sr-only">Apuntes de gráficas — Matemáticas 2 UA</h2>
 
 <nav class="nav">
   <button class="nav-btn active" onclick="w4show('w4-numpy', this)">plt.plot (numpy)</button>
@@ -1732,11 +2015,15 @@ plt.plot(x1, y1)</pre>
 
 </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </div></div></div></div></div>
 </main>
 <script>
+  function switchTab(tab,btn){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+    btn.classList.add('active');
+    document.getElementById('panel-teoria').classList.toggle('active',tab==='teoria');
+    document.getElementById('panel-practica').classList.toggle('active',tab==='practica');
+  }
   function toggleWidget(id){document.getElementById(id).classList.toggle('collapsed')}
   function scrollToWidget(id,el){
     document.querySelectorAll('.nav-item').forEach(function(i){i.classList.remove('active')});
@@ -1744,55 +2031,47 @@ plt.plot(x1, y1)</pre>
     document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  function w1show(id, btn) {
-    document.querySelectorAll('#w1 .section').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#w1 .nav-btn, #w1 .tab, #w1 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el = document.getElementById(id);
-    if(el){el.classList.add('active');el.classList.add('on');}
+  function mt7show(id,btn){
+    document.querySelectorAll('#mt7 .section,#mt7 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#mt7 .nav-btn,#mt7 .tab,#mt7 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
     if(btn){btn.classList.add('active');btn.classList.add('on');}
   }
-  function w2show(id, btn) {
-    document.querySelectorAll('#w2 .section').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#w2 .nav-btn, #w2 .tab, #w2 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el = document.getElementById(id);
-    if(el){el.classList.add('active');el.classList.add('on');}
+  function w1show(id,btn){
+    document.querySelectorAll('#w1 .section,#w1 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#w1 .nav-btn,#w1 .tab,#w1 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
     if(btn){btn.classList.add('active');btn.classList.add('on');}
   }
-  function w3show(id, btn) {
-    document.querySelectorAll('#w3 .section').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#w3 .nav-btn, #w3 .tab, #w3 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el = document.getElementById(id);
-    if(el){el.classList.add('active');el.classList.add('on');}
+  function w2show(id,btn){
+    document.querySelectorAll('#w2 .section,#w2 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#w2 .nav-btn,#w2 .tab,#w2 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
     if(btn){btn.classList.add('active');btn.classList.add('on');}
   }
-  function w4show(id, btn) {
-    document.querySelectorAll('#w4 .section').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#w4 .nav-btn, #w4 .tab, #w4 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el = document.getElementById(id);
-    if(el){el.classList.add('active');el.classList.add('on');}
+  function w3show(id,btn){
+    document.querySelectorAll('#w3 .section,#w3 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#w3 .nav-btn,#w3 .tab,#w3 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
+    if(btn){btn.classList.add('active');btn.classList.add('on');}
+  }
+  function w4show(id,btn){
+    document.querySelectorAll('#w4 .section,#w4 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
+    document.querySelectorAll('#w4 .nav-btn,#w4 .tab,#w4 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
+    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
     if(btn){btn.classList.add('active');btn.classList.add('on');}
   }
 
-  document.querySelectorAll('pre, .code, .formula').forEach(function(el) {
-    var wrapper = document.createElement('div');
-    wrapper.className = 'code-block';
-    wrapper.style.position = 'relative';
-    el.parentNode.insertBefore(wrapper, el);
-    wrapper.appendChild(el);
-    var btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-    btn.onclick = function() {
-      navigator.clipboard.writeText(el.innerText).then(function() {
-        btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4af0a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-        btn.classList.add('copied');
-        setTimeout(function() {
-          btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-          btn.classList.remove('copied');
-        }, 2000);
-      });
-    };
-    wrapper.appendChild(btn);
+  document.querySelectorAll('pre,.code,.formula').forEach(function(el){
+    var w=document.createElement('div');w.className='code-block';w.style.position='relative';
+    el.parentNode.insertBefore(w,el);w.appendChild(el);
+    var btn=document.createElement('button');btn.className='copy-btn';
+    btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    btn.onclick=function(){navigator.clipboard.writeText(el.innerText).then(function(){
+      btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4af0a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      btn.classList.add('copied');
+      setTimeout(function(){btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';btn.classList.remove('copied');},2000);
+    });};w.appendChild(btn);
   });
 
 </script>
