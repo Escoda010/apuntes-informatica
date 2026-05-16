@@ -104,7 +104,7 @@
         <div class="widget-header" onclick="toggleWidget('fbd1')">
           <div class="widget-header-left">
             <div class="widget-icon" style="background:rgba(29,158,117,.1)">🗄️</div>
-            <div><div class="widget-title">Funciones de agregado, GROUP BY y HAVING</div><div class="widget-subtitle">T08·T09·T10 — COUNT · SUM · GROUP BY · HAVING</div></div>
+            <div><div class="widget-title">Funciones de agregado, GROUP BY y HAVING</div><div class="widget-subtitle">T08·T09·T10</div></div>
           </div>
           <span class="widget-chevron">▼</span>
         </div>
@@ -155,6 +155,12 @@
   #fbd1 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #fbd1 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #fbd1 .wrap,#fbd1 .w{padding:0}
+
+  #fbd1 .fbd1-sec{display:none}
+  #fbd1 .fbd1-sec.fbd1-sec-on{display:block}
+  #fbd1 .fbd1-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #fbd1 .fbd1-btn:hover{background:var(--surface);color:var(--text)}
+  #fbd1 .fbd1-btn.fbd1-btn-on{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
 </style><div class="wrap">
 <h2 class="sr-only">Apuntes SQL interactivos — Fundamentos de Bases de Datos UA</h2>
 
@@ -502,6 +508,12 @@ GROUP BY p.codp, p.nombre;</div>
   #fbd2 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #fbd2 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #fbd2 .wrap,#fbd2 .w{padding:0}
+
+  #fbd2 .fbd2-sec{display:none}
+  #fbd2 .fbd2-sec.fbd2-sec-on{display:block}
+  #fbd2 .fbd2-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #fbd2 .fbd2-btn:hover{background:var(--surface);color:var(--text)}
+  #fbd2 .fbd2-btn.fbd2-btn-on{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
 </style><div class="w">
 <h2 class="sr-only">Apuntes SQL conjuntos — T11 Fundamentos de Bases de Datos UA</h2>
 
@@ -887,6 +899,12 @@ ORDER BY fecha;</div>
   #fbd3 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #fbd3 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #fbd3 .wrap,#fbd3 .w{padding:0}
+
+  #fbd3 .fbd3-sec{display:none}
+  #fbd3 .fbd3-sec.fbd3-sec-on{display:block}
+  #fbd3 .fbd3-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #fbd3 .fbd3-btn:hover{background:var(--surface);color:var(--text)}
+  #fbd3 .fbd3-btn.fbd3-btn-on{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
 </style><div class="w">
 <h2 class="sr-only">Apuntes tablas temporales T12 — Fundamentos de Bases de Datos UA</h2>
 
@@ -1291,6 +1309,12 @@ FROM
   #fbd4 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #fbd4 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #fbd4 .wrap,#fbd4 .w{padding:0}
+
+  #fbd4 .fbd4-sec{display:none}
+  #fbd4 .fbd4-sec.fbd4-sec-on{display:block}
+  #fbd4 .fbd4-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #fbd4 .fbd4-btn:hover{background:var(--surface);color:var(--text)}
+  #fbd4 .fbd4-btn.fbd4-btn-on{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
 </style><div class="w">
 
 <div class="nav">
@@ -1562,28 +1586,28 @@ WITH CHECK OPTION;</div>
   }
 
   function fbd1show(id,btn){
-    document.querySelectorAll('#fbd1 .section,#fbd1 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#fbd1 .nav-btn,#fbd1 .tab,#fbd1 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#fbd1 .fbd1-sec').forEach(function(s){s.classList.remove('fbd1-sec-on');});
+    document.querySelectorAll('#fbd1 .fbd1-btn').forEach(function(b){b.classList.remove('fbd1-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('fbd1-sec-on');}
+    if(btn){btn.classList.add('fbd1-btn-on');}
   }
   function fbd2show(id,btn){
-    document.querySelectorAll('#fbd2 .section,#fbd2 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#fbd2 .nav-btn,#fbd2 .tab,#fbd2 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#fbd2 .fbd2-sec').forEach(function(s){s.classList.remove('fbd2-sec-on');});
+    document.querySelectorAll('#fbd2 .fbd2-btn').forEach(function(b){b.classList.remove('fbd2-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('fbd2-sec-on');}
+    if(btn){btn.classList.add('fbd2-btn-on');}
   }
   function fbd3show(id,btn){
-    document.querySelectorAll('#fbd3 .section,#fbd3 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#fbd3 .nav-btn,#fbd3 .tab,#fbd3 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#fbd3 .fbd3-sec').forEach(function(s){s.classList.remove('fbd3-sec-on');});
+    document.querySelectorAll('#fbd3 .fbd3-btn').forEach(function(b){b.classList.remove('fbd3-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('fbd3-sec-on');}
+    if(btn){btn.classList.add('fbd3-btn-on');}
   }
   function fbd4show(id,btn){
-    document.querySelectorAll('#fbd4 .section,#fbd4 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#fbd4 .nav-btn,#fbd4 .tab,#fbd4 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#fbd4 .fbd4-sec').forEach(function(s){s.classList.remove('fbd4-sec-on');});
+    document.querySelectorAll('#fbd4 .fbd4-btn').forEach(function(b){b.classList.remove('fbd4-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('fbd4-sec-on');}
+    if(btn){btn.classList.add('fbd4-btn-on');}
   }
 
   document.querySelectorAll('pre,.code,.formula').forEach(function(el){

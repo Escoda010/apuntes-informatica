@@ -152,6 +152,12 @@
   #disc .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #disc .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #disc .wrap,#disc .w{padding:0}
+
+  #disc .disc-sec{display:none}
+  #disc .disc-sec.disc-sec-on{display:block}
+  #disc .disc-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #disc .disc-btn:hover{background:var(--surface);color:var(--text)}
+  #disc .disc-btn.disc-btn-on{background:rgba(200,240,74,.1);color:#c8f04a;border-color:rgba(200,240,74,.3);font-weight:500}
 </style><div class="wrap">
 <h2 class="sr-only">Chuleta completa matemática discreta — Lección 1</h2>
 
@@ -378,10 +384,10 @@
   }
 
   function discshow(id,btn){
-    document.querySelectorAll('#disc .section,#disc .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#disc .nav-btn,#disc .tab,#disc .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#disc .disc-sec').forEach(function(s){s.classList.remove('disc-sec-on');});
+    document.querySelectorAll('#disc .disc-btn').forEach(function(b){b.classList.remove('disc-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('disc-sec-on');}
+    if(btn){btn.classList.add('disc-btn-on');}
   }
 
   document.querySelectorAll('pre,.code,.formula').forEach(function(el){

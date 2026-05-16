@@ -151,19 +151,25 @@
   #mt7 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #mt7 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #mt7 .wrap,#mt7 .w{padding:0}
+
+  #mt7 .mt7-sec{display:none}
+  #mt7 .mt7-sec.mt7-sec-on{display:block}
+  #mt7 .mt7-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #mt7 .mt7-btn:hover{background:var(--surface);color:var(--text)}
+  #mt7 .mt7-btn.mt7-btn-on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
 </style><div class="wrap">
-<nav class="nav">
-  <button class="nav-btn active" onclick="mt7show('mt7-intro', this)">Introducción</button>
-  <button class="nav-btn" onclick="mt7show('mt7-bezier', this)">Curvas de Bézier</button>
-  <button class="nav-btn" onclick="mt7show('mt7-bernstein', this)">Bernstein</button>
-  <button class="nav-btn" onclick="mt7show('mt7-casteljau', this)">De Casteljau</button>
-  <button class="nav-btn" onclick="mt7show('mt7-matricial', this)">Forma matricial</button>
-  <button class="nav-btn" onclick="mt7show('mt7-propiedades', this)">Propiedades</button>
-  <button class="nav-btn" onclick="mt7show('mt7-superficies', this)">Superficies</button>
+<nav class="mt7-nav">
+  <button class="mt7-btn mt7-btn-active" onclick="mt7show('mt7-intro', this)">Introducción</button>
+  <button class="mt7-btn" onclick="mt7show('mt7-bezier', this)">Curvas de Bézier</button>
+  <button class="mt7-btn" onclick="mt7show('mt7-bernstein', this)">Bernstein</button>
+  <button class="mt7-btn" onclick="mt7show('mt7-casteljau', this)">De Casteljau</button>
+  <button class="mt7-btn" onclick="mt7show('mt7-matricial', this)">Forma matricial</button>
+  <button class="mt7-btn" onclick="mt7show('mt7-propiedades', this)">Propiedades</button>
+  <button class="mt7-btn" onclick="mt7show('mt7-superficies', this)">Superficies</button>
   
 </nav>
 
-<div class="section active" id="mt7-intro">
+<div class="mt7-sec mt7-sec-active" id="mt7-intro">
   <p class="section-title">Curvas paramétricas — introducción</p>
   <div class="card">
     <h3>Tres formas de representar curvas</h3>
@@ -190,7 +196,7 @@
   </div>
 </div>
 
-<div class="section" id="mt7-bezier">
+<div class="mt7-sec" id="mt7-bezier">
   <p class="section-title">Curvas de Bézier</p>
   <div class="card">
     <h3>Idea clave</h3>
@@ -226,7 +232,7 @@
   </div>
 </div>
 
-<div class="section" id="mt7-bernstein">
+<div class="mt7-sec" id="mt7-bernstein">
   <p class="section-title">Polinomios de Bernstein</p>
   <div class="card">
     <h3>Definición</h3>
@@ -283,7 +289,7 @@
   </div>
 </div>
 
-<div class="section" id="mt7-casteljau">
+<div class="mt7-sec" id="mt7-casteljau">
   <p class="section-title">Formulación de De Casteljau</p>
   <div class="card">
     <h3>Idea</h3>
@@ -310,7 +316,7 @@
   </div>
 </div>
 
-<div class="section" id="mt7-matricial">
+<div class="mt7-sec" id="mt7-matricial">
   <p class="section-title">Forma matricial</p>
   <div class="card">
     <h3>Curvas cúbicas en forma matricial</h3>
@@ -326,7 +332,7 @@
   </div>
 </div>
 
-<div class="section" id="mt7-propiedades">
+<div class="mt7-sec" id="mt7-propiedades">
   <p class="section-title">Propiedades de las curvas de Bézier</p>
   <div class="card">
     <div class="prop">
@@ -372,7 +378,7 @@
   </div>
 </div>
 
-<div class="section" id="mt7-superficies">
+<div class="mt7-sec" id="mt7-superficies">
   <p class="section-title">Superficies de Bézier</p>
   <div class="card">
     <h3>Extensión de curvas a superficies</h3>
@@ -395,26 +401,6 @@
       <tr><td>Arquitectura</td><td>Estructuras curvas, puentes</td></tr>
     </table>
   </div>
-</div>
-
-<div class="section" id="s-quiz">
-  <p class="section-title">Repaso rápido</p>
-  <div class="card" id="quiz-card">
-    <div class="q-num" id="q-num"></div>
-    <div class="q-text" id="q-text"></div>
-    <div id="q-options"></div>
-    <div class="quiz-feedback" id="q-feedback"></div>
-    <button class="quiz-next" id="q-next" onclick="nextQ()">Siguiente →</button>
-  </div>
-  <div id="quiz-result" style="display:none;">
-    <div class="card">
-      <h3 id="result-title"></h3>
-      <p id="result-text" style="margin-top:0.5rem;"></p>
-      
-    </div>
-  </div>
-</div>
-
 </div>
         </div>
       </div></div></div></div></div>
@@ -479,24 +465,30 @@
   #w1 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #w1 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #w1 .wrap,#w1 .w{padding:0}
+
+  #w1 .w1-sec{display:none}
+  #w1 .w1-sec.w1-sec-on{display:block}
+  #w1 .w1-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #w1 .w1-btn:hover{background:var(--surface);color:var(--text)}
+  #w1 .w1-btn.w1-btn-on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
 </style><div class="container">
   <h2 class="sr-only">Resumen interactivo del Tema 1 — Matemáticas 2</h2>
 
   <nav class="nav" id="nav">
-    <button class="nav-btn active" onclick="w1show('w1-librerias')">Librerías</button>
-    <button class="nav-btn" onclick="w1show('w1-variables')">Variables y tipos</button>
-    <button class="nav-btn" onclick="w1show('w1-estructuras')">Estructuras</button>
-    <button class="nav-btn" onclick="w1show('w1-flujo')">Control de flujo</button>
-    <button class="nav-btn" onclick="w1show('w1-funciones')">Funciones</button>
-    <button class="nav-btn" onclick="w1show('w1-numpy')">numpy</button>
-    <button class="nav-btn" onclick="w1show('w1-sympy')">sympy</button>
-    <button class="nav-btn" onclick="w1show('w1-scipy')">scipy</button>
-    <button class="nav-btn" onclick="w1show('w1-matplotlib')">matplotlib</button>
+    <button class="w1-btn w1-btn-on" onclick="w1show('w1-librerias')">Librerías</button>
+    <button class="w1-btn" onclick="w1show('w1-variables')">Variables y tipos</button>
+    <button class="w1-btn" onclick="w1show('w1-estructuras')">Estructuras</button>
+    <button class="w1-btn" onclick="w1show('w1-flujo')">Control de flujo</button>
+    <button class="w1-btn" onclick="w1show('w1-funciones')">Funciones</button>
+    <button class="w1-btn" onclick="w1show('w1-numpy')">numpy</button>
+    <button class="w1-btn" onclick="w1show('w1-sympy')">sympy</button>
+    <button class="w1-btn" onclick="w1show('w1-scipy')">scipy</button>
+    <button class="w1-btn" onclick="w1show('w1-matplotlib')">matplotlib</button>
     
   </nav>
 
   <!-- LIBRERÍAS -->
-  <div class="section active" id="w1-librerias">
+  <div class="w1-sec w1-sec-on" id="w1-librerias">
     <p class="section-title">Librerías principales</p>
     <div class="grid2">
       <div class="card">
@@ -549,7 +541,7 @@
   </div>
 
   <!-- VARIABLES -->
-  <div class="section" id="w1-variables">
+  <div class="w1-sec" id="w1-variables">
     <p class="section-title">Variables y tipos básicos</p>
     <div class="grid2">
       <div class="card">
@@ -593,7 +585,7 @@ not (x == 0)</pre>
   </div>
 
   <!-- ESTRUCTURAS -->
-  <div class="section" id="w1-estructuras">
+  <div class="w1-sec" id="w1-estructuras">
     <p class="section-title">Estructuras de datos</p>
     <div class="grid2">
       <div class="card">
@@ -641,7 +633,7 @@ cuad = [i**2 for i in range(21) if i % 2 == 0]</pre>
   </div>
 
   <!-- CONTROL DE FLUJO -->
-  <div class="section" id="w1-flujo">
+  <div class="w1-sec" id="w1-flujo">
     <p class="section-title">Control de flujo</p>
     <div class="grid2">
       <div class="card">
@@ -701,7 +693,7 @@ while error > tol:
   </div>
 
   <!-- FUNCIONES -->
-  <div class="section" id="w1-funciones">
+  <div class="w1-sec" id="w1-funciones">
     <p class="section-title">Definición de funciones</p>
     <div class="grid2">
       <div class="card">
@@ -758,7 +750,7 @@ y = f_num(x_vals)</pre>
   </div>
 
   <!-- NUMPY -->
-  <div class="section" id="w1-numpy">
+  <div class="w1-sec" id="w1-numpy">
     <p class="section-title">numpy</p>
     <div class="grid2">
       <div class="card">
@@ -809,7 +801,7 @@ sqrt2 = x_new</pre>
   </div>
 
   <!-- SYMPY -->
-  <div class="section" id="w1-sympy">
+  <div class="w1-sec" id="w1-sympy">
     <p class="section-title">sympy — cálculo simbólico</p>
     <div class="grid2">
       <div class="card">
@@ -864,7 +856,7 @@ sp.limit(f, x, sp.oo)</pre>
   </div>
 
   <!-- SCIPY -->
-  <div class="section" id="w1-scipy">
+  <div class="w1-sec" id="w1-scipy">
     <p class="section-title">scipy — métodos numéricos</p>
     <div class="grid2">
       <div class="card">
@@ -913,7 +905,7 @@ diff = abs(root_bab - root_newton)  # ≈ 1e-16</pre>
   </div>
 
   <!-- MATPLOTLIB -->
-  <div class="section" id="w1-matplotlib">
+  <div class="w1-sec" id="w1-matplotlib">
     <p class="section-title">matplotlib — visualización</p>
     <div class="grid2">
       <div class="card">
@@ -1031,20 +1023,26 @@ p.show()</pre>
   #w2 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #w2 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #w2 .wrap,#w2 .w{padding:0}
+
+  #w2 .w2-sec{display:none}
+  #w2 .w2-sec.w2-sec-on{display:block}
+  #w2 .w2-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #w2 .w2-btn:hover{background:var(--surface);color:var(--text)}
+  #w2 .w2-btn.w2-btn-on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
 </style><div class="container">
   <h2 class="sr-only">Resumen interactivo del Tema 2 — Derivadas y límites</h2>
 
   <nav class="nav">
-    <button class="nav-btn active" onclick="w2show('w2-limites', this)">Límites</button>
-    <button class="nav-btn" onclick="w2show('w2-derivada', this)">Derivada</button>
-    <button class="nav-btn" onclick="w2show('w2-parciales', this)">Derivadas parciales</button>
-    <button class="nav-btn" onclick="w2show('w2-analisis', this)">Análisis de funciones</button>
-    <button class="nav-btn" onclick="w2show('w2-optimizacion', this)">Optimización</button>
+    <button class="w2-btn w2-btn-on" onclick="w2show('w2-limites', this)">Límites</button>
+    <button class="w2-btn" onclick="w2show('w2-derivada', this)">Derivada</button>
+    <button class="w2-btn" onclick="w2show('w2-parciales', this)">Derivadas parciales</button>
+    <button class="w2-btn" onclick="w2show('w2-analisis', this)">Análisis de funciones</button>
+    <button class="w2-btn" onclick="w2show('w2-optimizacion', this)">Optimización</button>
     
   </nav>
 
   <!-- LÍMITES -->
-  <div class="section active" id="w2-limites">
+  <div class="w2-sec w2-sec-on" id="w2-limites">
     <p class="section-title">Límites</p>
     <div class="grid2">
       <div class="card">
@@ -1100,7 +1098,7 @@ sp.limit(f, x, 3, '-')                   # → -1</pre>
   </div>
 
   <!-- DERIVADA -->
-  <div class="section" id="w2-derivada">
+  <div class="w2-sec" id="w2-derivada">
     <p class="section-title">Derivada</p>
     <div class="grid2">
       <div class="card">
@@ -1146,7 +1144,7 @@ p.show()</pre>
   </div>
 
   <!-- PARCIALES -->
-  <div class="section" id="w2-parciales">
+  <div class="w2-sec" id="w2-parciales">
     <p class="section-title">Derivadas parciales</p>
     <div class="grid2">
       <div class="card">
@@ -1202,7 +1200,7 @@ f.jacobian([x, y, z])   # matriz jacobiana</pre>
   </div>
 
   <!-- ANÁLISIS -->
-  <div class="section" id="w2-analisis">
+  <div class="w2-sec" id="w2-analisis">
     <p class="section-title">Análisis de funciones</p>
     <div class="card">
       <h3>Pasos para analizar una función</h3>
@@ -1258,7 +1256,7 @@ list(sp.solveset(f1, x, domain=sp.S.Reals))</pre>
   </div>
 
   <!-- OPTIMIZACIÓN -->
-  <div class="section" id="w2-optimizacion">
+  <div class="w2-sec" id="w2-optimizacion">
     <p class="section-title">Optimización</p>
     <div class="card">
       <h3>Pasos para resolver un problema de optimización</h3>
@@ -1360,20 +1358,26 @@ optimize.fminbound(f, -1, 2)  # en [-1, 2]</pre>
   #w3 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #w3 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #w3 .wrap,#w3 .w{padding:0}
+
+  #w3 .w3-sec{display:none}
+  #w3 .w3-sec.w3-sec-on{display:block}
+  #w3 .w3-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #w3 .w3-btn:hover{background:var(--surface);color:var(--text)}
+  #w3 .w3-btn.w3-btn-on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
 </style><div class="wrap">
 <nav class="nav">
-  <button class="nav-btn active" onclick="w3show('w3-sumas', this)">Sumas de Riemann</button>
-  <button class="nav-btn" onclick="w3show('w3-trapecio', this)">Trapecio y Simpson</button>
-  <button class="nav-btn" onclick="w3show('w3-exacta', this)">Integral exacta</button>
-  <button class="nav-btn" onclick="w3show('w3-scipy', this)">scipy</button>
-  <button class="nav-btn" onclick="w3show('w3-error', this)">Error relativo</button>
-  <button class="nav-btn" onclick="w3show('w3-multiples', this)">Integrales múltiples</button>
-  <button class="nav-btn" onclick="w3show('w3-graficas', this)">Gráficas</button>
+  <button class="w3-btn w3-btn-on" onclick="w3show('w3-sumas', this)">Sumas de Riemann</button>
+  <button class="w3-btn" onclick="w3show('w3-trapecio', this)">Trapecio y Simpson</button>
+  <button class="w3-btn" onclick="w3show('w3-exacta', this)">Integral exacta</button>
+  <button class="w3-btn" onclick="w3show('w3-scipy', this)">scipy</button>
+  <button class="w3-btn" onclick="w3show('w3-error', this)">Error relativo</button>
+  <button class="w3-btn" onclick="w3show('w3-multiples', this)">Integrales múltiples</button>
+  <button class="w3-btn" onclick="w3show('w3-graficas', this)">Gráficas</button>
   
 </nav>
 
 <!-- SUMAS DE RIEMANN -->
-<div class="section active" id="w3-sumas">
+<div class="w3-sec w3-sec-on" id="w3-sumas">
   <p class="section-title">Sumas de Riemann</p>
   <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;">Aproximan el área bajo una curva dividiendo el intervalo en n rectángulos. Cuantos más intervalos, más preciso.</p>
 
@@ -1421,7 +1425,7 @@ def L_n(f, a, b, n):
 </div>
 
 <!-- TRAPECIO Y SIMPSON -->
-<div class="section" id="w3-trapecio">
+<div class="w3-sec" id="w3-trapecio">
   <p class="section-title">Trapecio y Simpson</p>
 
   <div class="card">
@@ -1474,7 +1478,7 @@ simpson = integrate.simps(y, x)</pre>
 </div>
 
 <!-- INTEGRAL EXACTA -->
-<div class="section" id="w3-exacta">
+<div class="w3-sec" id="w3-exacta">
   <p class="section-title">Integral exacta con sympy</p>
 
   <div class="grid2">
@@ -1531,7 +1535,7 @@ integrate(f, x)   <span class="comment"># integra respecto a x</span>
 </div>
 
 <!-- SCIPY -->
-<div class="section" id="w3-scipy">
+<div class="w3-sec" id="w3-scipy">
   <p class="section-title">Integrales numéricas con scipy</p>
 
   <div class="card">
@@ -1584,7 +1588,7 @@ i2 = dblquad(lambdify((x,y), 16*x*y), 0, 0.5, 0, xlimit)</pre>
 </div>
 
 <!-- ERROR RELATIVO -->
-<div class="section" id="w3-error">
+<div class="w3-sec" id="w3-error">
   <p class="section-title">Error relativo</p>
 
   <div class="card">
@@ -1638,7 +1642,7 @@ error_STn = abs(valor_real - STn) / abs(valor_real)</pre>
 </div>
 
 <!-- INTEGRALES MÚLTIPLES -->
-<div class="section" id="w3-multiples">
+<div class="w3-sec" id="w3-multiples">
   <p class="section-title">Integrales múltiples</p>
 
   <div class="card">
@@ -1697,7 +1701,7 @@ tplquad(
 </div>
 
 <!-- GRÁFICAS -->
-<div class="section" id="w3-graficas">
+<div class="w3-sec" id="w3-graficas">
   <p class="section-title">Gráficas de integrales</p>
 
   <div class="card">
@@ -1794,17 +1798,23 @@ plt.show()</pre>
   #w4 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
   #w4 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
   #w4 .wrap,#w4 .w{padding:0}
+
+  #w4 .w4-sec{display:none}
+  #w4 .w4-sec.w4-sec-on{display:block}
+  #w4 .w4-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  #w4 .w4-btn:hover{background:var(--surface);color:var(--text)}
+  #w4 .w4-btn.w4-btn-on{background:rgba(124,106,247,.1);color:#9d8fff;border-color:rgba(124,106,247,.3);font-weight:500}
 </style><div class="wrap">
 <h2 class="sr-only">Apuntes de gráficas — Matemáticas 2 UA</h2>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="w4show('w4-numpy', this)">plt.plot (numpy)</button>
-  <button class="nav-btn" onclick="w4show('w4-symplot', this)">symplot (sympy)</button>
-  <button class="nav-btn" onclick="w4show('w4-opciones', this)">Opciones y extras</button>
-  <button class="nav-btn" onclick="w4show('w4-cuando', this)">¿Cuándo uso cada una?</button>
+  <button class="w4-btn w4-btn-on" onclick="w4show('w4-numpy', this)">plt.plot (numpy)</button>
+  <button class="w4-btn" onclick="w4show('w4-symplot', this)">symplot (sympy)</button>
+  <button class="w4-btn" onclick="w4show('w4-opciones', this)">Opciones y extras</button>
+  <button class="w4-btn" onclick="w4show('w4-cuando', this)">¿Cuándo uso cada una?</button>
 </nav>
 
-<div class="section active" id="w4-numpy">
+<div class="w4-sec w4-sec-on" id="w4-numpy">
   <p class="section-title">Gráficas numéricas — plt.plot</p>
   <p style="font-size:14px; color:var(--color-text-secondary); margin-bottom:1rem;">Para funciones numéricas con numpy. Necesitas discretizar el intervalo con <code>np.linspace</code>.</p>
 
@@ -1867,7 +1877,7 @@ plt.show()</pre>
   </div>
 </div>
 
-<div class="section" id="w4-symplot">
+<div class="w4-sec" id="w4-symplot">
   <p class="section-title">Gráficas simbólicas — symplot</p>
   <p style="font-size:14px; color:var(--color-text-secondary); margin-bottom:1rem;">Para funciones simbólicas de sympy. No necesitas <code>np.linspace</code>, sympy discretiza sola.</p>
 
@@ -1917,7 +1927,7 @@ p.show()</pre>
   </div>
 </div>
 
-<div class="section" id="w4-opciones">
+<div class="w4-sec" id="w4-opciones">
   <p class="section-title">Opciones y extras</p>
 
   <div class="grid2">
@@ -1973,7 +1983,7 @@ plt.show()</pre>
   </div>
 </div>
 
-<div class="section" id="w4-cuando">
+<div class="w4-sec" id="w4-cuando">
   <p class="section-title">¿Cuándo uso cada una?</p>
 
   <div class="card">
@@ -2032,34 +2042,34 @@ plt.plot(x1, y1)</pre>
   }
 
   function mt7show(id,btn){
-    document.querySelectorAll('#mt7 .section,#mt7 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#mt7 .nav-btn,#mt7 .tab,#mt7 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#mt7 .mt7-sec').forEach(function(s){s.classList.remove('mt7-sec-on');});
+    document.querySelectorAll('#mt7 .mt7-btn').forEach(function(b){b.classList.remove('mt7-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('mt7-sec-on');}
+    if(btn){btn.classList.add('mt7-btn-on');}
   }
   function w1show(id,btn){
-    document.querySelectorAll('#w1 .section,#w1 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#w1 .nav-btn,#w1 .tab,#w1 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#w1 .w1-sec').forEach(function(s){s.classList.remove('w1-sec-on');});
+    document.querySelectorAll('#w1 .w1-btn').forEach(function(b){b.classList.remove('w1-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('w1-sec-on');}
+    if(btn){btn.classList.add('w1-btn-on');}
   }
   function w2show(id,btn){
-    document.querySelectorAll('#w2 .section,#w2 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#w2 .nav-btn,#w2 .tab,#w2 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#w2 .w2-sec').forEach(function(s){s.classList.remove('w2-sec-on');});
+    document.querySelectorAll('#w2 .w2-btn').forEach(function(b){b.classList.remove('w2-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('w2-sec-on');}
+    if(btn){btn.classList.add('w2-btn-on');}
   }
   function w3show(id,btn){
-    document.querySelectorAll('#w3 .section,#w3 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#w3 .nav-btn,#w3 .tab,#w3 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#w3 .w3-sec').forEach(function(s){s.classList.remove('w3-sec-on');});
+    document.querySelectorAll('#w3 .w3-btn').forEach(function(b){b.classList.remove('w3-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('w3-sec-on');}
+    if(btn){btn.classList.add('w3-btn-on');}
   }
   function w4show(id,btn){
-    document.querySelectorAll('#w4 .section,#w4 .sec').forEach(function(s){s.classList.remove('active');s.classList.remove('on');});
-    document.querySelectorAll('#w4 .nav-btn,#w4 .tab,#w4 .nb').forEach(function(b){b.classList.remove('active');b.classList.remove('on');});
-    var el=document.getElementById(id);if(el){el.classList.add('active');el.classList.add('on');}
-    if(btn){btn.classList.add('active');btn.classList.add('on');}
+    document.querySelectorAll('#w4 .w4-sec').forEach(function(s){s.classList.remove('w4-sec-on');});
+    document.querySelectorAll('#w4 .w4-btn').forEach(function(b){b.classList.remove('w4-btn-on');});
+    var el=document.getElementById(id);if(el){el.classList.add('w4-sec-on');}
+    if(btn){btn.classList.add('w4-btn-on');}
   }
 
   document.querySelectorAll('pre,.code,.formula').forEach(function(el){
