@@ -73,7 +73,7 @@
       <h1>Fundamentos de <em>Bases de Datos</em></h1>
     </div>
     <div class="header-meta">
-      <div class="widget-count">3</div>
+      <div class="widget-count">4</div>
       widgets
     </div>
   </div>
@@ -86,6 +86,7 @@
         <li class="nav-item active" onclick="scrollToWidget('fbd1',this)"><span class="nav-num">01</span>T08-T10 — SQL agregado</li>
         <li class="nav-item" onclick="scrollToWidget('fbd2',this)"><span class="nav-num">02</span>T11 — Conjuntos SQL</li>
         <li class="nav-item" onclick="scrollToWidget('fbd3',this)"><span class="nav-num">03</span>T12 — Tablas temporales</li>
+        <li class="nav-item" onclick="scrollToWidget('fbd4',this)"><span class="nav-num">04</span>T13 — Vistas SQL</li>
       </ul>
       <div class="sidebar-divider"></div>
       <div class="add-hint">+ Los nuevos widgets se irán añadiendo aquí</div>
@@ -1237,6 +1238,297 @@ FROM
 </div>
         </div>
       </div>
+
+      <div class="widget-wrapper" id="fbd4">
+        <div class="widget-header" onclick="toggleWidget('fbd4')">
+          <div class="widget-header-left">
+            <div class="widget-icon" style="background:rgba(29,158,117,.1)">👁️</div>
+            <div>
+              <div class="widget-title">Vistas SQL</div>
+              <div class="widget-subtitle">T13 — Crear · INSERT/DELETE/UPDATE · CHECK OPTION · Combinar</div>
+            </div>
+          </div>
+          <span class="widget-chevron">▼</span>
+        </div>
+        <div class="widget-body">
+          <div class="leccion-badge"><span class="leccion-dot"></span>TEMA 13</div>
+          <style>
+            #fbd4 .nb{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+            #fbd4 .nb:hover{background:var(--surface);color:var(--text)}
+            #fbd4 .nb.on{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3);font-weight:500}
+            #fbd4 .nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
+            #fbd4 .sec{display:none} #fbd4 .sec.on{display:block}
+            #fbd4 .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+            #fbd4 .ct{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem}
+            #fbd4 .cb{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:.4rem}
+            #fbd4 .code{background:#0a0a0d;border-radius:8px;padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:12.5px;color:var(--text);overflow-x:auto;margin:.5rem 0;line-height:1.7;border:1px solid var(--border);white-space:pre-wrap}
+            #fbd4 .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500;margin-bottom:.5rem;font-family:'DM Mono',monospace}
+            #fbd4 .t13{background:rgba(240,160,74,.1);color:#f0a04a;border:1px solid rgba(240,160,74,.2)}
+            #fbd4 .tteo{background:rgba(124,106,247,.1);color:#9d8fff;border:1px solid rgba(124,106,247,.2)}
+            #fbd4 .warn{background:rgba(240,74,74,.07);border:1px solid rgba(240,74,74,.2);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:#f07070;margin:.5rem 0}
+            #fbd4 .ok{background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.2);border-radius:8px;padding:.65rem .9rem;font-size:13px;color:#1D9E75;margin:.5rem 0}
+            #fbd4 .rule{border-left:3px solid #1D9E75;padding:.5rem 1rem;margin:.5rem 0;font-size:13px;color:var(--text)}
+            #fbd4 .stitle{font-size:17px;font-weight:600;color:var(--text);margin-bottom:1rem;font-family:'DM Serif Display',serif}
+            #fbd4 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:.75rem 0}
+            #fbd4 .mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--text-dim);text-align:center}
+            #fbd4 .mini strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
+            #fbd4 .w{padding:0}
+          </style>
+<div class="w">
+
+<div class="nav">
+  <button class="nb on" onclick="fbd4show('fbd4-que',this)">¿Qué es una vista?</button>
+  <button class="nb" onclick="fbd4show('fbd4-crear',this)">Crear y eliminar</button>
+  <button class="nb" onclick="fbd4show('fbd4-ops',this)">INSERT / DELETE / UPDATE</button>
+  <button class="nb" onclick="fbd4show('fbd4-check',this)">WITH CHECK OPTION</button>
+  <button class="nb" onclick="fbd4show('fbd4-combinar',this)">Combinar vistas</button>
+  <button class="nb" onclick="fbd4show('fbd4-trucos',this)">Resumen</button>
+</div>
+
+<div id="fbd4-que" class="sec on">
+  <p class="stitle">¿Qué es una vista?</p>
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">Definición</div>
+    <div class="cb">Una vista es una consulta guardada con nombre que se comporta como una tabla. No almacena datos, solo almacena la consulta. Cada vez que la usas, ejecuta la consulta por debajo.</div>
+    <div class="rule">La vista es una ventana sobre los datos. Limita qué filas y columnas puedes ver y con cuáles puedes trabajar.</div>
+  </div>
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">¿Para qué sirve?</div>
+    <div class="cb">Tiene dos usos principales:</div>
+    <div class="ok">1. Seguridad: limitar el acceso a solo una parte de los datos. Un comercial de Alicante solo ve usuarios de Alicante.</div>
+    <div class="ok">2. Comodidad: encapsular una consulta compleja para reutilizarla como si fuera una tabla.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Ejemplo básico</div>
+    <div class="code">-- Vista que solo muestra usuarios de Alicante
+CREATE OR REPLACE VIEW VusuAli AS
+SELECT * FROM tiendaonline.usuario WHERE provincia='03';
+
+-- Usarla exactamente igual que una tabla
+SELECT * FROM VusuAli ORDER BY apellidos, nombre;
+SELECT * FROM VusuAli WHERE nombre IN ('Carolina','Iloveny');</div>
+    <div class="cb">A partir de aquí, cualquiera que use VusuAli nunca podrá ver usuarios de otras provincias, aunque existan en la tabla original.</div>
+  </div>
+</div>
+
+<div id="fbd4-crear" class="sec">
+  <p class="stitle">Crear y eliminar vistas</p>
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">Sintaxis básica</div>
+    <div class="code">-- Crear
+CREATE VIEW nombrevista AS SELECT ...;
+
+-- Crear o reemplazar si ya existe (más seguro)
+CREATE OR REPLACE VIEW nombrevista AS SELECT ...;
+
+-- Eliminar
+DROP VIEW nombrevista;
+
+-- Ver su definición
+SHOW CREATE VIEW nombrevista;</div>
+    <div class="rule">Una vista es un objeto persistente: existe en la base de datos hasta que la eliminas con DROP VIEW.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Vista con GROUP BY — encapsular una consulta compleja</div>
+    <div class="code">-- Vista con el total de cada pedido
+CREATE OR REPLACE VIEW Tpedidos AS
+SELECT p.numpedido, SUM(importe*cantidad) total, DATE(fecha)
+FROM tiendaonline.pedido p
+JOIN tiendaonline.linped l ON p.numpedido=l.numpedido
+GROUP BY p.numpedido, fecha;
+
+-- Ahora usarla es trivial
+SELECT * FROM Tpedidos;</div>
+    <div class="cb">Una vista puede encapsular cualquier consulta, por compleja que sea: JOINs, GROUP BY, HAVING... Una vez creada, la usas como si fuera una tabla simple.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Crear tabla con la misma estructura que otra</div>
+    <div class="code">-- Crea una tabla idéntica (sin claves ajenas)
+CREATE TABLE usuAlm LIKE tiendaonline.usuario;
+
+-- Añadir claves ajenas después si las necesitas
+ALTER TABLE usuAlm ADD FOREIGN KEY (pueblo, provincia)
+REFERENCES tiendaonline.localidad (codm, provincia);</div>
+    <div class="cb">LIKE copia la estructura (columnas, tipos, clave primaria) pero NO las claves ajenas. Si las necesitas, hay que añadirlas con ALTER TABLE.</div>
+  </div>
+</div>
+
+<div id="fbd4-ops" class="sec">
+  <p class="stitle">INSERT, DELETE y UPDATE en vistas</p>
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">La regla clave</div>
+    <div class="cb">Consultar una vista siempre funciona. Pero insertar, borrar y modificar depende de cómo esté definida.</div>
+    <div class="grid2">
+      <div class="mini"><strong>✓ Funciona</strong>vista sobre 1 tabla con su clave primaria</div>
+      <div class="mini"><strong>✗ No funciona</strong>vista con JOIN de 2 o más tablas</div>
+    </div>
+    <div class="rule">Cuando insertas o borras en una vista, en realidad estás modificando la tabla base. La vista es solo una ventana.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Insertar en una vista de una tabla</div>
+    <div class="code">-- Vista sobre una sola tabla → INSERT funciona
+CREATE VIEW vma AS SELECT cod, nombre, pvp FROM miarticulo;
+INSERT INTO vma (cod, nombre, pvp) VALUES ('B001', 'MiArtículo', 499);
+-- El artículo se inserta en miarticulo, no en vma</div>
+    <div class="ok">La inserción va a la tabla base (miarticulo). La vista es solo el canal.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Lo que NO puedes hacer con una vista con JOIN</div>
+    <div class="code">-- Vista con JOIN de dos tablas
+CREATE VIEW vat AS
+SELECT a.cod, nombre, pvp, resolucion, tdt
+FROM miarticulo a, mitv t WHERE a.cod=t.cod;
+
+DELETE FROM vat WHERE cod='A0694';    -- ERROR: Can not delete from join view
+INSERT INTO vat (cod,nombre,pvp,resolucion,tdt)
+VALUES ('B003','X',1100,null,null);   -- ERROR: Can not modify more than one base table
+
+-- Solo puedes actualizar columnas de UNA sola tabla a la vez
+UPDATE vat SET pvp=999 WHERE cod='A0694';         -- OK (solo miarticulo)
+UPDATE vat SET resolucion='800x600' WHERE cod=...; -- OK (solo mitv)
+UPDATE vat SET pvp=850, resolucion='x' WHERE cod=...; -- ERROR (dos tablas)</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Seguridad: lo que no ves, no puedes tocar</div>
+    <div class="code">-- Vista limitada a pvp entre 500 y 700
+CREATE VIEW vmb AS SELECT cod,nombre,pvp FROM miarticulo WHERE pvp BETWEEN 500 AND 700;
+
+-- El artículo B002 tiene pvp=701, fuera del rango de vmb
+DELETE FROM vmb WHERE cod='B002'; -- No hace nada, vmb no "ve" ese artículo</div>
+    <div class="cb">Esta es una de las grandes ventajas de las vistas: si un usuario no puede ver un dato a través de la vista, tampoco puede borrarlo ni modificarlo.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">tiendaonline es de solo lectura</div>
+    <div class="warn">Las vistas sobre tiendaonline.usuario, tiendaonline.pedido... solo permiten consultar. No puedes insertar ni borrar porque no tienes permisos en esa base de datos.</div>
+    <div class="ok">Para gestionar datos (altas, bajas) crea tu propia tabla y haz la vista sobre ella:
+CREATE TABLE usuAlm LIKE tiendaonline.usuario;
+CREATE VIEW VusuAlm AS SELECT * FROM usuAlm WHERE provincia='04';</div>
+  </div>
+</div>
+
+<div id="fbd4-check" class="sec">
+  <p class="stitle">WITH CHECK OPTION</p>
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">¿Qué hace?</div>
+    <div class="cb">Sin CHECK OPTION puedes insertar filas que la vista no puede ver. Con CHECK OPTION, la vista solo deja entrar filas que cumplan su condición WHERE.</div>
+    <div class="rule">WITH CHECK OPTION obliga a que toda operación cumpla el WHERE de la vista.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Comparación con y sin CHECK OPTION</div>
+    <div class="code">-- Sin check option: puedes insertar cualquier cosa
+CREATE VIEW bart AS SELECT * FROM miarticulo WHERE cod LIKE 'B%';
+INSERT INTO bart (cod,nombre,pvp) VALUES ('C010','Artículo C',1999); -- OK
+-- C010 se inserta en miarticulo pero bart no puede verlo
+
+-- Con check option: solo deja entrar lo que cumple el WHERE
+CREATE VIEW bart2 AS SELECT * FROM miarticulo WHERE cod LIKE 'B%'
+WITH CHECK OPTION;
+INSERT INTO bart2 (cod,nombre,pvp) VALUES ('C010','Artículo C',1999); -- ERROR
+INSERT INTO bart2 (cod,nombre,pvp) VALUES ('B010','Artículo B',1999); -- OK</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Caso real: delegación de Almería</div>
+    <div class="code">-- CHECK OPTION asegura que nadie puede insertar usuarios de otra provincia
+CREATE VIEW VusuAlm AS SELECT * FROM usuAlm
+WHERE provincia='04'
+WITH CHECK OPTION;
+
+INSERT INTO VusuAlm (..., provincia) VALUES (..., '04'); -- OK, es Almería
+INSERT INTO VusuAlm (..., provincia) VALUES (..., '03'); -- ERROR, es Alicante</div>
+    <div class="cb">Sin CHECK OPTION podrías insertar un usuario de Alicante en la tabla de Almería. Con él, es imposible. La vista garantiza la integridad de los datos.</div>
+  </div>
+</div>
+
+<div id="fbd4-combinar" class="sec">
+  <p class="stitle">Combinar vistas entre sí</p>
+  <div class="card">
+    <span class="tag tteo">Teoría</span>
+    <div class="ct">Las vistas se pueden combinar como tablas</div>
+    <div class="cb">Puedes hacer JOINs entre vistas, o entre una vista y una tabla, exactamente igual que con tablas normales. Incluso puedes usar UNION entre vistas.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">JOIN entre dos vistas</div>
+    <div class="code">-- VusuAli: usuarios de Alicante
+-- TApedidos: total por pedido con usuario y fecha
+
+SELECT u.email, u.apellidos, u.nombre, pp.total
+FROM VusuAli u
+LEFT JOIN TApedidos pp ON pp.usuario = u.email;</div>
+    <div class="cb">El LEFT JOIN muestra todos los usuarios de Alicante aunque no tengan pedidos (salen con NULL en total). Las vistas se comportan exactamente como tablas en el JOIN.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">UNION entre vista y tabla</div>
+    <div class="code">-- Todos los usuarios: los de Almería (tu tabla) + el resto (tiendaonline)
+SELECT email, apellidos, nombre, provincia, pueblo FROM VusuAlm
+UNION
+SELECT email, apellidos, nombre, provincia, pueblo FROM tiendaonline.usuario;</div>
+    <div class="cb">Puedes mezclar vistas y tablas en el mismo UNION. Esto es útil cuando tienes datos repartidos entre tu base de datos y tiendaonline.</div>
+  </div>
+  <div class="card">
+    <span class="tag t13">T13</span>
+    <div class="ct">Vista que usa otra vista</div>
+    <div class="code">-- TApedidosAlm usa las tablas pedidosAlm y lineasAlm
+CREATE OR REPLACE VIEW TApedidosAlm AS
+SELECT p.numpedido, SUM(importe*cantidad) total, DATE(fecha), usuario
+FROM pedidosAlm p JOIN lineasAlm l ON p.numpedido=l.numpedido
+GROUP BY p.numpedido, DATE(fecha), usuario;
+
+-- Luego la usas con VusuAlm
+SELECT email, nombre, apellidos, p.numpedido, total
+FROM VusuAlm u
+LEFT JOIN TApedidosAlm p ON u.email=p.usuario;</div>
+  </div>
+</div>
+
+<div id="fbd4-trucos" class="sec">
+  <p class="stitle">Resumen</p>
+  <div class="card">
+    <div class="ct">¿Qué puedes hacer con cada tipo de vista?</div>
+    <div class="grid2">
+      <div class="mini"><strong>SELECT</strong>siempre funciona en cualquier vista</div>
+      <div class="mini"><strong>INSERT</strong>solo si es 1 tabla y tiene la PK</div>
+    </div>
+    <div class="grid2">
+      <div class="mini"><strong>DELETE</strong>solo si es 1 tabla (sin JOIN)</div>
+      <div class="mini"><strong>UPDATE</strong>solo columnas de 1 tabla a la vez</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Cuándo usar WITH CHECK OPTION</div>
+    <div class="ok">Úsalo siempre que la vista restrinja filas con un WHERE y quieras garantizar que nadie puede insertar datos fuera de ese rango.</div>
+    <div class="warn">Sin CHECK OPTION puedes insertar datos que la vista no puede ver → datos "fantasma" en la tabla base.</div>
+  </div>
+  <div class="card">
+    <div class="ct">tiendaonline vs tu base de datos</div>
+    <div class="code">-- tiendaonline → solo lectura → vistas solo para consultar
+CREATE VIEW v1 AS SELECT * FROM tiendaonline.usuario WHERE provincia='03';
+
+-- Tu BD → permisos totales → vistas para gestionar
+CREATE TABLE miusuario LIKE tiendaonline.usuario;
+CREATE VIEW v2 AS SELECT * FROM miusuario WHERE provincia='04'
+WITH CHECK OPTION;</div>
+  </div>
+  
+</div>
+</div>
+        </div>
+      </div>
     </div>
   </div>
 </main>
@@ -1292,6 +1584,14 @@ FROM
     wrapper.appendChild(btn);
   });
 
+
+  function fbd4show(id, btn) {
+    document.querySelectorAll('#fbd4 .sec').forEach(function(s){s.classList.remove('on');});
+    document.querySelectorAll('#fbd4 .nb').forEach(function(b){b.classList.remove('on');});
+    var el = document.getElementById(id);
+    if(el){el.classList.add('on');}
+    if(btn){btn.classList.add('on');}
+  }
 </script>
 </body>
 </html>
