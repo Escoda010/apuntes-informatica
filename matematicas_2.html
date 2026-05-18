@@ -411,9 +411,11 @@ function renderResults(results, query) {
     var panelCls = e.panel === 'Teoría' ? 'badge-teoria' : 'badge-practica';
     var panelIcon = e.panel === 'Teoría' ? '📖' : '💻';
     var panel = e.panel === 'Teoría' ? 'teoria' : 'practica';
-    var navData = JSON.stringify({panel: e.panel, widgetId: e.widget_id, pageUrl: e.page_url});
+    var navPanel = e.panel;
+    var navWidget = e.widget_id;
+    var navPage = e.page_url;
 
-    html += '<div class="sd-card" onclick="searchNavigate(' + esc(navData).replace(/"/g,'&quot;') + ')">';
+    html += '<div class="sd-card" data-panel="' + esc(e.panel) + '" data-widget="' + esc(e.widget_id) + '" data-page="' + esc(e.page_url) + '" onclick="searchNavigateEl(this)">';
     html += '<div class="sd-left">';
     html += '<div class="sd-top">';
     html += '<span class="sd-term">' + hlText(e.section_label, tokens) + '</span>';
@@ -433,6 +435,14 @@ function renderResults(results, query) {
     html += '</div>';
   });
   container.innerHTML = html;
+}
+
+
+function searchNavigateEl(el) {
+  var panel = el.getAttribute('data-panel');
+  var widgetId = el.getAttribute('data-widget');
+  var pageUrl = el.getAttribute('data-page');
+  searchNavigate(JSON.stringify({panel: panel, widgetId: widgetId, pageUrl: pageUrl}));
 }
 
 function searchNavigate(navDataStr) {
