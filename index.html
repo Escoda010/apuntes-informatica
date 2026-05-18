@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ingeniería Informática — Apuntes</title>
@@ -35,9 +35,98 @@
   .pill.done{color:var(--text-dim)}
   .arrow{font-size:14px;color:var(--text-muted);transition:transform .2s,color .2s;flex-shrink:0}
   .subject-card.active:hover .arrow{transform:translateX(4px);color:#c8f04a}
+
+/* ── SEARCH BAR ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(14,14,17,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 2rem;
+  display: flex; align-items: center; gap: 12px;
+}
+.topbar-logo {
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-muted); text-decoration: none;
+  white-space: nowrap; transition: color .15s; flex-shrink: 0;
+}
+.topbar-logo:hover { color: var(--accent); }
+.topbar-search {
+  flex: 1; max-width: 520px; display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 12px; transition: border-color .2s;
+}
+.topbar-search:focus-within { border-color: rgba(var(--accent-rgb), .4); }
+.topbar-search-icon { font-size: 14px; color: var(--text-muted); flex-shrink: 0; }
+.topbar-input {
+  flex: 1; background: none; border: none; outline: none;
+  font-size: 13px; color: var(--text); font-family: 'DM Sans', sans-serif;
+}
+.topbar-input::placeholder { color: var(--text-muted); }
+.topbar-kbd {
+  font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-muted);
+  border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px;
+  flex-shrink: 0;
+}
+
+/* Search dropdown */
+.search-dropdown {
+  position: fixed; top: 52px; left: 0; right: 0; z-index: 999;
+  background: rgba(14,14,17,0.97); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  max-height: calc(100vh - 60px); overflow-y: auto;
+  display: none;
+}
+.search-dropdown.visible { display: block; }
+.search-dropdown-inner { max-width: 760px; margin: 0 auto; padding: 1rem 2rem 1.5rem; }
+.sd-count { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: .75rem; }
+.sd-results { display: flex; flex-direction: column; gap: 8px; }
+.sd-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: .875rem 1.125rem; display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 12px; cursor: pointer; transition: all .15s;
+}
+.sd-card:hover { border-color: #3a3a50; background: var(--surface2); }
+.sd-left { flex: 1; min-width: 0; }
+.sd-top { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; flex-wrap: wrap; }
+.sd-term { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; background: var(--surface2); padding: 1px 7px; border-radius: 5px; }
+.sd-term mark { background: rgba(var(--accent-rgb),.25); color: var(--accent); border-radius: 2px; font-style: normal; }
+.sd-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
+.badge-practica { background: rgba(124,106,247,.12); color: #9d8fff; border: 1px solid rgba(124,106,247,.25); }
+.badge-teoria { background: rgba(74,176,240,.12); color: #4ab0f0; border: 1px solid rgba(74,176,240,.25); }
+.badge-disc { background: rgba(200,240,74,.12); color: #c8f04a; border: 1px solid rgba(200,240,74,.25); }
+.badge-fbd { background: rgba(29,158,117,.12); color: #1D9E75; border: 1px solid rgba(29,158,117,.25); }
+.badge-m2 { background: rgba(124,106,247,.12); color: #9d8fff; border: 1px solid rgba(124,106,247,.25); }
+.sd-preview { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+.sd-preview mark { background: rgba(var(--accent-rgb),.15); color: var(--text-dim); border-radius: 2px; font-style: normal; }
+.sd-path { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.sd-path-item { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+.sd-path-sep { font-size: 10px; color: var(--text-muted); opacity: .4; }
+.sd-path-item.hl { color: var(--text-dim); }
+.sd-arrow { flex-shrink: 0; font-size: 12px; padding: 5px 12px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted); white-space: nowrap; align-self: center; transition: all .15s; }
+.sd-card:hover .sd-arrow { border-color: rgba(var(--accent-rgb),.3); color: var(--accent); }
+.sd-empty { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 13px; font-family: 'DM Mono', monospace; }
+body { padding-top: 52px; }
+
 </style>
 </head>
 <body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="index.html" class="topbar-logo">◈ Apuntes</a>
+  <div class="topbar-search">
+    <span class="topbar-search-icon">🔍</span>
+    <input class="topbar-input" id="topbarInput" type="text" placeholder="Buscar concepto, función, tema..." autocomplete="off">
+    <span class="topbar-kbd">/ para buscar</span>
+  </div>
+</div>
+<div class="search-dropdown" id="searchDropdown">
+  <div class="search-dropdown-inner">
+    <div class="sd-count" id="sdCount"></div>
+    <div class="sd-results" id="sdResults"></div>
+  </div>
+</div>
+
 <header>
   <div class="pretitle">Ingeniería Informática</div>
   <h1>Mis <em>Apuntes</em><br>Interactivos</h1>
